@@ -4,10 +4,11 @@
 name: Build
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
+  workflow_dispatch
 
 permissions:
   contents: read
@@ -31,11 +32,13 @@ jobs:
     - name: Build
       run: |
         scons tools=yes platform=x11 bits=64 arch=x64 lto=full progress=yes debug_symbols=no module_gdnative_enabled=no module_mobile_vr_enabled=no module_visual_script_enabled=no
-    #- name: Upload artifact
-    #  uses: actions/upload-artifact@v4
-    #  with:
-    #    name: godot build
-    #    path: bin/libcod1.so
+        strip bin/godot.x11.tools.x64
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: godot.x11.tools.x64
+        path: bin/godot.x11.tools.x64
     - name: test
       run: |
         ls -l bin
