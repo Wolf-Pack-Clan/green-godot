@@ -1,10 +1,11 @@
 name: Android CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
+  workflow_dispatch
 
 jobs:
   build:
@@ -46,6 +47,12 @@ jobs:
     - name: Build
       run: |
         scons tools=no platform=android arch=armv7 lto=full \
+          progress=yes debug_symbols=no module_gdnative_enabled=no \
+          module_mobile_vr_enabled=no module_visual_script_enabled=no
+        scons tools=no platform=android arch=arm64v8 lto=full \
+          progress=yes debug_symbols=no module_gdnative_enabled=no \
+          module_mobile_vr_enabled=no module_visual_script_enabled=no
+        scons tools=no platform=android arch=x86 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
   
