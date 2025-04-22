@@ -17,22 +17,22 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Cache APT packages
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-${{ hashFiles('Dockerfile') }}
+      #- name: Cache APT packages
+      #  uses: actions/cache@v4
+      #  with:
+      #    path: /var/cache/apt/archives
+      #    key: ${{ runner.os }}-apt-${{ hashFiles('Dockerfile') }}
 
-      - name: Restore SCons cache
+      - name: Restore cache
         uses: actions/cache@v4
         with:
           path: |
             .scons_cache/
             .sconsign.dblite
-          key: ${{ runner.os }}-scons-${{ hashFiles('SConstruct', '**/*.cpp', '**/*.h') }}
+            /var/cache/apt/archives
+          key: ${{ runner.os }}-cache #-${{ hashFiles('SConstruct', '**/*.cpp', '**/*.h', 'Dockerfile') }}
           restore-keys: |
-            ${{ runner.os }}-scons-
-            ${{ runner.os }}-apt-
+            ${{ runner.os }}-cache
 
       - name: Install system dependencies
         run: |
