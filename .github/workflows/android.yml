@@ -25,6 +25,15 @@ jobs:
       with:
         python-version: "3.10"
 
+    - name: Install system dependencies
+      run: |
+        sudo apt-mark hold firefox imagemagick \
+        sudo apt update && sudo apt upgrade -y
+        sudo apt install build-essential scons pkg-config \
+          libx11-dev libxcursor-dev libxinerama-dev \
+          libgl1-mesa-dev libglu-dev libasound2-dev \
+          libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+
     - name: Build
       env:
         SCONS_CACHE: ${{ github.workspace }}/.scons_cache
