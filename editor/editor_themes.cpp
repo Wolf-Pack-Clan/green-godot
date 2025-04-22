@@ -376,6 +376,10 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 		preset_accent_color = Color(0.15, 0.55, 0.82);
 		preset_base_color = Color(0.99, 0.96, 0.89);
 		preset_contrast = 0.06;
+	} else if (preset == "Wolf Pack") {
+		preset_accent_color = Color(0.80, 0.94, 0.26);
+		preset_base_color = Color(0.26, 0.18, 0.35);
+		preset_contrast = 0.23;
 	} else { // Default
 		preset_accent_color = Color(0.41, 0.61, 0.91);
 		preset_base_color = Color(0.2, 0.23, 0.31);
