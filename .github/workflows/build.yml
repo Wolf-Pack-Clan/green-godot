@@ -24,6 +24,12 @@ jobs:
             libx11-dev libxcursor-dev libxinerama-dev \
             libgl1-mesa-dev libglu-dev libasound2-dev \
             libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+      
+      - name: Cache APT packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('Dockerfile') }}
 
       - name: Restore SCons cache
         uses: actions/cache@v4
@@ -34,6 +40,7 @@ jobs:
           key: ${{ runner.os }}-scons-${{ hashFiles('SConstruct', '**/*.cpp', '**/*.h') }}
           restore-keys: |
             ${{ runner.os }}-scons-
+            ${{ runner.os }}-apt-
 
       - name: Build
         env:
