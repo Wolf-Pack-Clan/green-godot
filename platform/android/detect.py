@@ -170,6 +170,7 @@ def configure(env):
     print("################################")
     print(toolchain_path)
     print("################################")
+    sys.exit(1)
 
     env["CC"] = compiler_path + "/clang"
     env["CXX"] = compiler_path + "/clang++"
