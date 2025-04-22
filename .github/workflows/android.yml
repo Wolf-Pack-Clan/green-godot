@@ -39,8 +39,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: |
-          /godot-dev/build-tools
-        key: ${{ runner.os }}-android-cache #-${{ hashFiles('SConstruct', '**/*.cpp', '**/*.h', 'Dockerfile') }}
+          /usr/local/lib/android/sdk
+        key: ${{ runner.os }}-android-cache
         restore-keys: |
           ${{ runner.os }}-android-cache
 
