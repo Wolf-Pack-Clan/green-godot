@@ -29,7 +29,6 @@ jobs:
           path: |
             .scons_cache/
             .sconsign.dblite
-            /var/cache/apt/archives
           key: ${{ runner.os }}-cache #-${{ hashFiles('SConstruct', '**/*.cpp', '**/*.h', 'Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-cache
