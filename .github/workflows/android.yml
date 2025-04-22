@@ -34,9 +34,16 @@ jobs:
           libgl1-mesa-dev libglu-dev libasound2-dev \
           libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
 
+    - name: Restore cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          /godot-dev/build-tools
+        key: ${{ runner.os }}-android-cache #-${{ hashFiles('SConstruct', '**/*.cpp', '**/*.h', 'Dockerfile') }}
+        restore-keys: |
+          ${{ runner.os }}-android-cache
+
     - name: Build
-      env:
-        SCONS_CACHE: ${{ github.workspace }}/.scons_cache
       run: |
         scons tools=no platform=android arch=armv7 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
@@ -45,6 +52,7 @@ jobs:
     - name: Build with Gradle
       run: |
         cd platform/android/java
+        chmod +x gradlew
         ./gradlew generateGodotTemplates
         cd ../../../
         zip -r -9 bin.zip bin
