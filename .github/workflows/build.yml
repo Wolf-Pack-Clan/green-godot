@@ -1,44 +1,54 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
 name: Build
 
-on:
-  #push:
-  #  branches: [ "main" ]
-  #pull_request:
-  #  branches: [ "main" ]
-  workflow_dispatch
+on: workflow_dispatch
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev \
-        libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
-    - name: Build
-      run: |
-        scons tools=yes platform=x11 bits=64 arch=x64 lto=full progress=yes debug_symbols=no module_gdnative_enabled=no module_mobile_vr_enabled=no module_visual_script_enabled=no
-        strip bin/godot.x11.tools.x64
+      - uses: actions/checkout@v4
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: godot.x11.tools.x64
-        path: bin/godot.x11.tools.x64
-    - name: test
-      run: |
-        ls -l bin
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install build-essential scons pkg-config \
+            libx11-dev libxcursor-dev libxinerama-dev \
+            libgl1-mesa-dev libglu-dev libasound2-dev \
+            libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+
+      - name: Restore SCons cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .scons_cache/
+            .sconsign.dblite
+          key: ${{ runner.os }}-scons-${{ hashFiles('SConstruct', '**/*.cpp', '**/*.h') }}
+          restore-keys: |
+            ${{ runner.os }}-scons-
+
+      - name: Build
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          scons tools=yes platform=x11 bits=64 arch=x64 lto=full \
+            progress=yes debug_symbols=no module_gdnative_enabled=no \
+            module_mobile_vr_enabled=no module_visual_script_enabled=no
+          strip bin/godot.x11.tools.x64
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot.x11.tools.x64
+          path: bin/godot.x11.tools.x64
+
+      - name: List build output
+        run: ls -l bin
