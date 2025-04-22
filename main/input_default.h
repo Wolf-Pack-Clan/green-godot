@@ -32,6 +32,7 @@
 #define INPUT_DEFAULT_H
 
 #include "core/os/input.h"
+hello
 
 class InputDefault : public Input {
 	GDCLASS(InputDefault, Input);
