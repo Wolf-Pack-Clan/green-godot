@@ -36,6 +36,7 @@ jobs:
 
       - name: Install system dependencies
         run: |
+          sudo apt-mark hold firefox imagemagick \
           sudo apt update && sudo apt upgrade -y
           sudo apt install build-essential scons pkg-config \
             libx11-dev libxcursor-dev libxinerama-dev \
