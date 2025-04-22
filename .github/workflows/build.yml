@@ -17,14 +17,6 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt install build-essential scons pkg-config \
-            libx11-dev libxcursor-dev libxinerama-dev \
-            libgl1-mesa-dev libglu-dev libasound2-dev \
-            libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
-      
       - name: Cache APT packages
         uses: actions/cache@v4
         with:
@@ -41,6 +33,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-scons-
             ${{ runner.os }}-apt-
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update && sudo apt upgrade -y
+          sudo apt install build-essential scons pkg-config \
+            libx11-dev libxcursor-dev libxinerama-dev \
+            libgl1-mesa-dev libglu-dev libasound2-dev \
+            libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
 
       - name: Build
         env:
