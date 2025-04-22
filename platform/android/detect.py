@@ -167,6 +167,9 @@ def configure(env):
 
     toolchain_path = ndk_root + "/toolchains/llvm/prebuilt/" + host_subpath
     compiler_path = toolchain_path + "/bin"
+    print("################################")
+    print(toolchain_path)
+    print("################################")
 
     env["CC"] = compiler_path + "/clang"
     env["CXX"] = compiler_path + "/clang++"
