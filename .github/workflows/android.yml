@@ -50,6 +50,7 @@ jobs:
       with:
         ndk-version: r23c
         add-to-path: true
+        local-cache: true
 
     - name: Build
       run: |
