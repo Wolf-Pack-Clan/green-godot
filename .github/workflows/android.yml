@@ -43,9 +43,8 @@ jobs:
     #    key: ${{ runner.os }}-android-cache
     #    restore-keys: |
     #      ${{ runner.os }}-android-cache
-    - uses: actions/checkout@v4
-    - uses: nttld/setup-ndk@v1
     - name: setup ndk
+      uses: nttld/setup-ndk@v1
       id: setup-ndk
       with:
         ndk-version: r23c
