@@ -66,12 +66,6 @@ jobs:
         scons tools=no target=release platform=android arch=arm64v8 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
-        
-        # tools for arm64v8 devices
-        scons tools=yes target=release_debug platform=android arch=arm64v8 \
-          lto=full progress=yes module_gdnative_enabled=no \
-          module_mobile_vr_enabled=no module_visual_script_enabled=no
-        # compile here to even the sizes :)
     
     - name: Build with Gradle
       shell: bash
@@ -80,7 +74,6 @@ jobs:
         cd platform/android/java
         chmod +x gradlew
         ./gradlew generateGodotTemplates
-        ./gradlew generateGodotEditor
         cd ../../../
         p7zip bin
         mv bin.7z android_release.7z
@@ -149,6 +142,11 @@ jobs:
         scons tools=no target=release_debug platform=android arch=arm64v8 lto=full \
           progress=yes debug_symbols=yes module_gdnative_enabled=yes \
           module_mobile_vr_enabled=yes module_visual_script_enabled=yes
+        
+        # tools for arm64v8 devices
+        scons tools=yes target=release_debug platform=android arch=arm64v8 \
+          lto=full progress=yes module_gdnative_enabled=no \
+          module_mobile_vr_enabled=no module_visual_script_enabled=no
     
     - name: Debug Build with Gradle
       shell: bash
@@ -157,7 +155,10 @@ jobs:
         cd platform/android/java
         chmod +x gradlew
         ./gradlew generateGodotTemplates
+        ./gradlew generateGodotEditor
         cd ../../../
+        p7zip bin/android_editor_builds
+        mv bin/android_editor_builds.7z ./
         p7zip bin
         mv bin.7z android_debug.7z
 
@@ -166,3 +167,9 @@ jobs:
       with:
         name: binaries_android_debug
         path: android_debug.7z
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: android_editor
+        path: android_editor_builds.7z
