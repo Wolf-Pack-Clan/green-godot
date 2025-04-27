@@ -86,10 +86,10 @@ jobs:
         chmod +x gradlew
         ./gradlew generateGodotTemplates
         cd ../../../
-        zip -r -9 bin.zip bin
+        p7zip bin
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: binaries
-        path: bin.zip
+        path: bin.7z
