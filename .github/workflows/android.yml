@@ -54,6 +54,7 @@ jobs:
     #    local-cache: true
 
     - name: Build
+      shell: bash
       run: |
         source /android_sdk/envars
         scons tools=no platform=android arch=armv7 lto=full \
