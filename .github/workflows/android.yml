@@ -7,6 +7,10 @@ on:
   #  branches: [ "main" ]
   workflow_dispatch
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   build:
 
@@ -28,31 +32,34 @@ jobs:
       with:
         python-version: "3.10"
 
-    #- name: Install system dependencies
-    #  run: |
-    #    sudo apt-mark hold firefox imagemagick \
-    #    sudo apt update && sudo apt upgrade -y
-    #    sudo apt install build-essential scons pkg-config \
-    #      libx11-dev libxcursor-dev libxinerama-dev \
-    #      libgl1-mesa-dev libglu-dev libasound2-dev \
-    #      libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+    - name: Restore cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          /android_sdk
+        key: ${{ runner.os }}-android-cache
+        restore-keys: |
+          ${{ runner.os }}-android-cache
+    
+    - name: Set up Android SDK
+      shell: bash
+      run: |
+        wget -nv -O cmdline-tools.zip \
+          https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+        
+        mkdir -p /android_sdk/cmdline-tools/latest
+        unzip -q cmdline-tools.zip -d /tmp
+        
+        mv /tmp/cmdline-tools/* /android_sdk/cmdline-tools/latest/
+        
+        export ANDROID_SDK_ROOT=/android_sdk
+        export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+        echo "export ANDROID_SDK_ROOT=/android_sdk" >> /android_sdk/envars
+        echo "export PATH=\$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:\$PATH" >> /android_sdk/envars
 
-    #- name: Restore cache
-    #  uses: actions/cache@v4
-    #  with:
-    #    path: |
-    #      /usr/local/lib/android/sdk
-    #    key: ${{ runner.os }}-android-cache
-    #    restore-keys: |
-    #      ${{ runner.os }}-android-cache
-    #- name: setup ndk
-    #  uses: nttld/setup-ndk@v1
-    #  id: setup-ndk
-    #  with:
-    #    ndk-version: r23c
-    #    add-to-path: true
-    #    local-cache: true
-
+        for i in {1..8}; do echo "y"; done | sdkmanager --licenses
+        sdkmanager --install "platform-tools" "build-tools;30.0.3" "platforms;android-29" "cmake;3.10.2.4988404" "ndk;23.2.8568313"
+    
     - name: Build
       shell: bash
       run: |
