@@ -7,19 +7,25 @@ permissions:
   actions: write
 
 jobs:
-  build-linux:
+  setup-environment:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/mechamorph/godot-linux-build
+
+    steps:
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+  build-release:
+    needs: setup-environment
     runs-on: ubuntu-latest
     container:
       image: quay.io/mechamorph/godot-linux-build
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.10"
-
       - name: Build
         run: |
           scons tools=yes target=release platform=x11 bits=64 arch=x64 lto=full \
@@ -28,12 +34,39 @@ jobs:
           scons tools=no target=release platform=x11 bits=64 arch=x64 lto=full \
             progress=yes debug_symbols=no module_gdnative_enabled=no \
             module_mobile_vr_enabled=no module_visual_script_enabled=no
-          # strip em anyway
+          # release build but strip em anyway
           strip bin/*
           p7zip bin
+          mv bin.7z linux_release.7z
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: binaries
-          path: bin.7z
+          name: binaries_linux_release
+          path: linux_release.7z
+  
+  build-debug:
+    needs: setup-environment
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/mechamorph/godot-linux-build
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          scons tools=yes target=release_debug platform=x11 bits=64 arch=x64 lto=full \
+            progress=yes debug_symbols=yes module_gdnative_enabled=no \
+            module_mobile_vr_enabled=no module_visual_script_enabled=no
+          scons tools=no target=release_debug platform=x11 bits=64 arch=x64 lto=full \
+            progress=yes debug_symbols=yes module_gdnative_enabled=no \
+            module_mobile_vr_enabled=no module_visual_script_enabled=no
+          
+          p7zip bin
+          mv bin.7z linux_debug.7z
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries_linux_debug
+          path: linux_debug.7z
