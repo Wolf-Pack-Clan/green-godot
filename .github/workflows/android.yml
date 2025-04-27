@@ -11,6 +11,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    container:
+      image: quay.io/mechamorph/godot-android-build
 
     steps:
     - uses: actions/checkout@v4
@@ -26,14 +28,14 @@ jobs:
       with:
         python-version: "3.10"
 
-    - name: Install system dependencies
-      run: |
-        sudo apt-mark hold firefox imagemagick \
-        sudo apt update && sudo apt upgrade -y
-        sudo apt install build-essential scons pkg-config \
-          libx11-dev libxcursor-dev libxinerama-dev \
-          libgl1-mesa-dev libglu-dev libasound2-dev \
-          libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+    #- name: Install system dependencies
+    #  run: |
+    #    sudo apt-mark hold firefox imagemagick \
+    #    sudo apt update && sudo apt upgrade -y
+    #    sudo apt install build-essential scons pkg-config \
+    #      libx11-dev libxcursor-dev libxinerama-dev \
+    #      libgl1-mesa-dev libglu-dev libasound2-dev \
+    #      libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
 
     #- name: Restore cache
     #  uses: actions/cache@v4
@@ -43,16 +45,17 @@ jobs:
     #    key: ${{ runner.os }}-android-cache
     #    restore-keys: |
     #      ${{ runner.os }}-android-cache
-    - name: setup ndk
-      uses: nttld/setup-ndk@v1
-      id: setup-ndk
-      with:
-        ndk-version: r23c
-        add-to-path: true
-        local-cache: true
+    #- name: setup ndk
+    #  uses: nttld/setup-ndk@v1
+    #  id: setup-ndk
+    #  with:
+    #    ndk-version: r23c
+    #    add-to-path: true
+    #    local-cache: true
 
     - name: Build
       run: |
+        source /android_sdk/envars
         scons tools=no platform=android arch=armv7 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
@@ -62,8 +65,6 @@ jobs:
         scons tools=no platform=android arch=x86 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
-      env:
-        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
   
     - name: Build with Gradle
       run: |
