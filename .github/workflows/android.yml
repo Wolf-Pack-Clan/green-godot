@@ -79,6 +79,7 @@ jobs:
           module_mobile_vr_enabled=no module_visual_script_enabled=no
   
     - name: Build with Gradle
+      shell: bash
       run: |
         source /android_sdk/envars
         cd platform/android/java
