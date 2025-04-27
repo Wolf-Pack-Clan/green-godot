@@ -44,22 +44,24 @@ jobs:
     - name: Set up Android SDK
       shell: bash
       run: |
-        wget -nv -O cmdline-tools.zip \
-          https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
-        
-        mkdir -p /android_sdk/cmdline-tools/latest
-        unzip -q cmdline-tools.zip -d /tmp
-        
-        mv /tmp/cmdline-tools/* /android_sdk/cmdline-tools/latest/
-        
-        export ANDROID_SDK_ROOT=/android_sdk
-        export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
-        echo "export ANDROID_SDK_ROOT=/android_sdk" >> /android_sdk/envars
-        echo "export PATH=\$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:\$PATH" >> /android_sdk/envars
-        echo "export ANDROID_HOME=$ANDROID_SDK_ROOT" >> /android_sdk/envars
+        if [ ! -d "/android_sdk" ]; then
+          wget -nv -O cmdline-tools.zip \
+            https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+          
+          mkdir -p /android_sdk/cmdline-tools/latest
+          unzip -q cmdline-tools.zip -d /tmp
+          
+          mv /tmp/cmdline-tools/* /android_sdk/cmdline-tools/latest/
+          
+          export ANDROID_SDK_ROOT=/android_sdk
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+          echo "export ANDROID_SDK_ROOT=/android_sdk" >> /android_sdk/envars
+          echo "export PATH=\$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:\$PATH" >> /android_sdk/envars
+          echo "export ANDROID_HOME=$ANDROID_SDK_ROOT" >> /android_sdk/envars
 
-        for i in {1..8}; do echo "y"; done | sdkmanager --licenses
-        sdkmanager --install "platform-tools" "build-tools;30.0.3" "platforms;android-29" "cmake;3.10.2.4988404" "ndk;23.2.8568313"
+          for i in {1..8}; do echo "y"; done | sdkmanager --licenses
+          sdkmanager --install "platform-tools" "build-tools;30.0.3" "platforms;android-29" "cmake;3.10.2.4988404" "ndk;23.2.8568313"
+        fi
     
     - name: Build
       shell: bash
