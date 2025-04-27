@@ -1,10 +1,10 @@
-short_name = "godot"
-name = "Godot Engine"
+short_name = "green-godot"
+name = "Green Godot"
 major = 3
 minor = 6
 patch = 0
 status = "stable"
-module_config = ""
-year = 2024
-website = "https://godotengine.org"
+module_config = "green"
+year = 2025
+website = "https://github.com/Wolf-Pack-Clan/green-godot"
 docs = "3.6"

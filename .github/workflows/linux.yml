@@ -50,12 +50,12 @@ jobs:
         with:
           python-version: "3.10"
       
-      - name: Build
+      - name: Debug Build
         run: |
-          scons tools=yes target=release_debug platform=x11 bits=64 arch=x64 lto=full \
+          scons tools=yes target=debug platform=x11 bits=64 arch=x64 lto=full \
             progress=yes debug_symbols=yes module_gdnative_enabled=no \
             module_mobile_vr_enabled=no module_visual_script_enabled=no
-          scons tools=no target=release_debug platform=x11 bits=64 arch=x64 lto=full \
+          scons tools=no target=debug platform=x11 bits=64 arch=x64 lto=full \
             progress=yes debug_symbols=yes module_gdnative_enabled=no \
             module_mobile_vr_enabled=no module_visual_script_enabled=no
           
