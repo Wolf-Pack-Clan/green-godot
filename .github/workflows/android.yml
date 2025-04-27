@@ -68,20 +68,21 @@ jobs:
       shell: bash
       run: |
         source /android_sdk/envars
-        scons tools=no platform=android arch=armv7 lto=full \
+        scons tools=no target=release platform=android arch=armv7 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
-        scons tools=no platform=android arch=arm64v8 lto=full \
+        scons tools=no target=release platform=android arch=arm64v8 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
-        scons tools=no platform=android arch=x86 lto=full \
+        scons tools=no target=release platform=android arch=x86 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
 
         # tools for arm64v8 devices
-        scons tools=yes platform=android arch=arm64v8 lto=full \
-          progress=yes debug_symbols=no module_gdnative_enabled=no \
-          module_mobile_vr_enabled=no module_visual_script_enabled=no
+        # scons tools=yes target=release platform=android arch=arm64v8 lto=full \
+        #  progress=yes debug_symbols=no module_gdnative_enabled=no \
+        #  module_mobile_vr_enabled=no module_visual_script_enabled=no
+        # maybe not yet. don't have a device for testing.
   
     - name: Build with Gradle
       shell: bash
@@ -90,7 +91,7 @@ jobs:
         cd platform/android/java
         chmod +x gradlew
         ./gradlew generateGodotTemplates
-        ./gradlew generateGodotEditor
+        # ./gradlew generateGodotEditor
         cd ../../../
         p7zip bin
 
