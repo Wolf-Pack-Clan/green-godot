@@ -7,7 +7,7 @@ permissions:
   actions: write
 
 jobs:
-  setup-environment:
+  build-release:
     runs-on: ubuntu-latest
     container:
       image: quay.io/mechamorph/godot-linux-build
@@ -18,15 +18,7 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
-
-  build-release:
-    needs: setup-environment
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/mechamorph/godot-linux-build
-
-    steps:
-      - uses: actions/checkout@v4
+      
       - name: Build
         run: |
           scons tools=yes target=release platform=x11 bits=64 arch=x64 lto=full \
@@ -47,13 +39,17 @@ jobs:
           path: linux_release.7z
   
   build-debug:
-    needs: setup-environment
     runs-on: ubuntu-latest
     container:
       image: quay.io/mechamorph/godot-linux-build
 
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      
       - name: Build
         run: |
           scons tools=yes target=release_debug platform=x11 bits=64 arch=x64 lto=full \
