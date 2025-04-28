@@ -16,3 +16,7 @@ Official [README](https://github.com/godotengine/godot/blob/3.6/README.md)
 ## Additions
 
 - SQLite3 module
+
+## Todo
+
+- Fix deprecation warnings and make it compatible with latest compilers and tools
