@@ -1,4 +1,4 @@
-name: Android CI
+name: Android CI (old)
 
 on:
   workflow_dispatch
@@ -8,7 +8,7 @@ permissions:
   actions: write
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
     container:
       image: quay.io/mechamorph/godot-android-build
@@ -66,7 +66,77 @@ jobs:
         scons tools=no target=release platform=android arch=arm64v8 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
-        
+    
+    - name: Build with Gradle
+      shell: bash
+      run: |
+        source /android_sdk/envars
+        cd platform/android/java
+        chmod +x gradlew
+        ./gradlew generateGodotTemplates
+        cd ../../../
+        p7zip bin
+        mv bin.7z android_release.7z
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: binaries_android_release
+        path: android_release.7z
+
+  build-debug:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/mechamorph/godot-android-build
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    
+    - name: Restore cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          /android_sdk
+        key: ${{ runner.os }}-android-cache
+        restore-keys: |
+          ${{ runner.os }}-android-cache
+
+    - name: Set up Android SDK
+      shell: bash
+      run: |
+        SDK_SIZE_BLOCKS=$(du -s /android_sdk 2>/dev/null | cut -f1)
+        if [ -z "$SDK_SIZE_BLOCKS" ] || [ "$SDK_SIZE_BLOCKS" -eq 0 ]; then
+          wget -nv -O cmdline-tools.zip \
+            https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+          mkdir -p /android_sdk/cmdline-tools/latest
+          unzip -q cmdline-tools.zip -d /tmp
+          mv /tmp/cmdline-tools/* /android_sdk/cmdline-tools/latest/
+          export ANDROID_SDK_ROOT=/android_sdk
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+          echo "export ANDROID_SDK_ROOT=/android_sdk" >> /android_sdk/envars
+          echo "export PATH=\$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:\$PATH" >> /android_sdk/envars
+          echo "export ANDROID_HOME=$ANDROID_SDK_ROOT" >> /android_sdk/envars
+          echo "export BUILD_NAME=green_godot" >> /android_sdk/envars
+          for i in {1..8}; do echo "y"; done | sdkmanager --licenses
+          sdkmanager --install "platform-tools" "build-tools;30.0.3" "platforms;android-29" "cmake;3.10.2.4988404" "ndk;23.2.8568313"
+        fi
+    
+    - name: Build Debug
+      shell: bash
+      run: |
+        source /android_sdk/envars
+
         scons tools=no target=release_debug platform=android arch=armv7 lto=full \
           progress=yes debug_symbols=yes module_gdnative_enabled=yes \
           module_mobile_vr_enabled=yes module_visual_script_enabled=yes
@@ -79,7 +149,7 @@ jobs:
           lto=full progress=yes module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
     
-    - name: Build with Gradle
+    - name: Debug Build with Gradle
       shell: bash
       run: |
         source /android_sdk/envars
@@ -91,14 +161,13 @@ jobs:
         p7zip bin/android_editor_builds
         mv bin/android_editor_builds.7z ./
         p7zip bin
-        mv bin.7z android_binaries.7z
+        mv bin.7z android_debug.7z
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: binaries_android
-        path: |
-          android_binaries.7z
+        name: binaries_android_debug
+        path: android_debug.7z
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
