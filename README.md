@@ -13,9 +13,9 @@ Why v3.6? To support older hardware.
 
 Official [README](https://github.com/godotengine/godot/blob/3.6/README.md)
 
-## Additions
+## Download
 
-- SQLite3 module
+See [Releases](https://github.com/Wolf-Pack-Clan/green-godot/releases)
 
 ## Todo
 
