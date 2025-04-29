@@ -60,22 +60,22 @@ jobs:
       run: |
         source /android_sdk/envars
 
-        scons tools=no target=release platform=android arch=armv7 lto=full \
+        scons tools=no target=release platform=android android_arch=armv7 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
-        scons tools=no target=release platform=android arch=arm64v8 lto=full \
+        scons tools=no target=release platform=android android_arch=arm64v8 lto=full \
           progress=yes debug_symbols=no module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
         
-        scons tools=no target=release_debug platform=android arch=armv7 lto=full \
+        scons tools=no target=release_debug platform=android android_arch=armv7 lto=full \
           progress=yes debug_symbols=yes module_gdnative_enabled=yes \
           module_mobile_vr_enabled=yes module_visual_script_enabled=yes
-        scons tools=no target=release_debug platform=android arch=arm64v8 lto=full \
+        scons tools=no target=release_debug platform=android android_arch=arm64v8 lto=full \
           progress=yes debug_symbols=yes module_gdnative_enabled=yes \
           module_mobile_vr_enabled=yes module_visual_script_enabled=yes
         
         # tools for arm64v8 devices
-        scons tools=yes target=release_debug platform=android arch=arm64v8 \
+        scons tools=yes target=release_debug platform=android android_arch=arm64v8 \
           lto=full progress=yes module_gdnative_enabled=no \
           module_mobile_vr_enabled=no module_visual_script_enabled=no
     
