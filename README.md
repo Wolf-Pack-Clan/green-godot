@@ -11,7 +11,7 @@ The purpose of this repository is to share what I use with others.
 
 Why v3.6? To support older hardware.
 
-Official [README](https://github.com/godotengine/godot/blob/3.6/README.md)
+Official [README](https://github.com/godotengine/godot/blob/3.6.1-stable/README.md)
 
 ## Download
 
@@ -19,4 +19,4 @@ See [Releases](https://github.com/Wolf-Pack-Clan/green-godot/releases)
 
 ## Todo
 
-- Fix deprecation warnings and make it compatible with latest compilers and tools
+- FX engine
