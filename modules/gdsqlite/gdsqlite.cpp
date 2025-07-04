@@ -85,18 +85,9 @@ String GDSqlite::escape_string(const String &input)
     return result;
 }
 
-//int GDSqlite::get_result() {
-//    return 123;
-//}
-
 void GDSqlite::_bind_methods() {
-    //ClassDB::bind_method(D_METHOD("sqlitetest"), &GDSqlite::get_result);
     ClassDB::bind_method(D_METHOD("opendb", "path"), &GDSqlite::open_database);
     ClassDB::bind_method(D_METHOD("closedb", "dbId"), &GDSqlite::close_database);
     ClassDB::bind_method(D_METHOD("querydb", "dbId"), &GDSqlite::query_database);
     //ClassDB::bind_method(D_METHOD("escape_str", "input"), &GDSqlite::escape_string);
 }
-
-//GDSqlite::GDSqlite() {
-//    reslt = 0;
-//}
