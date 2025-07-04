@@ -2,6 +2,5 @@
 
 Import('env')
 
-
 env.add_source_files(env.modules_sources, "*.cpp") # Add all cpp files to the build
 env.add_source_files(env.modules_sources, "sqlite/sqlite3.c")
