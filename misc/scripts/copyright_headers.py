@@ -72,28 +72,3 @@ new_content = text + "\n" + "".join(lines)
 
 with open(fname, "w") as filewrite:
     filewrite.write(new_content)
-
-#while line.strip() == "":  # Skip empty lines at the top
-#    line = fileread.readline()
-
-#if line.find("/**********") == -1:  # Godot header starts this way
-#    # Maybe starting with a non-Godot comment, abort header magic
-#    header_done = True
-
-#while not header_done:  # Handle header now
-#    if line.find("/*") != 0:  # No more starting with a comment
-#        header_done = True
-#        if line.strip() != "":
-#            text += line
-#    line = fileread.readline()
-
-#while line != "":  # Dump everything until EOF
-#    text += line
-#    line = fileread.readline()
-
-#fileread.close()
-
-# Write
-#filewrite = open(fname.strip(), "w")
-#filewrite.write(text)
-#filewrite.close()
