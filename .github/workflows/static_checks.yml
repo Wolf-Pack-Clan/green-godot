@@ -17,10 +17,15 @@ jobs:
       - name: test
         run: |
           free -h
-          exit 1
+
+      - name: Set up swap
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 8
 
       - name: Install dependencies
         run: |
+          free -h
           # Azure repositories are flaky, remove them.
           sudo rm -f /etc/apt/sources.list.d/{azure,microsoft}*
           sudo apt-get update
@@ -59,4 +64,5 @@ jobs:
 
       - name: Style checks via clang-format (clang_format.sh)
         run: |
+          free -h
           bash ./misc/scripts/clang_format.sh --bin
