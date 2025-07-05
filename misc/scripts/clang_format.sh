@@ -6,11 +6,11 @@
 set -uo pipefail
 IFS=$'\n\t'
 
-use_bin=false
+header_worker="misc/scripts/copyright_headers.py"
 
 while (( $# )); do
     case "$1" in
-        --bin) use_bin=true ;;
+        --bin) header_worker="misc/scripts/copyright_headers" ;;
     esac
     shift
 done
@@ -47,11 +47,7 @@ while IFS= read -rd '' f; do
             elif [[ "$f" == "platform/android/java/lib/src/org/godotengine/godot/utils/ProcessPhoenix"* ]]; then
                 continue 2
             fi
-            if $use_bin; then
-                misc/scripts/copyright_headers "$f"
-            else
-                python misc/scripts/copyright_headers.py "$f"
-            fi
+            $header_worker "$f"
             continue 2
         fi
     done

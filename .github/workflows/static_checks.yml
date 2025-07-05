@@ -54,4 +54,4 @@ jobs:
 
       - name: Style checks via clang-format (clang_format.sh)
         run: |
-          bash ./misc/scripts/clang_format.sh
+          bash ./misc/scripts/clang_format.sh --bin
