@@ -3,8 +3,17 @@
 # This script runs clang-format and fixes copyright headers on all relevant files in the repo.
 # This is the primary script responsible for fixing style violations.
 
-set -uo pipefail
+#set -uo pipefail
 IFS=$'\n\t'
+
+use_bin=false
+
+while (( $# )); do
+    case "$1" in
+        --bin) use_bin=true ;;
+    esac
+    shift
+done
 
 CLANG_FORMAT_FILE_EXTS=(".c" ".h" ".cpp" ".hpp" ".cc" ".hh" ".cxx" ".m" ".mm" ".inc" ".java" ".glsl")
 
@@ -38,7 +47,13 @@ while IFS= read -rd '' f; do
             elif [[ "$f" == "platform/android/java/lib/src/org/godotengine/godot/utils/ProcessPhoenix"* ]]; then
                 continue 2
             fi
-            python misc/scripts/copyright_headers.py "$f"
+            if $use_bin; then
+                printf "using binary for file $f\n"
+                misc/scripts/copyright_headers "$f"
+            else
+                printf "using python for file $f\n"
+                python misc/scripts/copyright_headers.py "$f"
+            fi
             continue 2
         fi
     done

@@ -8,30 +8,26 @@ header = """\
 /*  $filename                                                             */
 /**************************************************************************/
 /*                         This file is part of:                          */
-/*                             GODOT ENGINE                               */
+/*                              Green Godot                               */
+/*             https://github.com/Wolf-Pack-Clan/green-godot              */
 /*                        https://godotengine.org                         */
 /**************************************************************************/
 /* Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md). */
 /* Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.                  */
+/* Copyright (c) 2025 Wolf Pack                                           */
 /*                                                                        */
-/* Permission is hereby granted, free of charge, to any person obtaining  */
-/* a copy of this software and associated documentation files (the        */
-/* "Software"), to deal in the Software without restriction, including    */
-/* without limitation the rights to use, copy, modify, merge, publish,    */
-/* distribute, sublicense, and/or sell copies of the Software, and to     */
-/* permit persons to whom the Software is furnished to do so, subject to  */
-/* the following conditions:                                              */
+/* This program is free software: you can redistribute it and/or modify   */
+/* it under the terms of the GNU General Public License as published by   */
+/* the Free Software Foundation, either version 3 of the License, or      */
+/* (at your option) any later version.                                    */
 /*                                                                        */
-/* The above copyright notice and this permission notice shall be         */
-/* included in all copies or substantial portions of the Software.        */
+/* This program is distributed in the hope that it will be useful,        */
+/* but WITHOUT ANY WARRANTY; without even the implied warranty of         */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          */
+/* GNU General Public License for more details.                           */
 /*                                                                        */
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,        */
-/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF     */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. */
-/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY   */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,   */
-/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE      */
-/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
+/* You should have received a copy of the GNU General Public License      */
+/* along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /**************************************************************************/
 """
 
@@ -65,31 +61,39 @@ text += "\n"
 # In a second pass, we skip all consecutive comment lines starting with "/*",
 # then we can append the rest (step 2).
 
-fileread = open(fname.strip(), "r")
-line = fileread.readline()
+with open(fname.strip(), "r") as fileread:
+    lines = fileread.readlines()
 header_done = False
 
-while line.strip() == "":  # Skip empty lines at the top
-    line = fileread.readline()
+if len(lines) > 5 and "godot" in lines[4].replace(" ", "").lower():
+    sys.exit(0)
 
-if line.find("/**********") == -1:  # Godot header starts this way
-    # Maybe starting with a non-Godot comment, abort header magic
-    header_done = True
+new_content = text + "\n" + "".join(lines)
 
-while not header_done:  # Handle header now
-    if line.find("/*") != 0:  # No more starting with a comment
-        header_done = True
-        if line.strip() != "":
-            text += line
-    line = fileread.readline()
+with open(fname, "w") as filewrite:
+    filewrite.write(new_content)
 
-while line != "":  # Dump everything until EOF
-    text += line
-    line = fileread.readline()
+#while line.strip() == "":  # Skip empty lines at the top
+#    line = fileread.readline()
 
-fileread.close()
+#if line.find("/**********") == -1:  # Godot header starts this way
+#    # Maybe starting with a non-Godot comment, abort header magic
+#    header_done = True
+
+#while not header_done:  # Handle header now
+#    if line.find("/*") != 0:  # No more starting with a comment
+#        header_done = True
+#        if line.strip() != "":
+#            text += line
+#    line = fileread.readline()
+
+#while line != "":  # Dump everything until EOF
+#    text += line
+#    line = fileread.readline()
+
+#fileread.close()
 
 # Write
-filewrite = open(fname.strip(), "w")
-filewrite.write(text)
-filewrite.close()
+#filewrite = open(fname.strip(), "w")
+#filewrite.write(text)
+#filewrite.close()
