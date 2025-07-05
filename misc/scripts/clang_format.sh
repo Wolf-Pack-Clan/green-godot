@@ -48,10 +48,8 @@ while IFS= read -rd '' f; do
                 continue 2
             fi
             if $use_bin; then
-                printf "using binary for file $f\n"
                 misc/scripts/copyright_headers "$f"
             else
-                printf "using python for file $f\n"
                 python misc/scripts/copyright_headers.py "$f"
             fi
             continue 2
