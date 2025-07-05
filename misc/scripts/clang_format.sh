@@ -3,7 +3,7 @@
 # This script runs clang-format and fixes copyright headers on all relevant files in the repo.
 # This is the primary script responsible for fixing style violations.
 
-#set -uo pipefail
+set -uo pipefail
 IFS=$'\n\t'
 
 use_bin=false
