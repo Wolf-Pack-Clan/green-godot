@@ -17,11 +17,7 @@ jobs:
       - name: test
         run: |
           free -h
-
-      - name: Set up swap
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 8
+          df -h
 
       - name: Install dependencies
         run: |
