@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GDSqlite" inherits="Reference" version="3.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+	<brief_description>
+        Query SQLite databases.
+	</brief_description>
+	<description>
+        Provides a GDSqlite instance that can be used to open/close/query SQLite databases.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+        <method name="opendb">
+            <return type="int" />
+            <argument index="0" name="path" type="String" />
+            <description>
+                Opens a database and returns it's ID number. Creates the database file if it doesn't exist.
+                Accepts [b]only[/b] [code]user://[/code] paths.
+                Returns [code]-1[/code] if failed to open database.
+                Example:
+                [codeblock]
+                var sqlite = GDSqlite.new()
+                var dbId = sqlite.opendb("user://database.db")
+                [/codeblock]
+            </description>
+        </method>
+        <method name="closedb">
+            <return type="bool" />
+            <argument index="0" name="dbId" type="int" />
+            <description>
+                Closes the database of ID specified. Returns [code]false[/code] if failed to close database.
+                Example:
+                [codeblock]
+                sqlite.closedb(dbId)
+                [/codeblock]
+            </description>
+        </method>
+        <method name="querydb">
+            <return type="Array" />
+            <argument index="0" name="dbId" type="int" />
+            <argument index="1" name="query" type="String" />
+            <description>
+                Query an [b]open[/b] database using it's ID number.
+                [codeblock]
+                var result = sqlite.querydb(db, "SELECT * FROM mytable;")
+                print(result)
+                [/codeblock]
+            </description>
+        </method>
+	</methods>
+	<constants>
+	</constants>
+</class>

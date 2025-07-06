@@ -112,6 +112,6 @@ String GDSqlite::escape_string(const String &input) {
 void GDSqlite::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("opendb", "path"), &GDSqlite::open_database);
 	ClassDB::bind_method(D_METHOD("closedb", "dbId"), &GDSqlite::close_database);
-	ClassDB::bind_method(D_METHOD("querydb", "dbId"), &GDSqlite::query_database);
+	ClassDB::bind_method(D_METHOD("querydb", "dbId", "query"), &GDSqlite::query_database);
 	//ClassDB::bind_method(D_METHOD("escape_str", "input"), &GDSqlite::escape_string);
 }
