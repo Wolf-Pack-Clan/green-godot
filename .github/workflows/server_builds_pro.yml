@@ -88,8 +88,8 @@ jobs:
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
         run: |
-          strip bin/godot.*
-          chmod +x bin/godot.*
+          strip bin/godot_server.*
+          chmod +x bin/godot_server.*
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
