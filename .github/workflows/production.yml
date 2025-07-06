@@ -1,0 +1,23 @@
+name: 🚀️ Production Builds
+on: [workflow_dispatch]
+
+concurrency:
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-runner
+  cancel-in-progress: true
+
+jobs:
+  android-build:
+    name: 🤖 Android
+    uses: ./.github/workflows/android_builds_pro.yml
+
+  javascript-build:
+    name: 🌐 JavaScript
+    uses: ./.github/workflows/javascript_builds_pro.yml
+
+  linux-build:
+    name: 🐧 Linux
+    uses: ./.github/workflows/linux_builds_pro.yml
+
+  server-build:
+    name: ☁ Server
+    uses: ./.github/workflows/server_builds_pro.yml
