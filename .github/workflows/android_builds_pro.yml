@@ -1,5 +1,6 @@
 name: 🤖 Android Builds
-on: [workflow_call, workflow_dispatch]
+on:
+  workflow_call:
 
 # Global Settings
 env:
@@ -50,7 +51,7 @@ jobs:
         if: ${{ !matrix.tools }}
         shell: sh
         run: |
-          echo Building templates with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          echo Building with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
           scons p=android android_arch=armv7 tools=no ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
           scons p=android android_arch=arm64v8 tools=no ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
           ls -l bin/
@@ -59,10 +60,7 @@ jobs:
         if: ${{ matrix.tools }}
         shell: sh
         run: |
-          echo Building editor with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
-          scons p=android android_arch=armv7 tools=yes ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
-          scons p=android android_arch=arm64v8 tools=yes ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
-          echo Building editor with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          echo Building with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
           scons p=android android_arch=armv7 tools=yes ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
           scons p=android android_arch=arm64v8 tools=yes ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
           ls -l bin/
@@ -71,14 +69,6 @@ jobs:
         shell: sh
         run: |
           cd platform/android/java
-          chmod +x gradlew
-          if [ "${{ matrix.tools }}" = "true" ]; then
-            echo "▶️ Generating Editor APK"
-            ./gradlew generateGodotEditor
-          else
-            echo "▶️ Generating Templates APKs"
-            ./gradlew generateGodotTemplates
-          fi
           chmod +x gradlew
           if [ "${{ matrix.tools }}" = "true" ]; then
             echo "▶️ Generating Editor APK"
