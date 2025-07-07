@@ -1,6 +1,5 @@
-name: ☁ Server Builds
-on:
-  workflow_call:
+name: ☁ Server Builds [Production]
+on: [workflow_call, workflow_dispatch]
 
 # Global Settings
 env:

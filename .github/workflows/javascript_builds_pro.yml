@@ -1,6 +1,5 @@
-name: 🌐 JavaScript Builds
-on:
-  workflow_call:
+name: 🌐 JavaScript Builds [Production]
+on: [workflow_call, workflow_dispatch]
 
 # Global Settings
 env:
@@ -53,6 +52,14 @@ jobs:
           platform: javascript
           target: release_debug
           tools: false
+
+      - name: Compilation (release_debug, tools=yes)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: threads_enabled=yes ${{ env.SCONSFLAGS }}
+          platform: javascript
+          target: release_debug
+          tools: true
 
       #- name: Save Godot build cache
       #  uses: ./.github/actions/godot-cache-save

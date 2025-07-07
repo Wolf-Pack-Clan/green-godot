@@ -1,4 +1,4 @@
-name: 🤖 Android Builds
+name: 🤖 Android Builds [Production]
 on: [workflow_call, workflow_dispatch]
 
 # Global Settings
