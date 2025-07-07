@@ -13,26 +13,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  javascript-template:
-    runs-on: "ubuntu-24.04"
-    name: Template (target=release, tools=no)
+  build-js:
+    runs-on: ubuntu-24.04
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Release Template
+            target: release
+            tools: false
+            extra-flags: ""
+          - name: Debug Template
+            target: release_debug
+            tools: false
+            extra-flags: ""
+          - name: Debug Editor
+            target: release_debug
+            tools: true
+            extra-flags: threads_enabled=yes
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Emscripten latest
+      - name: Set up Emscripten ${{ env.EM_VERSION }}
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: ${{env.EM_VERSION}}
+          version: ${{ env.EM_VERSION }}
           no-cache: true
 
       - name: Verify Emscripten setup
         run: |
           emcc -v
-
-      #- name: Restore Godot build cache
-      #  uses: ./.github/actions/godot-cache-restore
-      #  continue-on-error: true
 
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
@@ -40,30 +52,13 @@ jobs:
       - name: Compilation
         uses: ./.github/actions/godot-build
         with:
-          sconsflags: ${{ env.SCONSFLAGS }}
+          sconsflags: "${{ matrix.extra-flags }} ${{ env.SCONSFLAGS }}"
           platform: javascript
-          target: release
-          tools: false
-
-      - name: Compilation (release_debug)
-        uses: ./.github/actions/godot-build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }}
-          platform: javascript
-          target: release_debug
-          tools: false
-
-      - name: Compilation (release_debug, tools=yes)
-        uses: ./.github/actions/godot-build
-        with:
-          sconsflags: threads_enabled=yes ${{ env.SCONSFLAGS }}
-          platform: javascript
-          target: release_debug
-          tools: true
-
-      #- name: Save Godot build cache
-      #  uses: ./.github/actions/godot-cache-save
-      #  continue-on-error: true
+          target: ${{ matrix.target }}
+          tools: ${{ matrix.tools }}
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
+        with:
+          name: ${{ matrix.name }}
+          path: bin/
