@@ -1,6 +1,5 @@
 name: 🤖 Android Builds
-on:
-  workflow_call:
+on: [workflow_call, workflow_dispatch]
 
 # Global Settings
 env:
@@ -13,9 +12,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  android-template:
+  build-android:
     runs-on: "ubuntu-24.04"
-    name: Templates
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Release Template
+            cache-name: android-release
+            sconsflags: target=release
+            tools: false
+          
+          - name: Debug Template
+            cache-name: android-debug
+            sconsflags: target=release_debug
+            tools: false
+          
+          - name: Editor
+            cache-name: android-editor
+            sconsflags: target=release_debug
+            tools: true
 
     steps:
       - uses: actions/checkout@v4
@@ -26,62 +43,52 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      #- name: Restore Godot build cache
-      #  uses: ./.github/actions/godot-cache-restore
-      #  continue-on-error: true
-
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
-
-      - name: Compilation (armv7)
-        uses: ./.github/actions/godot-build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }} android_arch=armv7
-          platform: android
-          target: release
-          tools: false
-
-      - name: Compilation (arm64v8)
-        uses: ./.github/actions/godot-build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }} android_arch=arm64v8
-          platform: android
-          target: release
-          tools: false
-
-      #- name: Save Godot build cache
-      #  uses: ./.github/actions/godot-cache-save
-      #  continue-on-error: true
-
-      - name: Generate Godot templates
+      
+      - name: Compile Templates
+        if: ${{ !matrix.tools }}
+        shell: sh
+        run: |
+          echo Building templates with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          scons p=android android_arch=armv7 tools=no ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          scons p=android android_arch=arm64v8 tools=no ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          ls -l bin/
+      
+      - name: Compile Editor
+        if: ${{ matrix.tools }}
+        shell: sh
+        run: |
+          echo Building editor with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          scons p=android android_arch=armv7 tools=yes ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          scons p=android android_arch=arm64v8 tools=yes ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          ls -l bin/
+      
+      - name: Build with Gradle
+        shell: sh
         run: |
           cd platform/android/java
-          ./gradlew generateGodotTemplates
+          chmod +x gradlew
+          if [ "${{ matrix.tools }}" = "true" ]; then
+            echo "▶️ Generating Editor APK"
+            ./gradlew generateGodotEditor
+          else
+            echo "▶️ Generating Templates APKs"
+            ./gradlew generateGodotTemplates
+          fi
           cd ../../..
           ls -l bin/
-
-      - name: Compilation (armv7, release_debug)
-        uses: ./.github/actions/godot-build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }} android_arch=armv7
-          platform: android
-          target: release_debug
-          tools: false
-
-      - name: Compilation (arm64v8, release_debug)
-        uses: ./.github/actions/godot-build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }} android_arch=arm64v8
-          platform: android
-          target: release_debug
-          tools: false
-
-      - name: Generate Godot templates (release_debug)
+      
+      - name: Prepare Artifact
+        shell: sh
         run: |
-          cd platform/android/java
-          ./gradlew generateGodotTemplates
-          cd ../../..
-          ls -l bin/
-
-      - name: Upload artifact
-        uses: ./.github/actions/upload-artifact
+          sudo apt install -y p7zip-full
+          p7zip bin
+          mv bin.7z android_binaries.7z
+      
+      - name: Upload Godot Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.cache-name }}
+          path: android_binaries.7z
+          retention-days: 14
