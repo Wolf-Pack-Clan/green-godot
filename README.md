@@ -1,5 +1,8 @@
 # green-godot
 
+[![🔗 GHA | Testing](https://github.com/Wolf-Pack-Clan/green-godot/actions/workflows/runner.yml/badge.svg?event=push)](https://github.com/Wolf-Pack-Clan/green-godot/actions/workflows/runner.yml)
+[![🚀️ Production Builds](https://github.com/Wolf-Pack-Clan/green-godot/actions/workflows/production.yml/badge.svg?event=workflow_dispatch)](https://github.com/Wolf-Pack-Clan/green-godot/actions/workflows/production.yml)
+
 <p align="center">
   <a href="https://godotengine.org">
     <img src="logo_outlined.svg" width="400" alt="Godot Engine logo">
