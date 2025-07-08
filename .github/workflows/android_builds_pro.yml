@@ -19,14 +19,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Release Template
-            cache-name: android-release
-            sconsflags: target=release
-            tools: false
+          #- name: Release Template
+          #  cache-name: android-release
+          #  sconsflags: target=release
+          #  tools: false
 
-          - name: Debug Template
-            cache-name: android-debug
-            sconsflags: target=release_debug
+          #- name: Debug Template
+          #  cache-name: android-debug
+          #  sconsflags: target=release_debug
+          #  tools: false
+          - name: Templates
+            cache-name: android-templates
             tools: false
 
           - name: Editor
@@ -51,8 +54,10 @@ jobs:
         shell: sh
         run: |
           echo Building with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
-          scons p=android android_arch=armv7 tools=no ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
-          scons p=android android_arch=arm64v8 tools=no ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          scons p=android android_arch=armv7 tools=no target=release_debug ${{env.SCONSFLAGS}}
+          scons p=android android_arch=arm64v8 tools=no target=release_debug ${{env.SCONSFLAGS}}
+          scons p=android android_arch=armv7 tools=no target=release ${{env.SCONSFLAGS}}
+          scons p=android android_arch=arm64v8 tools=no target=release ${{env.SCONSFLAGS}}
           ls -l bin/
 
       - name: Compile Editor
