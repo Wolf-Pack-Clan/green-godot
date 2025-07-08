@@ -137,7 +137,6 @@ doc_classes/*                       @godotengine/documentation
 /modules/opensimplex/               @godotengine/3d-nodes
 /modules/recast/                    @godotengine/navigation
 /modules/regex/                     @godotengine/core
-/modules/gdsqlite/                  @Wolf-Pack-Clan
 
 # Platform
 

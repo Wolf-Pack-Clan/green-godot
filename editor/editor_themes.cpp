@@ -321,7 +321,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	OS::get_singleton()->benchmark_begin_measure("create_editor_theme");
 	Ref<Theme> theme = Ref<Theme>(memnew(Theme));
 
-	const float default_contrast = 0.23;
+	const float default_contrast = 0.25;
 
 	//Theme settings
 	Color accent_color = EDITOR_GET("interface/theme/accent_color");
@@ -360,10 +360,6 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 		preset_accent_color = Color(0.53, 0.67, 0.89);
 		preset_base_color = Color(0.24, 0.23, 0.27);
 		preset_contrast = 0.25;
-	} else if (preset == "Godot 3") {
-		preset_accent_color = Color(0.41, 0.61, 0.91);
-		preset_base_color = Color(0.2, 0.23, 0.31);
-		preset_contrast = 0.25;
 	} else if (preset == "Grey") {
 		preset_accent_color = Color(0.44, 0.73, 0.98);
 		preset_base_color = Color(0.24, 0.24, 0.24);
@@ -380,9 +376,13 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 		preset_accent_color = Color(0.15, 0.55, 0.82);
 		preset_base_color = Color(0.99, 0.96, 0.89);
 		preset_contrast = 0.06;
-	} else { // Default
+	} else if (preset == "Wolf Pack") {
 		preset_accent_color = Color(0.80, 0.94, 0.26);
 		preset_base_color = Color(0.26, 0.18, 0.35);
+		preset_contrast = 0.23;
+	} else { // Default
+		preset_accent_color = Color(0.41, 0.61, 0.91);
+		preset_base_color = Color(0.2, 0.23, 0.31);
 		preset_contrast = default_contrast;
 	}
 

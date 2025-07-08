@@ -14,14 +14,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: test
-        run: |
-          free -h
-          df -h
-
       - name: Install dependencies
         run: |
-          free -h
           # Azure repositories are flaky, remove them.
           sudo rm -f /etc/apt/sources.list.d/{azure,microsoft}*
           sudo apt-get update
@@ -60,5 +54,4 @@ jobs:
 
       - name: Style checks via clang-format (clang_format.sh)
         run: |
-          free -h
-          bash ./misc/scripts/clang_format.sh --bin
+          bash ./misc/scripts/clang_format.sh

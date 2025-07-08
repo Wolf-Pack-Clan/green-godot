@@ -6,15 +6,6 @@
 set -uo pipefail
 IFS=$'\n\t'
 
-header_worker="misc/scripts/copyright_headers.py"
-
-while (( $# )); do
-    case "$1" in
-        --bin) header_worker="misc/scripts/copyright_headers" ;;
-    esac
-    shift
-done
-
 CLANG_FORMAT_FILE_EXTS=(".c" ".h" ".cpp" ".hpp" ".cc" ".hh" ".cxx" ".m" ".mm" ".inc" ".java" ".glsl")
 
 # Loops through all text files tracked by Git.
@@ -47,7 +38,7 @@ while IFS= read -rd '' f; do
             elif [[ "$f" == "platform/android/java/lib/src/org/godotengine/godot/utils/ProcessPhoenix"* ]]; then
                 continue 2
             fi
-            $header_worker "$f"
+            python misc/scripts/copyright_headers.py "$f"
             continue 2
         fi
     done
