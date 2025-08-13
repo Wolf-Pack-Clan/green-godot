@@ -1,3 +1,8 @@
+# INFO
+Migrated to GitLab:
+https://gitlab.com/kazam0180/green-godot
+
+
 # green-godot
 
 [![🔗 GHA | Testing](https://github.com/Wolf-Pack-Clan/green-godot/actions/workflows/runner.yml/badge.svg?event=push)](https://github.com/Wolf-Pack-Clan/green-godot/actions/workflows/runner.yml)
