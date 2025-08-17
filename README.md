@@ -1,7 +1,4 @@
-# INFO
-Migrated to GitLab:
-https://gitlab.com/kazam0180/green-godot
-
+###### toplink
 
 # green-godot
 
