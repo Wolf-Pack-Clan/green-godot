@@ -752,6 +752,7 @@ if selected_platform in platform_list:
     SConscript("scene/SCsub")
     if env["tools"]:
         SConscript("editor/SCsub")
+        SConscript("thirdparty/discord-rpc/SCsub")
     SConscript("drivers/SCsub")
 
     SConscript("platform/SCsub")

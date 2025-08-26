@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+Import("env")
+
+# Clone environment to avoid polluting main env
+thirdparty_env = env.Clone()
+
+# Add include path for discord-rpc headers
+thirdparty_env.Prepend(CPPPATH=["#thirdparty/discord-rpc/include"])
+
+# Platform-specific source files
+discord_rpc_sources = [
+    "src/discord_rpc.cpp",
+    "src/rpc_connection.cpp", 
+    "src/serialization.cpp",
+    "src/connection_unix.cpp",
+    "src/discord_register_linux.cpp",
+]
+
+#discord_rpc_sources = [thirdparty_dir + file for file in thirdparty_sources]
+
+# Disable warnings for third-party code
+#thirdparty_env.disable_warnings()
+
+# Build the library
+discord_rpc_lib = thirdparty_env.add_library("discord_rpc", discord_rpc_sources)
+
+# Make the library available to the main environment
+env.Prepend(LIBS=[discord_rpc_lib])
+env.Prepend(CPPPATH=["#thirdparty/discord-rpc/include"])
