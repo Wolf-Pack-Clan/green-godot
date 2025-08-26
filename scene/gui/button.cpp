@@ -49,7 +49,7 @@ Size2 Button::get_minimum_size() const {
 		}
 
 		if (!_icon.is_null()) {
-			minsize.height = MAX(minsize.height, _icon->get_height());
+			minsize.height = MAX(minsize.height, _icon->get_height()) + 4;
 
 			if (icon_align != ALIGN_CENTER) {
 				minsize.width += _icon->get_width();
