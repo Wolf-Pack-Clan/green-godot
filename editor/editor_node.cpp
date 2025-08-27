@@ -7049,7 +7049,7 @@ EditorNode::EditorNode() {
 	raise_bottom_panel_item(AnimationPlayerEditor::singleton);
 
 	add_editor_plugin(VersionControlEditorPlugin::get_singleton());
-	//add_editor_plugin(DiscordRPCPlugin::get_singleton());
+	add_editor_plugin(DiscordRPCPlugin::get_singleton());
 	add_editor_plugin(memnew(ShaderEditorPlugin(this)));
 	add_editor_plugin(memnew(VisualShaderEditorPlugin(this)));
 

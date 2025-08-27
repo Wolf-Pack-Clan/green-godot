@@ -688,6 +688,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	_initial_set("discord_rpc/enable", false);
 	_initial_set("discord_rpc/application_id", "1392752877369561108");
 	_initial_set("discord_rpc/show_project_name", false);
+	_initial_set("discord_rpc/show_scene_name", false);
 	_initial_set("discord_rpc/show_scene_type", false);
 
 	// TRANSLATORS: Project Manager here refers to the tool used to create/manage Godot projects.
