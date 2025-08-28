@@ -380,6 +380,7 @@ void EditorNode::_update_title() {
 	}
 
 	OS::get_singleton()->set_window_title(title);
+	notification(NOTIFICATION_WM_TITLE_CHANGE);
 }
 
 void EditorNode::_unhandled_input(const Ref<InputEvent> &p_event) {

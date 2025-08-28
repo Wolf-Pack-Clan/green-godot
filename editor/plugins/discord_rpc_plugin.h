@@ -24,7 +24,6 @@
 /* along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /**************************************************************************/
 
-
 #ifndef DISCORD_RPC_PLUGIN_H
 #define DISCORD_RPC_PLUGIN_H
 
@@ -51,11 +50,16 @@ private:
 
 	std::unique_ptr<SimpleDiscordRPC> rpc;
 
+	String cached_scene_name;
+	String cached_project_name;
+	bool need_update;
+
 	static void handleSettingsChange();
 	static void updateDiscordPresence();
 	static void discordLoop();
 	void initDiscord();
 	void shutdownDiscord();
+	void updateCachedData();
 
 protected:
 	static void _bind_methods();

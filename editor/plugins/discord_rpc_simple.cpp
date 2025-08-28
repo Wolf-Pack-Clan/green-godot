@@ -24,7 +24,6 @@
 /* along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 /**************************************************************************/
 
-
 #include "discord_rpc_simple.h"
 #include "core/os/os.h"
 #include <sys/socket.h>
@@ -69,11 +68,11 @@ bool SimpleDiscordRPC::connect() {
 			String socket_path = socket_base + String::num(i);
 			CharString socket_path_utf8 = socket_path.utf8();
 
-			print_line("[DiscordRPC] Attempting to connect to socket: " + socket_path);
+			//print_line("[DiscordRPC] Attempting to connect to socket: " + socket_path);
 
 			// Check if socket file exists first
 			if (access(socket_path_utf8.get_data(), F_OK) != 0) {
-				print_line("[DiscordRPC] Socket file doesn't exist: " + socket_path);
+				//print_line("[DiscordRPC] Socket file doesn't exist: " + socket_path);
 				continue;
 			}
 

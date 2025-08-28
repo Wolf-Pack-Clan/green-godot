@@ -47,9 +47,9 @@ void DiscordRPCPlugin::_bind_methods() {}
 void DiscordRPCPlugin::_notification(int p_what) {
 	if (p_what == NOTIFICATION_READY) {
 		handleSettingsChange();
-
 		if (enableRPC) {
 			EditorNode::get_log()->add_message("Discord RPC Plugin: ready", EditorLog::MSG_TYPE_STD);
+			updateCachedData(); // Cache initial data
 			initDiscord();
 		} else {
 			EditorNode::get_log()->add_message("Discord RPC Plugin: disabled in settings", EditorLog::MSG_TYPE_STD);
@@ -64,13 +64,28 @@ void DiscordRPCPlugin::_notification(int p_what) {
 		if (enableRPC && !wasEnabled) {
 			// RPC was just enabled
 			EditorNode::get_log()->add_message("Discord RPC: Enabling...", EditorLog::MSG_TYPE_STD);
+			updateCachedData(); // Update cache before enabling
 			initDiscord();
 		} else if (!enableRPC && wasEnabled) {
 			// RPC was just disabled
 			EditorNode::get_log()->add_message("Discord RPC: Disabling...", EditorLog::MSG_TYPE_STD);
 			shutdownDiscord();
 		}
-		// If already running, presence will update automatically with new settings
+
+		// Update cached data if RPC is running
+		if (enableRPC && rpc) {
+			updateCachedData();
+			need_update = true; // Flag that we need to send an update
+		}
+	}
+
+	// Update cached data periodically when scenes change
+	if (p_what == NOTIFICATION_WM_TITLE_CHANGE) {
+		print_line("Title changed");
+		if (enableRPC && rpc) {
+			updateCachedData();
+			need_update = true;
+		}
 	}
 }
 
@@ -85,61 +100,47 @@ void DiscordRPCPlugin::handleSettingsChange() {
 	showSceneType = EDITOR_GET("discord_rpc/show_scene_type");
 }
 
+void DiscordRPCPlugin::updateCachedData() {
+	// This method runs on the main thread and caches scene/project data
+	// so the background thread doesn't need to access Godot's scene tree
+	print_line("updateCachedData called");
+	// Cache project name
+	if (showProjectName) {
+		String project_name = ProjectSettings::get_singleton()->get_setting("application/config/name");
+		if (!project_name.empty()) {
+			cached_project_name = "Project: " + project_name;
+		} else {
+			cached_project_name = "Untitled Project";
+		}
+	}
+
+	// Cache scene name
+	if (showSceneName) {
+		EditorNode *editor = EditorNode::get_singleton();
+		const String scene_name = editor->get_edited_scene()->get_name();
+		print_line(scene_name);
+		cached_scene_name = scene_name.empty() ? "Untitled Scene" : "Editing: " + scene_name;
+		if (showSceneType) {
+			const String scene_type = editor->get_edited_scene()->get_class_name();
+			print_line(scene_type);
+			if (!scene_type.empty()) {
+				cached_scene_name += " (" + scene_type + ")";
+			}
+		}
+	}
+}
+
 void DiscordRPCPlugin::updateDiscordPresence() {
 	if (!singleton || !singleton->rpc || !enableRPC)
 		return;
 
 	SimpleDiscordRPC::Activity activity;
 
-	// Build state string (scene type info)
-
-	if (showSceneName) {
-		String state = "";
-		// Try to get current scene info
-		SceneTree *scene_tree = SceneTree::get_singleton();
-		if (scene_tree && scene_tree->get_current_scene()) {
-			Node *current_scene = scene_tree->get_current_scene();
-			String scene_name = current_scene->get_filename();
-			print_line("Scene Name 1:");
-			print_line(scene_name);
-			if (!scene_name.empty()) {
-				// Extract just the filename
-				scene_name = scene_name.get_file();
-				print_line("Scene Name 2:");
-				print_line(scene_name);
-				state = "Editing: " + scene_name;
-			} else {
-				state = "Editing unsaved scene";
-			}
-
-			if (showSceneType) {
-				String scene_type = current_scene->get_class();
-				print_line("Scene Type:");
-				print_line(scene_type);
-				print_line(scene_type);
-				if (!scene_type.empty()) {
-					state += " (" + scene_type + ")";
-				}
-			}
-		}
-		print_line(state);
-		activity.state = state;
-	}
-
-	// Build details string (project info)
-	if (showProjectName) {
-		String details = "";
-		String project_name = ProjectSettings::get_singleton()->get_setting("application/config/name");
-		if (!project_name.empty()) {
-			details = "Project: " + project_name;
-		} else {
-			details = "Untitled Project";
-		}
-		activity.details = details;
-	}
-
+	// Use cached data (safe to access from background thread)
+	activity.state = singleton->cached_scene_name;
+	activity.details = singleton->cached_project_name;
 	activity.large_image = "green-godot-1024";
-	activity.large_text = "Green Godot";
+	activity.large_text = "Godot Engine";
 	activity.start_timestamp = startTime;
 
 	singleton->rpc->update_activity(activity);
@@ -147,13 +148,22 @@ void DiscordRPCPlugin::updateDiscordPresence() {
 
 void DiscordRPCPlugin::discordLoop() {
 	while (shouldRun.load()) {
-		if (enableRPC) {
-			updateDiscordPresence();
+		if (enableRPC && singleton) {
+			// Only send updates if needed or periodically
+			if (singleton->need_update) {
+				updateDiscordPresence();
+				singleton->need_update = false;
+			}
 		}
 
 		// Sleep for 15 seconds (Discord recommends not updating too frequently)
 		for (int i = 0; i < 50 && shouldRun.load(); ++i) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
+
+		// Send periodic update every 15 seconds to keep presence alive
+		if (enableRPC && singleton && singleton->rpc) {
+			updateDiscordPresence();
 		}
 	}
 }
@@ -181,7 +191,8 @@ void DiscordRPCPlugin::initDiscord() {
 		shouldRun.store(true);
 		updateThread = std::thread(discordLoop);
 
-		// Send initial presence update
+		// Send initial presence update (safe since we're on main thread)
+		need_update = true;
 		updateDiscordPresence();
 	} else {
 		EditorNode::get_log()->add_message("Discord RPC: Failed to connect", EditorLog::MSG_TYPE_ERROR);
@@ -203,7 +214,8 @@ void DiscordRPCPlugin::shutdownDiscord() {
 	}
 }
 
-DiscordRPCPlugin::DiscordRPCPlugin() {
+DiscordRPCPlugin::DiscordRPCPlugin() :
+		need_update(false) {
 	singleton = this;
 	EditorNode::get_log()->add_message("Discord RPC Plugin: start", EditorLog::MSG_TYPE_STD);
 }
