@@ -293,51 +293,11 @@ bool GDNative::initialize() {
 		ERR_PRINT("No library set for this platform");
 		return false;
 	}
-#ifdef IPHONE_ENABLED
-	// On iOS we use static linking by default.
-	String path = "";
-
-	// On iOS dylibs is not allowed, but can be replaced with .framework or .xcframework.
-	// If they are used, we can run dlopen on them.
-	// They should be located under Frameworks directory, so we need to replace library path.
-	if (!lib_path.ends_with(".a")) {
-		path = ProjectSettings::get_singleton()->globalize_path(lib_path);
-
-		if (!FileAccess::exists(path)) {
-			String lib_name = lib_path.get_basename().get_file();
-			String framework_path_format = "Frameworks/$name.framework/$name";
-
-			Dictionary format_dict;
-			format_dict["name"] = lib_name;
-			String framework_path = framework_path_format.format(format_dict, "$_");
-
-			path = OS::get_singleton()->get_executable_path().get_base_dir().plus_file(framework_path);
-		}
-	}
-#elif defined(ANDROID_ENABLED)
+#ifdef ANDROID_ENABLED
 	// On Android dynamic libraries are located separately from resource assets,
 	// we should pass library name to dlopen(). The library name is flattened
 	// during export.
 	String path = lib_path.get_file();
-#elif defined(UWP_ENABLED)
-	// On UWP we use a relative path from the app
-	String path = lib_path.replace("res://", "");
-#elif defined(OSX_ENABLED)
-	// On OSX the exported libraries are located under the Frameworks directory.
-	// So we need to replace the library path.
-	String path = ProjectSettings::get_singleton()->globalize_path(lib_path);
-	DirAccess *da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-
-	if (!da->file_exists(path) && !da->dir_exists(path)) {
-		path = OS::get_singleton()->get_executable_path().get_base_dir().plus_file("../Frameworks").plus_file(lib_path.get_file());
-	}
-
-	if (da->dir_exists(path)) { // Target library is a ".framework", add library base name to the path.
-		path = path.plus_file(path.get_file().get_basename());
-	}
-
-	memdelete(da);
-
 #else
 	String path = ProjectSettings::get_singleton()->globalize_path(lib_path);
 #endif

@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 ################################################################################
 
 flags = {
-    "c": platform.platform() != "Windows",  # Disable by default on windows, since we use ANSI escape codes
+    "c": True,  # Disable by default on windows, since we use ANSI escape codes
     "b": False,
     "g": False,
     "s": False,

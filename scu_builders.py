@@ -287,11 +287,7 @@ def generate_scu_files(verbose, is_release_build):
         [
             "platform",
             "android/export",
-            "iphone/export",
             "javascript/export",
-            "osx/export",
-            "uwp/export",
-            "windows/export",
             "x11/export",
         ]
     )

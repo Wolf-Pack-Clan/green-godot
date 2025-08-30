@@ -241,7 +241,6 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["uv"] = "UV";
 	capitalize_string_remaps["uv1"] = "UV1";
 	capitalize_string_remaps["uv2"] = "UV2";
-	capitalize_string_remaps["uwp"] = "UWP";
 	capitalize_string_remaps["vadjust"] = "V Adjust";
 	capitalize_string_remaps["valign"] = "V Align";
 	capitalize_string_remaps["vector2"] = "Vector2";

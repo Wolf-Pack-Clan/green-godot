@@ -271,13 +271,6 @@ void GDNativeLibraryEditor::_translate_to_config_file() {
 
 GDNativeLibraryEditor::GDNativeLibraryEditor() {
 	{ // Define platforms
-		NativePlatformConfig platform_windows;
-		platform_windows.name = "Windows";
-		platform_windows.entries.push_back("64");
-		platform_windows.entries.push_back("32");
-		platform_windows.library_extension = "*.dll";
-		platforms["Windows"] = platform_windows;
-
 		NativePlatformConfig platform_linux;
 		platform_linux.name = "Linux/X11";
 		platform_linux.entries.push_back("64");
@@ -285,26 +278,12 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
 		platform_linux.library_extension = "*.so";
 		platforms["X11"] = platform_linux;
 
-		NativePlatformConfig platform_osx;
-		platform_osx.name = "macOS";
-		platform_osx.entries.push_back("64");
-		platform_osx.library_extension = "*.framework; Framework, *.dylib; Dynamic Library";
-		platforms["OSX"] = platform_osx;
-
 		NativePlatformConfig platform_haiku;
 		platform_haiku.name = "Haiku";
 		platform_haiku.entries.push_back("64");
 		platform_haiku.entries.push_back("32");
 		platform_haiku.library_extension = "*.so";
 		platforms["Haiku"] = platform_haiku;
-
-		NativePlatformConfig platform_uwp;
-		platform_uwp.name = "UWP";
-		platform_uwp.entries.push_back("arm");
-		platform_uwp.entries.push_back("32");
-		platform_uwp.entries.push_back("64");
-		platform_uwp.library_extension = "*.dll";
-		platforms["UWP"] = platform_uwp;
 
 		NativePlatformConfig platform_android;
 		platform_android.name = "Android";
@@ -320,16 +299,6 @@ GDNativeLibraryEditor::GDNativeLibraryEditor() {
 		platform_html5.entries.push_back("wasm32");
 		platform_html5.library_extension = "*.wasm";
 		platforms["HTML5"] = platform_html5;
-
-		NativePlatformConfig platform_ios;
-		platform_ios.name = "iOS";
-		platform_ios.entries.push_back("armv7");
-		platform_ios.entries.push_back("arm64");
-		platform_ios.entries.push_back("x86_64");
-		// iOS can use both Static and Dynamic libraries.
-		// Frameworks is actually a folder with files.
-		platform_ios.library_extension = "*.framework; Framework, *.xcframework; Binary Framework, *.a; Static Library, *.dylib; Dynamic Library";
-		platforms["iOS"] = platform_ios;
 	}
 
 	VBoxContainer *container = memnew(VBoxContainer);

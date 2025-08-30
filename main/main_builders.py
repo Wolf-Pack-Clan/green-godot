@@ -82,7 +82,7 @@ def make_default_controller_mappings(target, source, env):
         with open(src_path, "r") as f:
             # read mapping file and skip header
             mapping_file_lines = f.readlines()[2:]
-
+        
         current_platform = None
         for line in mapping_file_lines:
             if not line:
@@ -107,12 +107,8 @@ def make_default_controller_mappings(target, source, env):
 
     platform_variables = {
         "Linux": "#ifdef X11_ENABLED",
-        "Windows": "#ifdef WINDOWS_ENABLED",
-        "Mac OS X": "#ifdef OSX_ENABLED",
         "Android": "#ifdef ANDROID_ENABLED",
-        "iOS": "#ifdef IPHONE_ENABLED",
         "Javascript": "#ifdef JAVASCRIPT_ENABLED",
-        "UWP": "#ifdef UWP_ENABLED",
     }
 
     g.write("const char* DefaultControllerMappings::mappings[] = {\n")
