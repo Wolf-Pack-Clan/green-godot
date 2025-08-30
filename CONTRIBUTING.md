@@ -32,7 +32,7 @@ from there if it's a duplicate.
 Godot runs on a large variety of platforms and operating systems and devices.
 **In your bug reports, please always specify:**
 
-- Operating system and version (e.g. Windows 10, macOS 10.15, Ubuntu 19.10)
+- Operating system and version (e.g. Ubuntu 19.10)
 - Godot version (e.g. 3.2, 3.1.2, or the Git commit hash if you're using a development branch)
 
 For bugs that are likely OS-specific and/or graphics-related, please also specify:

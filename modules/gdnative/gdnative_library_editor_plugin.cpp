@@ -139,8 +139,6 @@ void GDNativeLibraryEditor::_on_item_button(Object *item, int column, int id) {
 
 		if (id == BUTTON_SELECT_DEPENDENCES) {
 			mode = EditorFileDialog::MODE_OPEN_FILES;
-		} else if (treeItem->get_text(0) == "iOS" || treeItem->get_text(0) == "macOS") {
-			mode = EditorFileDialog::MODE_OPEN_ANY;
 		}
 
 		file_dialog->set_meta("target", target);

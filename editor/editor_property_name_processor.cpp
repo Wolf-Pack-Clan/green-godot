@@ -183,7 +183,6 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["ldr"] = "LDR";
 	capitalize_string_remaps["lod"] = "LOD";
 	capitalize_string_remaps["lowpass"] = "Low-pass";
-	capitalize_string_remaps["macos"] = "macOS";
 	capitalize_string_remaps["mb"] = "(MB)"; // Unit.
 	capitalize_string_remaps["mms"] = "MMS";
 	capitalize_string_remaps["ms"] = "(ms)"; // Unit
@@ -205,8 +204,6 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["po2"] = "(Power of 2)"; // Unit.
 	capitalize_string_remaps["pvrtc"] = "PVRTC";
 	capitalize_string_remaps["pvs"] = "PVS";
-	capitalize_string_remaps["rcedit"] = "rcedit";
-	capitalize_string_remaps["rcodesign"] = "rcodesign";
 	capitalize_string_remaps["rgb"] = "RGB";
 	capitalize_string_remaps["rid"] = "RID";
 	capitalize_string_remaps["rmb"] = "RMB";

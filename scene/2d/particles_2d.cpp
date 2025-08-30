@@ -238,14 +238,6 @@ String Particles2D::get_configuration_warning() const {
 		return warning;
 	}
 
-#ifdef OSX_ENABLED
-	if (warning != String()) {
-		warning += "\n\n";
-	}
-
-	warning += "- " + TTR("On macOS, Particles2D rendering is much slower than CPUParticles2D due to transform feedback being implemented on the CPU instead of the GPU.\nConsider using CPUParticles2D instead when targeting macOS.\nYou can use the \"Convert to CPUParticles2D\" toolbar option for this purpose.");
-#endif
-
 	if (process_material.is_null()) {
 		if (warning != String()) {
 			warning += "\n\n";

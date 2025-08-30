@@ -347,16 +347,6 @@ String OS::get_cache_path() const {
 	return ".";
 }
 
-// Path to macOS .app bundle resources
-String OS::get_bundle_resource_dir() const {
-	return ".";
-};
-
-// Path to macOS .app bundle embedded icon
-String OS::get_bundle_icon_path() const {
-	return String();
-}
-
 // OS specific path for user://
 String OS::get_user_data_dir() const {
 	return ".";

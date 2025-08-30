@@ -33,18 +33,6 @@ namespace embree
     return "FreeBSD (32bit)";
 #elif defined(__FREEBSD__) && defined(__64BIT__)
     return "FreeBSD (64bit)";
-#elif defined(__CYGWIN__) && !defined(__64BIT__)
-    return "Cygwin (32bit)";
-#elif defined(__CYGWIN__) && defined(__64BIT__)
-    return "Cygwin (64bit)";
-#elif defined(__WIN32__) && !defined(__64BIT__)
-    return "Windows (32bit)";
-#elif defined(__WIN32__) && defined(__64BIT__)
-    return "Windows (64bit)";
-#elif defined(__MACOSX__) && !defined(__64BIT__)
-    return "Mac OS X (32bit)";
-#elif defined(__MACOSX__) && defined(__64BIT__)
-    return "Mac OS X (64bit)";
 #elif defined(__UNIX__) && !defined(__64BIT__)
     return "Unix (32bit)";
 #elif defined(__UNIX__) && defined(__64BIT__)
@@ -440,92 +428,6 @@ namespace embree
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Windows Platform
-////////////////////////////////////////////////////////////////////////////////
-
-#if defined(__WIN32__)
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <psapi.h>
-
-namespace embree
-{
-  std::string getExecutableFileName() {
-    char filename[1024];
-    if (!GetModuleFileName(nullptr, filename, sizeof(filename)))
-      return std::string();
-    return std::string(filename);
-  }
-
-  unsigned int getNumberOfLogicalThreads() 
-  {
-    static int nThreads = -1;
-    if (nThreads != -1) return nThreads;
-
-    typedef WORD (WINAPI *GetActiveProcessorGroupCountFunc)();
-    typedef DWORD (WINAPI *GetActiveProcessorCountFunc)(WORD);
-    HMODULE hlib = LoadLibrary("Kernel32");
-    GetActiveProcessorGroupCountFunc pGetActiveProcessorGroupCount = (GetActiveProcessorGroupCountFunc)GetProcAddress(hlib, "GetActiveProcessorGroupCount");
-    GetActiveProcessorCountFunc      pGetActiveProcessorCount      = (GetActiveProcessorCountFunc)     GetProcAddress(hlib, "GetActiveProcessorCount");
-
-    if (pGetActiveProcessorGroupCount && pGetActiveProcessorCount) 
-    {
-      int groups = pGetActiveProcessorGroupCount();
-      int totalProcessors = 0;
-      for (int i = 0; i < groups; i++) 
-        totalProcessors += pGetActiveProcessorCount(i);
-      nThreads = totalProcessors;
-    }
-    else
-    {
-      SYSTEM_INFO sysinfo;
-      GetSystemInfo(&sysinfo);
-      nThreads = sysinfo.dwNumberOfProcessors;
-    }
-    assert(nThreads);
-    return nThreads;
-  }
-
-  int getTerminalWidth() 
-  {
-    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (handle == INVALID_HANDLE_VALUE) return 80;
-    CONSOLE_SCREEN_BUFFER_INFO info;
-    memset(&info,0,sizeof(info));
-    GetConsoleScreenBufferInfo(handle, &info);
-    return info.dwSize.X;
-  }
-
-  double getSeconds() 
-  {
-    LARGE_INTEGER freq, val;
-    QueryPerformanceFrequency(&freq);
-    QueryPerformanceCounter(&val);
-    return (double)val.QuadPart / (double)freq.QuadPart;
-  }
-
-  void sleepSeconds(double t) {
-    Sleep(DWORD(1000.0*t));
-  }
-
-  size_t getVirtualMemoryBytes()
-  {
-    PROCESS_MEMORY_COUNTERS info;
-    GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
-    return (size_t)info.QuotaPeakPagedPoolUsage;
-  }
-
-  size_t getResidentMemoryBytes()
-  {
-    PROCESS_MEMORY_COUNTERS info;
-    GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
-    return (size_t)info.WorkingSetSize;
-  }
-}
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
 /// Linux Platform
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -598,36 +500,6 @@ namespace embree
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Mac OS X Platform
-////////////////////////////////////////////////////////////////////////////////
-
-#if defined(__MACOSX__)
-
-#include <mach-o/dyld.h>
-
-namespace embree
-{
-  std::string getExecutableFileName()
-  {
-    char buf[4096];
-    uint32_t size = sizeof(buf);
-    if (_NSGetExecutablePath(buf, &size) != 0)
-      return std::string();
-    return std::string(buf);
-  }
-
-  size_t getVirtualMemoryBytes() {
-    return 0;
-  }
-   
-  size_t getResidentMemoryBytes() {
-    return 0;
-  }
-}
-
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
 /// Unix Platform
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -649,7 +521,7 @@ namespace embree
     static int nThreads = -1;
     if (nThreads != -1) return nThreads;
 
-#if defined(__MACOSX__) || defined(__ANDROID__)
+#if defined(__ANDROID__)
     nThreads = sysconf(_SC_NPROCESSORS_ONLN); // does not work in Linux LXC container
     assert(nThreads);
 #elif defined(__EMSCRIPTEN__)

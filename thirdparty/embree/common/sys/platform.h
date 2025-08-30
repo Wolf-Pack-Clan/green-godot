@@ -56,30 +56,6 @@
 #  endif
 #endif
 
-/* detect Windows 95/98/NT/2000/XP/Vista/7/8/10 platform */
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)) && !defined(__CYGWIN__)
-#  if !defined(__WIN32__)
-#     define __WIN32__
-#  endif
-#endif
-
-/* detect Cygwin platform */
-#if defined(__CYGWIN__)
-#  if !defined(__UNIX__)
-#     define __UNIX__
-#  endif
-#endif
-
-/* detect MAC OS X platform */
-#if defined(__APPLE__) || defined(MACOSX) || defined(__MACOSX__)
-#  if !defined(__MACOSX__)
-#     define __MACOSX__
-#  endif
-#  if !defined(__UNIX__)
-#     define __UNIX__
-#  endif
-#endif
-
 /* try to detect other Unix systems */
 #if defined(__unix__) || defined (unix) || defined(__unix) || defined(_unix)
 #  if !defined(__UNIX__)

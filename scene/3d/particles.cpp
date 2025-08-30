@@ -241,14 +241,6 @@ String Particles::get_configuration_warning() const {
 		return warnings;
 	}
 
-#ifdef OSX_ENABLED
-	if (warnings != String()) {
-		warnings += "\n\n";
-	}
-
-	warnings += "- " + TTR("On macOS, Particles rendering is much slower than CPUParticles due to transform feedback being implemented on the CPU instead of the GPU.\nConsider using CPUParticles instead when targeting macOS.\nYou can use the \"Convert to CPUParticles\" toolbar option for this purpose.");
-#endif
-
 	bool meshes_found = false;
 	bool anim_material_found = false;
 

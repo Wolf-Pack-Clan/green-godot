@@ -20,144 +20,6 @@
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Windows Platform
-////////////////////////////////////////////////////////////////////////////////
-
-#if defined(__WIN32__)
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-namespace embree
-{
-  /*! set the affinity of a given thread */
-  void setAffinity(HANDLE thread, ssize_t affinity)
-  {
-    typedef WORD (WINAPI *GetActiveProcessorGroupCountFunc)();
-    typedef DWORD (WINAPI *GetActiveProcessorCountFunc)(WORD);
-    typedef BOOL (WINAPI *SetThreadGroupAffinityFunc)(HANDLE, const GROUP_AFFINITY *, PGROUP_AFFINITY);
-    typedef BOOL (WINAPI *SetThreadIdealProcessorExFunc)(HANDLE, PPROCESSOR_NUMBER, PPROCESSOR_NUMBER);
-    HMODULE hlib = LoadLibrary("Kernel32");
-    GetActiveProcessorGroupCountFunc pGetActiveProcessorGroupCount = (GetActiveProcessorGroupCountFunc)GetProcAddress(hlib, "GetActiveProcessorGroupCount");
-    GetActiveProcessorCountFunc pGetActiveProcessorCount = (GetActiveProcessorCountFunc)GetProcAddress(hlib, "GetActiveProcessorCount");
-    SetThreadGroupAffinityFunc pSetThreadGroupAffinity = (SetThreadGroupAffinityFunc)GetProcAddress(hlib, "SetThreadGroupAffinity");
-    SetThreadIdealProcessorExFunc pSetThreadIdealProcessorEx = (SetThreadIdealProcessorExFunc)GetProcAddress(hlib, "SetThreadIdealProcessorEx");
-    if (pGetActiveProcessorGroupCount && pGetActiveProcessorCount && pSetThreadGroupAffinity && pSetThreadIdealProcessorEx) 
-    {
-      int groups = pGetActiveProcessorGroupCount();
-      int totalProcessors = 0, group = 0, number = 0;
-      for (int i = 0; i<groups; i++) {
-        int processors = pGetActiveProcessorCount(i);
-        if (totalProcessors + processors > affinity) {
-          group = i;
-          number = (int)affinity - totalProcessors;
-          break;
-        }
-        totalProcessors += processors;
-      }
-  
-      GROUP_AFFINITY groupAffinity;
-      groupAffinity.Group = (WORD)group;
-      groupAffinity.Mask = (KAFFINITY)(uint64_t(1) << number);
-      groupAffinity.Reserved[0] = 0;
-      groupAffinity.Reserved[1] = 0;
-      groupAffinity.Reserved[2] = 0;
-      if (!pSetThreadGroupAffinity(thread, &groupAffinity, nullptr))
-        WARNING("SetThreadGroupAffinity failed"); // on purpose only a warning
-  
-      PROCESSOR_NUMBER processorNumber;
-      processorNumber.Group = group;
-      processorNumber.Number = number;
-      processorNumber.Reserved = 0;
-      if (!pSetThreadIdealProcessorEx(thread, &processorNumber, nullptr))
-        WARNING("SetThreadIdealProcessorEx failed"); // on purpose only a warning
-    } 
-    else 
-    {
-      if (!SetThreadAffinityMask(thread, DWORD_PTR(uint64_t(1) << affinity)))
-        WARNING("SetThreadAffinityMask failed"); // on purpose only a warning
-      if (SetThreadIdealProcessor(thread, (DWORD)affinity) == (DWORD)-1)
-        WARNING("SetThreadIdealProcessor failed"); // on purpose only a warning
-      }
-  }
-
-  /*! set affinity of the calling thread */
-  void setAffinity(ssize_t affinity) {
-    setAffinity(GetCurrentThread(), affinity);
-  }
-
-  struct ThreadStartupData 
-  {
-  public:
-    ThreadStartupData (thread_func f, void* arg) 
-      : f(f), arg(arg) {}
-  public:
-    thread_func f;
-    void* arg;
-  };
-
-  DWORD WINAPI threadStartup(LPVOID ptr)
-  {
-    ThreadStartupData* parg = (ThreadStartupData*) ptr;
-    _mm_setcsr(_mm_getcsr() | /*FTZ:*/ (1<<15) | /*DAZ:*/ (1<<6));
-    parg->f(parg->arg);
-    delete parg;
-    return 0;
-  }
-
-#if !defined(PTHREADS_WIN32)
-
-  /*! creates a hardware thread running on specific core */
-  thread_t createThread(thread_func f, void* arg, size_t stack_size, ssize_t threadID)
-  {
-    HANDLE thread = CreateThread(nullptr, stack_size, threadStartup, new ThreadStartupData(f,arg), 0, nullptr);
-    if (thread == nullptr) FATAL("CreateThread failed");
-    if (threadID >= 0) setAffinity(thread, threadID);
-    return thread_t(thread);
-  }
-
-  /*! the thread calling this function gets yielded */
-  void yield() {
-    SwitchToThread();
-  }
-
-  /*! waits until the given thread has terminated */
-  void join(thread_t tid) {
-    WaitForSingleObject(HANDLE(tid), INFINITE);
-    CloseHandle(HANDLE(tid));
-  }
-
-  /*! destroy a hardware thread by its handle */
-  void destroyThread(thread_t tid) {
-    TerminateThread(HANDLE(tid),0);
-    CloseHandle(HANDLE(tid));
-  }
-
-  /*! creates thread local storage */
-  tls_t createTls() {
-    return tls_t(size_t(TlsAlloc()));
-  }
-
-  /*! set the thread local storage pointer */
-  void setTls(tls_t tls, void* const ptr) {
-    TlsSetValue(DWORD(size_t(tls)), ptr);
-  }
-
-  /*! return the thread local storage pointer */
-  void* getTls(tls_t tls) {
-    return TlsGetValue(DWORD(size_t(tls)));
-  }
-
-  /*! destroys thread local storage identifier */
-  void destroyTls(tls_t tls) {
-    TlsFree(DWORD(size_t(tls)));
-  }
-#endif
-}
-
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
 /// Linux Platform
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -311,33 +173,6 @@ namespace embree
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-/// MacOSX Platform
-////////////////////////////////////////////////////////////////////////////////
-
-#if defined(__MACOSX__)
-
-#include <mach/thread_act.h>
-#include <mach/thread_policy.h>
-#include <mach/mach_init.h>
-
-namespace embree
-{
-  /*! set affinity of the calling thread */
-  void setAffinity(ssize_t affinity)
-  {
-#if !defined(__ARM_NEON) // affinity seems not supported on M1 chip
-    
-    thread_affinity_policy ap;
-    ap.affinity_tag = affinity;
-    if (thread_policy_set(mach_thread_self(),THREAD_AFFINITY_POLICY,(thread_policy_t)&ap,THREAD_AFFINITY_POLICY_COUNT) != KERN_SUCCESS)
-      WARNING("setting thread affinity failed"); // on purpose only a warning
-    
-#endif
-  }
-}
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
 /// Unix Platform
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -366,12 +201,6 @@ namespace embree
   static void* threadStartup(ThreadStartupData* parg)
   {
     _mm_setcsr(_mm_getcsr() | /*FTZ:*/ (1<<15) | /*DAZ:*/ (1<<6));
-    
-    /*! Mac OS X does not support setting affinity at thread creation time */
-#if defined(__MACOSX__)
-    if (parg->affinity >= 0)
-	setAffinity(parg->affinity);
-#endif
 
     parg->f(parg->arg);
     delete parg;
