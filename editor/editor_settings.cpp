@@ -1564,7 +1564,6 @@ struct ShortCutMapping {
 };
 
 Ref<ShortCut> ED_SHORTCUT(const String &p_path, const String &p_name, uint32_t p_keycode) {
-
 	Ref<InputEventKey> ie;
 	if (p_keycode) {
 		ie.instance();

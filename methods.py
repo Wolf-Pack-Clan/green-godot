@@ -1025,6 +1025,7 @@ def CommandNoCache(env, target, sources, command, **args):
     env.NoCache(result)
     return result
 
+
 def get_compiler_version(env):
     """
     Returns an array of version numbers as ints: [major, minor, patch].

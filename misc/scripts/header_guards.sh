@@ -27,7 +27,6 @@ for file in $(find -name "thirdparty" -prune -o -name "*.h" -print); do
     platform=$(echo $file | sed "s@.*platform/\([^/]*\).*@\1@")
     prefix="${platform^^}_"
   fi
-  if [[ "$file" == "./modules/mono/utils/"* && "$bname" != *"mono"* ]]; then prefix="MONO_"; fi
   if [[ "$file" == "./modules/gdnative/include/gdnative/"* ]]; then prefix="GDNATIVE_"; fi
 
   suffix=

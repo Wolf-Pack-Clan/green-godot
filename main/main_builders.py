@@ -82,7 +82,7 @@ def make_default_controller_mappings(target, source, env):
         with open(src_path, "r") as f:
             # read mapping file and skip header
             mapping_file_lines = f.readlines()[2:]
-        
+
         current_platform = None
         for line in mapping_file_lines:
             if not line:

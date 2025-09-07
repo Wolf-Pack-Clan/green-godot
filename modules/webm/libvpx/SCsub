@@ -219,7 +219,7 @@ webm_multithread = env["platform"] != "javascript"
 cpu_bits = env["bits"]
 webm_cpu_x86 = False
 webm_cpu_arm = False
-#if env["platform"] != "windows":  # Disable for Windows, yasm SIMD optimizations trigger crash (GH-50862).
+# if env["platform"] != "windows":  # Disable for Windows, yasm SIMD optimizations trigger crash (GH-50862).
 import platform
 
 is_x11_or_server_arm = (env["platform"] == "x11" or env["platform"] == "server") and (
@@ -233,16 +233,9 @@ if is_android_x86:
 webm_cpu_x86 = (
     not is_x11_or_server_arm
     and (cpu_bits == "32" or cpu_bits == "64")
-    and (
-        env["platform"] == "x11"
-        or env["platform"] == "haiku"
-        or is_android_x86
-    )
+    and (env["platform"] == "x11" or env["platform"] == "haiku" or is_android_x86)
 )
-webm_cpu_arm = (
-    is_x11_or_server_arm
-    or (not is_android_x86 and env["platform"] == "android")
-)
+webm_cpu_arm = is_x11_or_server_arm or (not is_android_x86 and env["platform"] == "android")
 
 if webm_cpu_x86:
     import subprocess
