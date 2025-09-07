@@ -174,3 +174,5 @@ public:
 StringName _scs_create(const char *p_chr);
 
 #endif // STRING_NAME_H
+
+#define SNAME(m_arg) ([]() -> const StringName & { static StringName sname = StringName(m_arg, true); return sname; })()

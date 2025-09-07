@@ -326,7 +326,6 @@ void Main::print_help(const char *p_binary) {
 	OS::get_singleton()->print("  -t, --always-on-top              Request an always-on-top window.\n");
 	OS::get_singleton()->print("  --resolution <W>x<H>             Request window resolution.\n");
 	OS::get_singleton()->print("  --position <X>,<Y>               Request window position.\n");
-	OS::get_singleton()->print("  --low-dpi                        Force low-DPI mode (macOS and Windows only).\n");
 	OS::get_singleton()->print("  --no-window                      Run with invisible window. Useful together with --script.\n");
 	OS::get_singleton()->print("  --enable-vsync-via-compositor    When vsync is enabled, vsync via the OS' window compositor (Windows only).\n");
 	OS::get_singleton()->print("  --disable-vsync-via-compositor   Disable vsync via the OS' window compositor (Windows only).\n");
@@ -521,14 +520,6 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 
 	I = args.front();
 	while (I) {
-#ifdef OSX_ENABLED
-		// Ignore the process serial number argument passed by macOS Gatekeeper.
-		// Otherwise, Godot would try to open a non-existent project on the first start and abort.
-		if (I->get().begins_with("-psn_")) {
-			I = I->next();
-			continue;
-		}
-#endif
 
 		List<String>::Element *N = I->next();
 
@@ -704,9 +695,6 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 				goto error;
 			}
 
-		} else if (I->get() == "--low-dpi") { // force low DPI (macOS only)
-
-			force_lowdpi = true;
 		} else if (I->get() == "--no-window") { // run with an invisible window
 
 			OS::get_singleton()->set_no_window_mode(true);
@@ -1556,13 +1544,6 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
 			VisualServer::get_singleton()->set_boot_image(splash, boot_bg_color, false);
 #endif
 		}
-
-#ifdef TOOLS_ENABLED
-		if (OS::get_singleton()->get_bundle_icon_path().empty()) {
-			Ref<Image> icon = memnew(Image(app_icon_png));
-			OS::get_singleton()->set_icon(icon);
-		}
-#endif
 	}
 
 	MAIN_PRINT("Main: DCC");
@@ -1572,12 +1553,6 @@ Error Main::setup2(Thread::ID p_main_tid_override) {
 	ProjectSettings::get_singleton()->set_custom_property_info("application/config/icon",
 			PropertyInfo(Variant::STRING, "application/config/icon",
 					PROPERTY_HINT_FILE, "*.png,*.webp,*.svg"));
-
-	GLOBAL_DEF("application/config/macos_native_icon", String());
-	ProjectSettings::get_singleton()->set_custom_property_info("application/config/macos_native_icon", PropertyInfo(Variant::STRING, "application/config/macos_native_icon", PROPERTY_HINT_FILE, "*.icns"));
-
-	GLOBAL_DEF("application/config/windows_native_icon", String());
-	ProjectSettings::get_singleton()->set_custom_property_info("application/config/windows_native_icon", PropertyInfo(Variant::STRING, "application/config/windows_native_icon", PROPERTY_HINT_FILE, "*.ico"));
 
 	InputDefault *id = Object::cast_to<InputDefault>(Input::get_singleton());
 	if (id) {
@@ -2205,22 +2180,6 @@ bool Main::start() {
 				ERR_FAIL_COND_V_MSG(!scene, false, "Failed loading scene: " + local_game_path);
 				sml->add_current_scene(scene);
 
-#ifdef OSX_ENABLED
-				String mac_iconpath = GLOBAL_DEF("application/config/macos_native_icon", "Variant()");
-				if (mac_iconpath != "") {
-					OS::get_singleton()->set_native_icon(mac_iconpath);
-					hasicon = true;
-				}
-#endif
-
-#ifdef WINDOWS_ENABLED
-				String win_iconpath = GLOBAL_DEF("application/config/windows_native_icon", "Variant()");
-				if (win_iconpath != "") {
-					OS::get_singleton()->set_native_icon(win_iconpath);
-					hasicon = true;
-				}
-#endif
-
 				String iconpath = GLOBAL_DEF("application/config/icon", "Variant()");
 				if ((iconpath != "") && (!hasicon)) {
 					Ref<Image> icon;
@@ -2251,7 +2210,7 @@ bool Main::start() {
 #endif
 	}
 
-	if (!hasicon && OS::get_singleton()->get_bundle_icon_path().empty()) {
+	if (!hasicon) {
 		Ref<Image> icon = memnew(Image(app_icon_png));
 		OS::get_singleton()->set_icon(icon);
 	}

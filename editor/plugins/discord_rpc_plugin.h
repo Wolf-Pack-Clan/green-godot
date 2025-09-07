@@ -60,6 +60,7 @@ private:
 	void initDiscord();
 	void shutdownDiscord();
 	void updateCachedData();
+	void _delayed_init();
 
 protected:
 	static void _bind_methods();

@@ -42,15 +42,18 @@ bool DiscordRPCPlugin::showProjectName = false;
 bool DiscordRPCPlugin::showSceneName = false;
 bool DiscordRPCPlugin::showSceneType = false;
 
-void DiscordRPCPlugin::_bind_methods() {}
+void DiscordRPCPlugin::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("_delayed_init"), &DiscordRPCPlugin::_delayed_init);
+}
 
 void DiscordRPCPlugin::_notification(int p_what) {
 	if (p_what == NOTIFICATION_READY) {
 		handleSettingsChange();
 		if (enableRPC) {
 			EditorNode::get_log()->add_message("Discord RPC Plugin: ready", EditorLog::MSG_TYPE_STD);
-			updateCachedData(); // Cache initial data
-			initDiscord();
+			//updateCachedData(); // Cache initial data
+			//initDiscord();
+			call_deferred("_delayed_init");
 		} else {
 			EditorNode::get_log()->add_message("Discord RPC Plugin: disabled in settings", EditorLog::MSG_TYPE_STD);
 		}
@@ -79,7 +82,6 @@ void DiscordRPCPlugin::_notification(int p_what) {
 		}
 	}
 
-	// Update cached data periodically when scenes change
 	if (p_what == NOTIFICATION_WM_TITLE_CHANGE) {
 		print_line("Title changed");
 		if (enableRPC && rpc) {
@@ -91,6 +93,13 @@ void DiscordRPCPlugin::_notification(int p_what) {
 
 DiscordRPCPlugin *DiscordRPCPlugin::get_singleton() {
 	return singleton ? singleton : memnew(DiscordRPCPlugin);
+}
+
+void DiscordRPCPlugin::_delayed_init() {
+	// This runs after the editor is fully initialized
+	print_line("Discord RPC: Delayed initialization");
+	updateCachedData(); // Cache initial data
+	initDiscord();
 }
 
 void DiscordRPCPlugin::handleSettingsChange() {
@@ -117,17 +126,24 @@ void DiscordRPCPlugin::updateCachedData() {
 	// Cache scene name
 	if (showSceneName) {
 		EditorNode *editor = EditorNode::get_singleton();
-		const String scene_name = editor->get_edited_scene()->get_name();
+		if (!editor)
+			return;
+		Node *scene = editor->get_edited_scene();
+		if (!scene)
+			return;
+		const String scene_name = scene->get_name();
 		print_line(scene_name);
-		cached_scene_name = scene_name.empty() ? "Untitled Scene" : "Editing: " + scene_name;
+		cached_scene_name = scene_name.empty() ? "Untitled Scene" : "Scene: " + scene_name;
 		if (showSceneType) {
-			const String scene_type = editor->get_edited_scene()->get_class_name();
+			const String scene_type = scene->get_class_name();
 			print_line(scene_type);
 			if (!scene_type.empty()) {
 				cached_scene_name += " (" + scene_type + ")";
 			}
 		}
 	}
+
+	print_line("[updateCachedData] cached_project_name: " + cached_project_name + " cached_scene_name: " + cached_scene_name);
 }
 
 void DiscordRPCPlugin::updateDiscordPresence() {
@@ -137,6 +153,7 @@ void DiscordRPCPlugin::updateDiscordPresence() {
 	SimpleDiscordRPC::Activity activity;
 
 	// Use cached data (safe to access from background thread)
+	print_line("[updateDiscordPresence] cached_project_name: " + singleton->cached_project_name + " cached_scene_name: " + singleton->cached_scene_name);
 	activity.state = singleton->cached_scene_name;
 	activity.details = singleton->cached_project_name;
 	activity.large_image = "green-godot-1024";

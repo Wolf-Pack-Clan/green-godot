@@ -685,7 +685,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 
 	/* Extra config */
 
-	_initial_set("discord_rpc/enable", false);
+	_initial_set("discord_rpc/enable", true);
 	_initial_set("discord_rpc/application_id", "1392752877369561108");
 	_initial_set("discord_rpc/show_project_name", false);
 	_initial_set("discord_rpc/show_scene_name", false);
@@ -1564,12 +1564,6 @@ struct ShortCutMapping {
 };
 
 Ref<ShortCut> ED_SHORTCUT(const String &p_path, const String &p_name, uint32_t p_keycode) {
-#ifdef OSX_ENABLED
-	// Use Cmd+Backspace as a general replacement for Delete shortcuts on macOS
-	if (p_keycode == KEY_DELETE) {
-		p_keycode = KEY_MASK_CMD | KEY_BACKSPACE;
-	}
-#endif
 
 	Ref<InputEventKey> ie;
 	if (p_keycode) {

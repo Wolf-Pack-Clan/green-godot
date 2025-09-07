@@ -380,7 +380,10 @@ void EditorNode::_update_title() {
 	}
 
 	OS::get_singleton()->set_window_title(title);
-	notification(NOTIFICATION_WM_TITLE_CHANGE);
+	int plugin_count = editor_data.get_editor_plugin_count();
+	for (int i = 0; i < plugin_count; i++) {
+		editor_data.get_editor_plugin(i)->notification(NOTIFICATION_WM_TITLE_CHANGE);
+	}
 }
 
 void EditorNode::_unhandled_input(const Ref<InputEvent> &p_event) {
@@ -6580,11 +6583,8 @@ EditorNode::EditorNode() {
 
 	p = settings_menu->get_popup();
 	p->set_hide_on_window_lose_focus(true);
-#ifdef OSX_ENABLED
-	p->add_shortcut(ED_SHORTCUT("editor/editor_settings", TTR("Editor Settings..."), KEY_MASK_CMD + KEY_COMMA), SETTINGS_PREFERENCES);
-#else
 	p->add_shortcut(ED_SHORTCUT("editor/editor_settings", TTR("Editor Settings...")), SETTINGS_PREFERENCES);
-#endif
+
 	p->add_separator();
 
 	editor_layouts = memnew(PopupMenu);
@@ -6593,18 +6593,12 @@ EditorNode::EditorNode() {
 	editor_layouts->connect("id_pressed", this, "_layout_menu_option");
 	p->add_submenu_item(TTR("Editor Layout"), "Layouts");
 	p->add_separator();
-#ifdef OSX_ENABLED
-	p->add_shortcut(ED_SHORTCUT("editor/take_screenshot", TTR("Take Screenshot"), KEY_MASK_CMD | KEY_F12), EDITOR_SCREENSHOT);
-#else
 	p->add_shortcut(ED_SHORTCUT("editor/take_screenshot", TTR("Take Screenshot"), KEY_MASK_CTRL | KEY_F12), EDITOR_SCREENSHOT);
-#endif
+
 	p->set_item_tooltip(p->get_item_count() - 1, TTR("Screenshots are stored in the Editor Data/Settings Folder."));
 #ifndef ANDROID_ENABLED
-#ifdef OSX_ENABLED
-	p->add_shortcut(ED_SHORTCUT("editor/fullscreen_mode", TTR("Toggle Fullscreen"), KEY_MASK_CMD | KEY_MASK_CTRL | KEY_F), SETTINGS_TOGGLE_FULLSCREEN);
-#else
 	p->add_shortcut(ED_SHORTCUT("editor/fullscreen_mode", TTR("Toggle Fullscreen"), KEY_MASK_SHIFT | KEY_F11), SETTINGS_TOGGLE_FULLSCREEN);
-#endif
+
 #endif
 	p->add_separator();
 
