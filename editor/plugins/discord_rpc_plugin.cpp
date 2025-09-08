@@ -49,13 +49,13 @@ void DiscordRPCPlugin::_notification(int p_what) {
 	if (p_what == NOTIFICATION_READY) {
 		handleSettingsChange();
 		if (enableRPC) {
-			EditorNode::get_log()->add_message("Discord RPC Plugin: ready", EditorLog::MSG_TYPE_STD);
+			//EditorNode::get_log()->add_message("Discord RPC Plugin: ready", EditorLog::MSG_TYPE_STD);
 			//updateCachedData(); // Cache initial data
 			//initDiscord();
 			call_deferred("_delayed_init");
-		} else {
-			EditorNode::get_log()->add_message("Discord RPC Plugin: disabled in settings", EditorLog::MSG_TYPE_STD);
-		}
+		} /* else {
+			 EditorNode::get_log()->add_message("Discord RPC Plugin: disabled in settings", EditorLog::MSG_TYPE_STD);
+		 }//*/
 	}
 
 	if (p_what == EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED) {
@@ -65,24 +65,24 @@ void DiscordRPCPlugin::_notification(int p_what) {
 		// Handle enable/disable changes
 		if (enableRPC && !wasEnabled) {
 			// RPC was just enabled
-			EditorNode::get_log()->add_message("Discord RPC: Enabling...", EditorLog::MSG_TYPE_STD);
+			//EditorNode::get_log()->add_message("Discord RPC: Enabling...", EditorLog::MSG_TYPE_STD);
 			updateCachedData(); // Update cache before enabling
 			initDiscord();
 		} else if (!enableRPC && wasEnabled) {
 			// RPC was just disabled
-			EditorNode::get_log()->add_message("Discord RPC: Disabling...", EditorLog::MSG_TYPE_STD);
+			//EditorNode::get_log()->add_message("Discord RPC: Disabling...", EditorLog::MSG_TYPE_STD);
 			shutdownDiscord();
 		}
 
 		// Update cached data if RPC is running
 		if (enableRPC && rpc) {
 			updateCachedData();
-			need_update = true; // Flag that we need to send an update
+			need_update = true;
 		}
 	}
 
 	if (p_what == NOTIFICATION_WM_TITLE_CHANGE) {
-		print_line("Title changed");
+		//print_line("Title changed");
 		if (enableRPC && rpc) {
 			updateCachedData();
 			need_update = true;
@@ -111,7 +111,7 @@ void DiscordRPCPlugin::handleSettingsChange() {
 void DiscordRPCPlugin::updateCachedData() {
 	// This method runs on the main thread and caches scene/project data
 	// so the background thread doesn't need to access Godot's scene tree
-	print_line("updateCachedData called");
+	//print_line("updateCachedData called");
 	// Cache project name
 	if (showProjectName) {
 		String project_name = ProjectSettings::get_singleton()->get_setting("application/config/name");
@@ -130,9 +130,9 @@ void DiscordRPCPlugin::updateCachedData() {
 		Node *scene = editor->get_edited_scene();
 		if (!scene)
 			return;
-		const String scene_name = scene->get_name();
+		const String scene_name = scene->get_filename();
 		print_line(scene_name);
-		cached_scene_name = scene_name.empty() ? "Untitled Scene" : "Scene: " + scene_name;
+		cached_scene_name = scene_name.empty() ? "Untitled Scene" : "Scene: " + scene_name.get_basename().get_file();
 		if (showSceneType) {
 			const String scene_type = scene->get_class_name();
 			print_line(scene_type);
@@ -142,7 +142,7 @@ void DiscordRPCPlugin::updateCachedData() {
 		}
 	}
 
-	print_line("[updateCachedData] cached_project_name: " + cached_project_name + " cached_scene_name: " + cached_scene_name);
+	//print_line("[updateCachedData] cached_project_name: " + cached_project_name + " cached_scene_name: " + cached_scene_name);
 }
 
 void DiscordRPCPlugin::updateDiscordPresence() {
@@ -152,7 +152,7 @@ void DiscordRPCPlugin::updateDiscordPresence() {
 	SimpleDiscordRPC::Activity activity;
 
 	// Use cached data (safe to access from background thread)
-	print_line("[updateDiscordPresence] cached_project_name: " + singleton->cached_project_name + " cached_scene_name: " + singleton->cached_scene_name);
+	//print_line("[updateDiscordPresence] cached_project_name: " + singleton->cached_project_name + " cached_scene_name: " + singleton->cached_scene_name);
 	activity.state = singleton->cached_scene_name;
 	activity.details = singleton->cached_project_name;
 	activity.large_image = "green-godot-1024";
@@ -172,9 +172,9 @@ void DiscordRPCPlugin::discordLoop() {
 			}
 		}
 
-		// Sleep for 15 seconds (Discord recommends not updating too frequently)
-		for (int i = 0; i < 50 && shouldRun.load(); ++i) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		// Sleep for 10 seconds (Discord recommends not updating too frequently)
+		for (int i = 0; i < 10 && shouldRun.load(); ++i) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		}
 
 		// Send periodic update every 15 seconds to keep presence alive
@@ -193,11 +193,11 @@ void DiscordRPCPlugin::initDiscord() {
 	String app_id = settings->get_setting("discord_rpc/application_id");
 
 	if (app_id.empty()) {
-		EditorNode::get_log()->add_message("Discord RPC: No application ID set", EditorLog::MSG_TYPE_ERROR);
+		//EditorNode::get_log()->add_message("Discord RPC: No application ID set", EditorLog::MSG_TYPE_ERROR);
 		return;
 	}
 
-	print_line("[DiscordRPC] Initializing with app ID: " + app_id);
+	//print_line("[DiscordRPC] Initializing with app ID: " + app_id);
 	rpc = std::make_unique<SimpleDiscordRPC>(app_id);
 
 	if (rpc->connect()) {
@@ -219,14 +219,14 @@ void DiscordRPCPlugin::initDiscord() {
 void DiscordRPCPlugin::shutdownDiscord() {
 	shouldRun.store(false);
 
-	if (updateThread.joinable()) {
-		updateThread.join();
-	}
-
 	if (rpc) {
 		rpc->clear_activity();
 		rpc->disconnect();
 		rpc.reset();
+	}
+
+	if (updateThread.joinable()) {
+		updateThread.join();
 	}
 }
 
@@ -238,6 +238,7 @@ DiscordRPCPlugin::DiscordRPCPlugin() :
 
 DiscordRPCPlugin::~DiscordRPCPlugin() {
 	EditorNode::get_log()->add_message("Discord RPC Plugin: shutdown", EditorLog::MSG_TYPE_STD);
+	print_line("Discord RPC Plugin: shutdown");
 	shutdownDiscord();
 	singleton = nullptr;
 }
