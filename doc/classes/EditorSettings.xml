@@ -158,19 +158,19 @@
 	<members>
 		<member name="discord_rpc/application_id" type="String" setter="" getter="">
 			The Discord application ID to use for Discord Rich Presence integration. See also [member discord_rpc/enable].
-+		</member>
-+		<member name="discord_rpc/enable" type="bool" setter="" getter="">
-+			If [code]true[/code], enables Discord Rich Presence integration in the editor. See also [member discord_rpc/application_id].
-+		</member>
-+		<member name="discord_rpc/show_project_name" type="bool" setter="" getter="">
-+			If [code]true[/code], the current project's name will be shown in the Discord Rich Presence status message when editing a project.
-+		</member>
-+		<member name="discord_rpc/show_scene_name" type="bool" setter="" getter="">
-+			If [code]true[/code], the current scene's name will be shown in the Discord Rich Presence status message when editing a scene.
-+		</member>
-+		<member name="discord_rpc/show_scene_type" type="bool" setter="" getter="">
-+			If [code]true[/code], the current scene's root node type will be shown in the Discord Rich Presence status message when editing a scene. See also [member discord_rpc/show_scene_name].
-+		</member>
+		</member>
+		<member name="discord_rpc/enable" type="bool" setter="" getter="">
+			If [code]true[/code], enables Discord Rich Presence integration in the editor. See also [member discord_rpc/application_id].
+		</member>
+		<member name="discord_rpc/show_project_name" type="bool" setter="" getter="">
+			If [code]true[/code], the current project's name will be shown in the Discord Rich Presence status message when editing a project.
+		</member>
+		<member name="discord_rpc/show_scene_name" type="bool" setter="" getter="">
+			If [code]true[/code], the current scene's name will be shown in the Discord Rich Presence status message when editing a scene.
+		</member>
+		<member name="discord_rpc/show_scene_type" type="bool" setter="" getter="">
+			If [code]true[/code], the current scene's root node type will be shown in the Discord Rich Presence status message when editing a scene. See also [member discord_rpc/show_scene_name].
+		</member>
 		<member name="docks/filesystem/always_show_folders" type="bool" setter="" getter="">
 			If [code]true[/code], displays folders in the FileSystem dock's bottom pane when split mode is enabled. If [code]false[/code], only files will be displayed in the bottom pane. Split mode can be toggled by pressing the icon next to the [code]res://[/code] folder path.
 			[b]Note:[/b] This setting has no effect when split mode is disabled (which is the default).
