@@ -218,9 +218,6 @@
 			[b]Note:[/b] Restart the application after changing this setting.
 			[b]Note:[/b] Changing this value can help on platforms or with third-party tools where hidden directory patterns are disallowed. Only modify this setting if you know that your environment requires it, as changing the default can impact compatibility with some external tools or plugins which expect the default [code].import[/code] folder.
 		</member>
-		<member name="application/config/windows_native_icon" type="String" setter="" getter="" default="&quot;&quot;">
-			Icon set in [code].ico[/code] format used on Windows to set the game's icon. This is done automatically on start by calling [method OS.set_native_icon].
-		</member>
 		<member name="application/run/delta_smoothing" type="bool" setter="" getter="" default="true">
 			Time samples for frame deltas are subject to random variation introduced by the platform, even when frames are displayed at regular intervals thanks to V-Sync. This can lead to jitter. Delta smoothing can often give a better result by filtering the input deltas to correct for minor fluctuations from the refresh rate.
 			[b]Note:[/b] Delta smoothing is only attempted when [member display/window/vsync/use_vsync] is switched on, as it does not work well without V-Sync.
