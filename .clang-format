@@ -133,7 +133,7 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 # SpaceBeforeCpp11BracedList: false
 # SpaceBeforeCtorInitializerColon: true
 # SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: true # ControlStatements
+SpaceBeforeParens: ControlStatements
 # SpaceAroundPointerQualifiers: Default
 # SpaceBeforeRangeBasedForLoopColon: true
 # SpaceInEmptyParentheses: false
