@@ -100,20 +100,20 @@ static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left =
 }
 
 static Ref<StyleBoxFlat> make_flat_stylebox_v4(Color p_color, float p_margin_left = default_margin, float p_margin_top = default_margin, float p_margin_right = default_margin, float p_margin_bottom = default_margin, int p_corner_radius = default_corner_radius, bool p_draw_center = true, int p_border_width = 0) {
-    Ref<StyleBoxFlat> style(memnew(StyleBoxFlat));
-    style->set_bg_color(p_color);
-    style->set_default_margin(MARGIN_LEFT, p_margin_left * scale);
-    style->set_default_margin(MARGIN_RIGHT, p_margin_right * scale);
-    style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * scale);
-    style->set_default_margin(MARGIN_TOP, p_margin_top * scale);
-    
-    // Godot 3.6 StyleBoxFlat properties
-    style->set_corner_radius_all(p_corner_radius);
-    style->set_anti_aliased(true);
-    style->set_draw_center(p_draw_center);
-    style->set_border_width_all(p_border_width);
-    
-    return style;
+	Ref<StyleBoxFlat> style(memnew(StyleBoxFlat));
+	style->set_bg_color(p_color);
+	style->set_default_margin(MARGIN_LEFT, p_margin_left * scale);
+	style->set_default_margin(MARGIN_RIGHT, p_margin_right * scale);
+	style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * scale);
+	style->set_default_margin(MARGIN_TOP, p_margin_top * scale);
+
+	// Godot 3.6 StyleBoxFlat properties
+	style->set_corner_radius_all(p_corner_radius);
+	style->set_anti_aliased(true);
+	style->set_draw_center(p_draw_center);
+	style->set_border_width_all(p_border_width);
+
+	return style;
 }
 
 static Ref<StyleBoxTexture> sb_expand(Ref<StyleBoxTexture> p_sbox, float p_left, float p_top, float p_right, float p_bottom) {
@@ -742,16 +742,16 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_constant("vseparation", "PopupMenu", 4 * scale);
 
 	// GraphNode
-/*
-	Ref<StyleBoxTexture> graphsb = make_stylebox(graph_node_png, 6, 24, 6, 5, 16, 24, 16, 6);
-	Ref<StyleBoxTexture> graphsbcomment = make_stylebox(graph_node_comment_png, 6, 24, 6, 5, 16, 24, 16, 6);
-	Ref<StyleBoxTexture> graphsbcommentselected = make_stylebox(graph_node_comment_focus_png, 6, 24, 6, 5, 16, 24, 16, 6);
-	Ref<StyleBoxTexture> graphsbselected = make_stylebox(graph_node_selected_png, 6, 24, 6, 5, 16, 24, 16, 6);
-	Ref<StyleBoxTexture> graphsbdefault = make_stylebox(graph_node_default_png, 4, 4, 4, 4, 6, 4, 4, 4);
-	Ref<StyleBoxTexture> graphsbdeffocus = make_stylebox(graph_node_default_focus_png, 4, 4, 4, 4, 6, 4, 4, 4);
-	Ref<StyleBoxTexture> graph_bpoint = make_stylebox(graph_node_breakpoint_png, 6, 24, 6, 5, 16, 24, 16, 6);
-	Ref<StyleBoxTexture> graph_position = make_stylebox(graph_node_position_png, 6, 24, 6, 5, 16, 24, 16, 6);
-*/
+	/*
+		Ref<StyleBoxTexture> graphsb = make_stylebox(graph_node_png, 6, 24, 6, 5, 16, 24, 16, 6);
+		Ref<StyleBoxTexture> graphsbcomment = make_stylebox(graph_node_comment_png, 6, 24, 6, 5, 16, 24, 16, 6);
+		Ref<StyleBoxTexture> graphsbcommentselected = make_stylebox(graph_node_comment_focus_png, 6, 24, 6, 5, 16, 24, 16, 6);
+		Ref<StyleBoxTexture> graphsbselected = make_stylebox(graph_node_selected_png, 6, 24, 6, 5, 16, 24, 16, 6);
+		Ref<StyleBoxTexture> graphsbdefault = make_stylebox(graph_node_default_png, 4, 4, 4, 4, 6, 4, 4, 4);
+		Ref<StyleBoxTexture> graphsbdeffocus = make_stylebox(graph_node_default_focus_png, 4, 4, 4, 4, 6, 4, 4, 4);
+		Ref<StyleBoxTexture> graph_bpoint = make_stylebox(graph_node_breakpoint_png, 6, 24, 6, 5, 16, 24, 16, 6);
+		Ref<StyleBoxTexture> graph_position = make_stylebox(graph_node_position_png, 6, 24, 6, 5, 16, 24, 16, 6);
+	*/
 	//graphsb->set_expand_margin_size(MARGIN_LEFT,10);
 	//graphsb->set_expand_margin_size(MARGIN_RIGHT,10);
 	Ref<StyleBoxFlat> graphnode_normal = make_flat_stylebox_v4(style_color_normal, 18, 42, 18, 12);

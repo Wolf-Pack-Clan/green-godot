@@ -660,7 +660,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	Ref<StyleBoxFlat> style_menu_hover_bg = style_widget->duplicate();
 	style_menu_hover_bg->set_border_width_all(0);
 	style_menu_hover_bg->set_bg_color(dark_color_1);
-	
+
 	theme->set_stylebox("normal", "MenuButton", style_menu);
 	theme->set_stylebox("hover", "MenuButton", style_widget_hover);
 	theme->set_stylebox("pressed", "MenuButton", style_menu);
