@@ -51,6 +51,7 @@ public:
 	virtual bool test_mask(const Point2 &p_point, const Rect2 &p_rect) const;
 
 	void set_default_margin(Margin p_margin, float p_value);
+	void set_default_margin_all(float p_value);
 	float get_default_margin(Margin p_margin) const;
 	float get_margin(Margin p_margin) const;
 	virtual Size2 get_center_size() const;

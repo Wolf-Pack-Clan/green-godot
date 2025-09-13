@@ -43,6 +43,13 @@ void StyleBox::set_default_margin(Margin p_margin, float p_value) {
 	margin[p_margin] = p_value;
 	emit_changed();
 }
+void StyleBox::set_default_margin_all(float p_value) {
+	margin[Margin::MARGIN_LEFT] = p_value;
+	margin[Margin::MARGIN_TOP] = p_value;
+	margin[Margin::MARGIN_RIGHT] = p_value;
+	margin[Margin::MARGIN_BOTTOM] = p_value;
+	emit_changed();
+}
 float StyleBox::get_default_margin(Margin p_margin) const {
 	ERR_FAIL_INDEX_V((int)p_margin, 4, 0.0);
 

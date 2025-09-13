@@ -42,6 +42,8 @@ typedef Map<const void *, Ref<ImageTexture>> TexCacheMap;
 
 static TexCacheMap *tex_cache;
 static float scale = 1;
+static const int default_margin = 4;
+static const int default_corner_radius = 3;
 
 template <class T>
 static Ref<StyleBoxTexture> make_stylebox(T p_src, float p_left, float p_top, float p_right, float p_bottom, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1, bool p_draw_center = true) {
@@ -95,6 +97,23 @@ static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left =
 	style->set_default_margin(MARGIN_TOP, p_margin_top * scale);
 
 	return style;
+}
+
+static Ref<StyleBoxFlat> make_flat_stylebox_v4(Color p_color, float p_margin_left = default_margin, float p_margin_top = default_margin, float p_margin_right = default_margin, float p_margin_bottom = default_margin, int p_corner_radius = default_corner_radius, bool p_draw_center = true, int p_border_width = 0) {
+    Ref<StyleBoxFlat> style(memnew(StyleBoxFlat));
+    style->set_bg_color(p_color);
+    style->set_default_margin(MARGIN_LEFT, p_margin_left * scale);
+    style->set_default_margin(MARGIN_RIGHT, p_margin_right * scale);
+    style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * scale);
+    style->set_default_margin(MARGIN_TOP, p_margin_top * scale);
+    
+    // Godot 3.6 StyleBoxFlat properties
+    style->set_corner_radius_all(p_corner_radius);
+    style->set_anti_aliased(true);
+    style->set_draw_center(p_draw_center);
+    style->set_border_width_all(p_border_width);
+    
+    return style;
 }
 
 static Ref<StyleBoxTexture> sb_expand(Ref<StyleBoxTexture> p_sbox, float p_left, float p_top, float p_right, float p_bottom) {
@@ -199,14 +218,31 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// Font Colors
 
-	Color control_font_color = Color(0.88, 0.88, 0.88);
-	Color control_font_color_lower = Color(0.63, 0.63, 0.63);
-	Color control_font_color_low = Color(0.69, 0.69, 0.69);
-	Color control_font_color_hover = Color(0.94, 0.94, 0.94);
-	Color control_font_color_focus = Color(0.94, 0.94, 0.94);
-	Color control_font_color_disabled = Color(0.9, 0.9, 0.9, 0.2);
+	Color control_font_color = Color(0.875, 0.875, 0.875);
+	Color control_font_color_lower = Color(0.65, 0.65, 0.65);
+	Color control_font_color_low = Color(0.7, 0.7, 0.7);
+	Color control_font_color_hover = Color(0.95, 0.95, 0.95);
+	Color control_font_color_focus = Color(0.95, 0.95, 0.95);
+	Color control_font_color_disabled = control_font_color * Color(1, 1, 1, 0.5);
 	Color control_font_color_pressed = Color(1, 1, 1);
-	Color font_color_selection = Color(0.49, 0.49, 0.49);
+	Color font_color_selection = Color(0.5, 0.5, 0.5);
+
+	// StyleBox Colors
+
+	const Color style_color_focus = Color(1, 1, 1, 0.75);
+
+	const Color style_color_normal = Color(0.1, 0.1, 0.1, 0.6);
+	const Color style_color_hover = Color(0.225, 0.225, 0.225, 0.6);
+	const Color style_color_pressed = Color(0, 0, 0, 0.6);
+	const Color style_color_disabled = Color(0.1, 0.1, 0.1, 0.3);
+
+	const Color style_color_popup = Color(0.25, 0.25, 0.25, 1);
+	const Color style_color_popup_border = Color(0.175, 0.175, 0.175, 1);
+	const Color style_color_popup_hover = Color(0.4, 0.4, 0.4, 1);
+	const Color style_color_selected = Color(1, 1, 1, 0.3);
+
+	const Color style_color_progress = Color(1, 1, 1, 0.4);
+	const Color style_color_separator = Color(0.5, 0.5, 0.5);
 
 	// Panel
 
@@ -214,12 +250,13 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// Focus
 
-	Ref<StyleBoxTexture> focus = make_stylebox(focus_png, 5, 5, 5, 5);
+	/*Ref<StyleBoxTexture> focus = make_stylebox(focus_png, 5, 5, 5, 5);
 	for (int i = 0; i < 4; i++) {
-		focus->set_expand_margin_size(Margin(i), 1 * scale);
-	}
+		focus->set_expand_margin_size(Margin(i), 2 * scale);
+	}//*/
 
 	// Button
+	/*
 
 	Ref<StyleBox> sb_button_normal = sb_expand(make_stylebox(button_normal_png, 4, 4, 4, 4, 6, 3, 6, 3), 2, 2, 2, 2);
 	Ref<StyleBox> sb_button_pressed = sb_expand(make_stylebox(button_pressed_png, 4, 4, 4, 4, 6, 3, 6, 3), 2, 2, 2, 2);
@@ -249,7 +286,46 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_color("icon_color_focus", "Button", Color(1, 1, 1, 1));
 	theme->set_color("icon_color_disabled", "Button", Color(1, 1, 1, 0.4));
 
+	theme->set_constant("hseparation", "Button", 2 * scale);//*/
+
+	// Test
+	// Button - Godot 4.0 style with rounded corners
+	const Ref<StyleBoxFlat> sb_button_normal = make_flat_stylebox_v4(style_color_normal);
+	const Ref<StyleBoxFlat> sb_button_hover = make_flat_stylebox_v4(style_color_hover);
+	const Ref<StyleBoxFlat> sb_button_pressed = make_flat_stylebox_v4(style_color_pressed);
+	const Ref<StyleBoxFlat> sb_button_disabled = make_flat_stylebox_v4(style_color_disabled);
+
+	// Create focus style with border
+	Ref<StyleBoxFlat> focus = make_flat_stylebox_v4(style_color_focus, default_margin, default_margin, default_margin, default_margin, default_corner_radius, false, 2);
+	// Make the focus outline appear flush with buttons
+	for (int i = 0; i < 4; i++) {
+		focus->set_expand_margin_size(Margin(i), 2 * scale);
+	}
+
+	theme->set_stylebox("normal", "Button", sb_button_normal);
+	theme->set_stylebox("hover", "Button", sb_button_hover);
+	theme->set_stylebox("pressed", "Button", sb_button_pressed);
+	theme->set_stylebox("disabled", "Button", sb_button_disabled);
+	theme->set_stylebox("focus", "Button", focus);
+
+	theme->set_font("font", "Button", default_font);
+
+	theme->set_color("font_color", "Button", control_font_color);
+	theme->set_color("font_color_pressed", "Button", control_font_color_pressed);
+	theme->set_color("font_color_hover", "Button", control_font_color_hover);
+	theme->set_color("font_color_focus", "Button", control_font_color_focus);
+	theme->set_color("font_color_hover_pressed", "Button", control_font_color_pressed);
+	theme->set_color("font_color_disabled", "Button", control_font_color_disabled);
+
+	theme->set_color("icon_color_normal", "Button", Color(1, 1, 1, 1));
+	theme->set_color("icon_color_pressed", "Button", Color(1, 1, 1, 1));
+	theme->set_color("icon_color_hover", "Button", Color(1, 1, 1, 1));
+	theme->set_color("icon_color_hover_pressed", "Button", Color(1, 1, 1, 1));
+	theme->set_color("icon_color_focus", "Button", Color(1, 1, 1, 1));
+	theme->set_color("icon_color_disabled", "Button", Color(1, 1, 1, 0.4));
+
 	theme->set_constant("hseparation", "Button", 2 * scale);
+	// End test
 
 	// LinkButton
 
@@ -262,6 +338,7 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_color("font_color_hover", "LinkButton", control_font_color_hover);
 	theme->set_color("font_color_focus", "LinkButton", control_font_color_focus);
 
+	//theme->set_constant("outline_size", "LinkButton", 0);
 	theme->set_constant("underline_spacing", "LinkButton", 2 * scale);
 
 	// ToolButton
@@ -283,17 +360,22 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// OptionButton
 
-	Ref<StyleBox> sb_optbutton_normal = sb_expand(make_stylebox(option_button_normal_png, 4, 4, 21, 4, 6, 3, 9, 3), 2, 2, 2, 2);
+	/*Ref<StyleBox> sb_optbutton_normal = sb_expand(make_stylebox(option_button_normal_png, 4, 4, 21, 4, 6, 3, 9, 3), 2, 2, 2, 2);
 	Ref<StyleBox> sb_optbutton_pressed = sb_expand(make_stylebox(option_button_pressed_png, 4, 4, 21, 4, 6, 3, 9, 3), 2, 2, 2, 2);
 	Ref<StyleBox> sb_optbutton_hover = sb_expand(make_stylebox(option_button_hover_png, 4, 4, 21, 4, 6, 2, 9, 2), 2, 2, 2, 2);
 	Ref<StyleBox> sb_optbutton_disabled = sb_expand(make_stylebox(option_button_disabled_png, 4, 4, 21, 4, 6, 2, 9, 2), 2, 2, 2, 2);
-	Ref<StyleBox> sb_optbutton_focus = sb_expand(make_stylebox(button_focus_png, 4, 4, 4, 4, 6, 2, 6, 2), 2, 2, 2, 2);
+	Ref<StyleBox> sb_optbutton_focus = sb_expand(make_stylebox(button_focus_png, 4, 4, 4, 4, 6, 2, 6, 2), 2, 2, 2, 2);//*/
+
+	Ref<StyleBox> sb_optbutton_normal = make_flat_stylebox_v4(style_color_normal, 2 * default_margin, default_margin, 21, default_margin);
+	Ref<StyleBox> sb_optbutton_hover = make_flat_stylebox_v4(style_color_hover, 2 * default_margin, default_margin, 21, default_margin);
+	Ref<StyleBox> sb_optbutton_pressed = make_flat_stylebox_v4(style_color_pressed, 2 * default_margin, default_margin, 21, default_margin);
+	Ref<StyleBox> sb_optbutton_disabled = make_flat_stylebox_v4(style_color_disabled, 2 * default_margin, default_margin, 21, default_margin);
 
 	theme->set_stylebox("normal", "OptionButton", sb_optbutton_normal);
 	theme->set_stylebox("pressed", "OptionButton", sb_optbutton_pressed);
 	theme->set_stylebox("hover", "OptionButton", sb_optbutton_hover);
 	theme->set_stylebox("disabled", "OptionButton", sb_optbutton_disabled);
-	theme->set_stylebox("focus", "OptionButton", sb_optbutton_focus);
+	theme->set_stylebox("focus", "OptionButton", focus);
 
 	theme->set_icon("arrow", "OptionButton", make_icon(option_arrow_png));
 
@@ -306,7 +388,9 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_color("font_color_disabled", "OptionButton", control_font_color_disabled);
 
 	theme->set_constant("hseparation", "OptionButton", 2 * scale);
-	theme->set_constant("arrow_margin", "OptionButton", 2 * scale);
+	theme->set_constant("arrow_margin", "OptionButton", 4 * scale);
+	//theme->set_constant("outline_size", "OptionButton", 0);
+	theme->set_constant("modulate_arrow", "OptionButton", false);
 
 	// MenuButton
 
@@ -314,7 +398,7 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_stylebox("pressed", "MenuButton", sb_button_pressed);
 	theme->set_stylebox("hover", "MenuButton", sb_button_hover);
 	theme->set_stylebox("disabled", "MenuButton", sb_button_disabled);
-	theme->set_stylebox("focus", "MenuButton", sb_button_focus);
+	theme->set_stylebox("focus", "MenuButton", focus);
 
 	theme->set_font("font", "MenuButton", default_font);
 
@@ -325,6 +409,7 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_color("font_color_disabled", "MenuButton", Color(1, 1, 1, 0.3));
 
 	theme->set_constant("hseparation", "MenuButton", 3 * scale);
+	//theme->set_constant("outline_size", "MenuButton", 0);
 
 	// CheckBox
 
@@ -366,6 +451,7 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	theme->set_constant("hseparation", "CheckBox", 4 * scale);
 	theme->set_constant("check_vadjust", "CheckBox", 0 * scale);
+	//theme->set_constant("outline_size", "CheckBox", 0);
 
 	// CheckButton
 
@@ -415,9 +501,16 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// LineEdit
 
-	theme->set_stylebox("normal", "LineEdit", make_stylebox(line_edit_png, 5, 5, 5, 5));
+	Ref<StyleBoxFlat> style_line_edit = make_flat_stylebox_v4(style_color_normal);
+	style_line_edit->set_border_width(Margin::MARGIN_BOTTOM, 2);
+	style_line_edit->set_border_color(style_color_pressed);
+	theme->set_stylebox("normal", "LineEdit", style_line_edit);
 	theme->set_stylebox("focus", "LineEdit", focus);
-	theme->set_stylebox("read_only", "LineEdit", make_stylebox(line_edit_disabled_png, 6, 6, 6, 6));
+
+	Ref<StyleBoxFlat> style_line_edit_read_only = make_flat_stylebox_v4(style_color_disabled);
+	style_line_edit_read_only->set_border_width(Margin::MARGIN_BOTTOM, 2);
+	style_line_edit_read_only->set_border_color(style_color_pressed * Color(1, 1, 1, 0.5));
+	theme->set_stylebox("read_only", "LineEdit", style_line_edit_read_only);
 
 	theme->set_font("font", "LineEdit", default_font);
 
@@ -435,8 +528,8 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// ProgressBar
 
-	theme->set_stylebox("bg", "ProgressBar", make_stylebox(progress_bar_png, 4, 4, 4, 4, 0, 0, 0, 0));
-	theme->set_stylebox("fg", "ProgressBar", make_stylebox(progress_fill_png, 6, 6, 6, 6, 2, 1, 2, 1));
+	theme->set_stylebox("background", "ProgressBar", make_flat_stylebox_v4(style_color_disabled, 2, 2, 2, 2, 6));
+	theme->set_stylebox("fill", "ProgressBar", make_flat_stylebox_v4(style_color_progress, 2, 2, 2, 2, 6));
 
 	theme->set_font("font", "ProgressBar", default_font);
 
@@ -445,10 +538,10 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// TextEdit
 
-	theme->set_stylebox("normal", "TextEdit", make_stylebox(tree_bg_png, 3, 3, 3, 3, 0, 0, 0, 0));
+	theme->set_stylebox("normal", "TextEdit", style_line_edit);
 	theme->set_stylebox("focus", "TextEdit", focus);
-	theme->set_stylebox("read_only", "TextEdit", make_stylebox(tree_bg_disabled_png, 4, 4, 4, 4, 0, 0, 0, 0));
-	theme->set_stylebox("completion", "TextEdit", make_stylebox(tree_bg_png, 3, 3, 3, 3, 0, 0, 0, 0));
+	theme->set_stylebox("read_only", "TextEdit", style_line_edit_read_only);
+	theme->set_stylebox("completion", "TextEdit", make_flat_stylebox_v4(style_color_normal, 0, 0, 0, 0));
 
 	theme->set_icon("tab", "TextEdit", make_icon(tab_png));
 	theme->set_icon("space", "TextEdit", make_icon(space_png));
@@ -491,13 +584,19 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	Ref<Texture> empty_icon = memnew(ImageTexture);
 
+	const Ref<StyleBoxFlat> style_h_scrollbar = make_flat_stylebox_v4(style_color_normal, 0, 4, 0, 4, 10);
+	const Ref<StyleBoxFlat> style_v_scrollbar = make_flat_stylebox_v4(style_color_normal, 4, 0, 4, 0, 10);
+	Ref<StyleBoxFlat> style_scrollbar_grabber = make_flat_stylebox_v4(style_color_progress, 4, 4, 4, 4, 10);
+	Ref<StyleBoxFlat> style_scrollbar_grabber_highlight = make_flat_stylebox_v4(style_color_focus, 4, 4, 4, 4, 10);
+	Ref<StyleBoxFlat> style_scrollbar_grabber_pressed = make_flat_stylebox_v4(style_color_focus * Color(0.75, 0.75, 0.75), 4, 4, 4, 4, 10);
+
 	// HScrollBar
 
-	theme->set_stylebox("scroll", "HScrollBar", make_stylebox(scroll_bg_png, 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("scroll_focus", "HScrollBar", make_stylebox(scroll_bg_png, 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("grabber", "HScrollBar", make_stylebox(scroll_grabber_png, 5, 5, 5, 5, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_highlight", "HScrollBar", make_stylebox(scroll_grabber_hl_png, 5, 5, 5, 5, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_pressed", "HScrollBar", make_stylebox(scroll_grabber_pressed_png, 5, 5, 5, 5, 2, 2, 2, 2));
+	theme->set_stylebox("scroll", "HScrollBar", style_h_scrollbar);
+	theme->set_stylebox("scroll_focus", "HScrollBar", focus);
+	theme->set_stylebox("grabber", "HScrollBar", style_scrollbar_grabber);
+	theme->set_stylebox("grabber_highlight", "HScrollBar", style_scrollbar_grabber_highlight);
+	theme->set_stylebox("grabber_pressed", "HScrollBar", style_scrollbar_grabber_pressed);
 
 	theme->set_icon("increment", "HScrollBar", empty_icon);
 	theme->set_icon("increment_highlight", "HScrollBar", empty_icon);
@@ -508,11 +607,11 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// VScrollBar
 
-	theme->set_stylebox("scroll", "VScrollBar", make_stylebox(scroll_bg_png, 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("scroll_focus", "VScrollBar", make_stylebox(scroll_bg_png, 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("grabber", "VScrollBar", make_stylebox(scroll_grabber_png, 5, 5, 5, 5, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_highlight", "VScrollBar", make_stylebox(scroll_grabber_hl_png, 5, 5, 5, 5, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_pressed", "VScrollBar", make_stylebox(scroll_grabber_pressed_png, 5, 5, 5, 5, 2, 2, 2, 2));
+	theme->set_stylebox("scroll", "VScrollBar", style_v_scrollbar);
+	theme->set_stylebox("scroll_focus", "VScrollBar", focus);
+	theme->set_stylebox("grabber", "VScrollBar", style_scrollbar_grabber);
+	theme->set_stylebox("grabber_highlight", "VScrollBar", style_scrollbar_grabber_highlight);
+	theme->set_stylebox("grabber_pressed", "VScrollBar", style_scrollbar_grabber_pressed);
 
 	theme->set_icon("increment", "VScrollBar", empty_icon);
 	theme->set_icon("increment_highlight", "VScrollBar", empty_icon);
@@ -521,11 +620,15 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_icon("decrement_highlight", "VScrollBar", empty_icon);
 	theme->set_icon("decrement_pressed", "VScrollBar", empty_icon);
 
+	const Ref<StyleBoxFlat> style_slider = make_flat_stylebox_v4(style_color_normal, 4, 4, 4, 4, 4);
+	const Ref<StyleBoxFlat> style_slider_grabber = make_flat_stylebox_v4(style_color_progress, 4, 4, 4, 4, 4);
+	const Ref<StyleBoxFlat> style_slider_grabber_highlight = make_flat_stylebox_v4(style_color_focus, 4, 4, 4, 4, 4);
+
 	// HSlider
 
-	theme->set_stylebox("slider", "HSlider", make_stylebox(hslider_bg_png, 4, 4, 4, 4));
-	theme->set_stylebox("grabber_area", "HSlider", make_stylebox(hslider_bg_png, 4, 4, 4, 4));
-	theme->set_stylebox("grabber_area_highlight", "HSlider", make_stylebox(hslider_bg_png, 4, 4, 4, 4));
+	theme->set_stylebox("slider", "HSlider", style_slider);
+	theme->set_stylebox("grabber_area", "HSlider", style_slider_grabber);
+	theme->set_stylebox("grabber_area_highlight", "HSlider", style_slider_grabber_highlight);
 
 	theme->set_icon("grabber", "HSlider", make_icon(hslider_grabber_png));
 	theme->set_icon("grabber_highlight", "HSlider", make_icon(hslider_grabber_hl_png));
@@ -534,9 +637,9 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// VSlider
 
-	theme->set_stylebox("slider", "VSlider", make_stylebox(vslider_bg_png, 4, 4, 4, 4));
-	theme->set_stylebox("grabber_area", "VSlider", make_stylebox(vslider_bg_png, 4, 4, 4, 4));
-	theme->set_stylebox("grabber_area_highlight", "VSlider", make_stylebox(vslider_bg_png, 4, 4, 4, 4));
+	theme->set_stylebox("slider", "VSlider", style_slider);
+	theme->set_stylebox("grabber_area", "VSlider", style_slider_grabber);
+	theme->set_stylebox("grabber_area_highlight", "VSlider", style_slider_grabber_highlight);
 
 	theme->set_icon("grabber", "VSlider", make_icon(vslider_grabber_png));
 	theme->set_icon("grabber_highlight", "VSlider", make_icon(vslider_grabber_hl_png));
@@ -574,6 +677,7 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// Popup
 
+	//Ref<StyleBoxTexture> style_pp = sb_expand(make_flat_stylebox_v4(style_color_popup, 8 * scale, 8 * scale, 8 * scale, 8 * scale), 2, 2, 2, 2);
 	Ref<StyleBoxTexture> style_pp = sb_expand(make_stylebox(popup_bg_png, 5, 5, 5, 5, 4, 4, 4, 4), 2, 2, 2, 2);
 
 	Ref<StyleBoxTexture> selected = make_stylebox(selection_png, 6, 6, 6, 6);
@@ -586,17 +690,38 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// PopupDialog
 
-	Ref<StyleBoxTexture> style_pd = make_stylebox(popup_bg_png, 4, 4, 4, 4, 10, 10, 10, 10);
+	Ref<StyleBoxTexture> style_pd = make_flat_stylebox_v4(style_color_normal);
 	theme->set_stylebox("panel", "PopupDialog", style_pd);
 
 	// PopupMenu
 
-	theme->set_stylebox("panel", "PopupMenu", style_pd);
-	theme->set_stylebox("panel_disabled", "PopupMenu", make_stylebox(popup_bg_disabled_png, 4, 4, 4, 4));
-	theme->set_stylebox("hover", "PopupMenu", selected);
-	theme->set_stylebox("separator", "PopupMenu", make_stylebox(vseparator_png, 3, 3, 3, 3));
-	theme->set_stylebox("labeled_separator_left", "PopupMenu", make_stylebox(vseparator_png, 0, 0, 0, 0));
-	theme->set_stylebox("labeled_separator_right", "PopupMenu", make_stylebox(vseparator_png, 0, 0, 0, 0));
+	Ref<StyleBoxLine> separator_horizontal = memnew(StyleBoxLine);
+	separator_horizontal->set_thickness(Math::round(scale));
+	separator_horizontal->set_color(style_color_separator);
+	separator_horizontal->set_default_margin(Margin::MARGIN_LEFT, default_margin);
+	separator_horizontal->set_default_margin(Margin::MARGIN_TOP, 0);
+	separator_horizontal->set_default_margin(Margin::MARGIN_RIGHT, default_margin);
+	separator_horizontal->set_default_margin(Margin::MARGIN_BOTTOM, 0);
+
+	Ref<StyleBoxLine> separator_vertical = separator_horizontal->duplicate();
+	separator_vertical->set_vertical(true);
+	separator_vertical->set_default_margin(Margin::MARGIN_LEFT, 0);
+	separator_vertical->set_default_margin(Margin::MARGIN_TOP, default_margin);
+	separator_vertical->set_default_margin(Margin::MARGIN_RIGHT, 0);
+	separator_vertical->set_default_margin(Margin::MARGIN_BOTTOM, default_margin);
+
+	Ref<StyleBoxFlat> style_popup_panel = make_flat_stylebox_v4(style_color_popup);
+	style_popup_panel->set_border_width_all(2);
+	style_popup_panel->set_border_color(style_color_popup_border);
+	Ref<StyleBoxFlat> style_popup_panel_disabled = style_popup_panel->duplicate();
+	style_popup_panel_disabled->set_bg_color(style_color_disabled);
+
+	theme->set_stylebox("panel", "PopupMenu", style_popup_panel);
+	theme->set_stylebox("panel_disabled", "PopupMenu", style_popup_panel_disabled);
+	theme->set_stylebox("hover", "PopupMenu", make_flat_stylebox_v4(style_color_popup_hover));
+	theme->set_stylebox("separator", "PopupMenu", separator_horizontal);
+	theme->set_stylebox("labeled_separator_left", "PopupMenu", separator_horizontal);
+	theme->set_stylebox("labeled_separator_right", "PopupMenu", separator_horizontal);
 
 	theme->set_icon("checked", "PopupMenu", make_icon(checked_png));
 	theme->set_icon("unchecked", "PopupMenu", make_icon(unchecked_png));
@@ -617,7 +742,7 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_constant("vseparation", "PopupMenu", 4 * scale);
 
 	// GraphNode
-
+/*
 	Ref<StyleBoxTexture> graphsb = make_stylebox(graph_node_png, 6, 24, 6, 5, 16, 24, 16, 6);
 	Ref<StyleBoxTexture> graphsbcomment = make_stylebox(graph_node_comment_png, 6, 24, 6, 5, 16, 24, 16, 6);
 	Ref<StyleBoxTexture> graphsbcommentselected = make_stylebox(graph_node_comment_focus_png, 6, 24, 6, 5, 16, 24, 16, 6);
@@ -626,17 +751,35 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	Ref<StyleBoxTexture> graphsbdeffocus = make_stylebox(graph_node_default_focus_png, 4, 4, 4, 4, 6, 4, 4, 4);
 	Ref<StyleBoxTexture> graph_bpoint = make_stylebox(graph_node_breakpoint_png, 6, 24, 6, 5, 16, 24, 16, 6);
 	Ref<StyleBoxTexture> graph_position = make_stylebox(graph_node_position_png, 6, 24, 6, 5, 16, 24, 16, 6);
-
+*/
 	//graphsb->set_expand_margin_size(MARGIN_LEFT,10);
 	//graphsb->set_expand_margin_size(MARGIN_RIGHT,10);
-	theme->set_stylebox("frame", "GraphNode", graphsb);
-	theme->set_stylebox("selectedframe", "GraphNode", graphsbselected);
-	theme->set_stylebox("defaultframe", "GraphNode", graphsbdefault);
-	theme->set_stylebox("defaultfocus", "GraphNode", graphsbdeffocus);
-	theme->set_stylebox("comment", "GraphNode", graphsbcomment);
-	theme->set_stylebox("commentfocus", "GraphNode", graphsbcommentselected);
-	theme->set_stylebox("breakpoint", "GraphNode", graph_bpoint);
-	theme->set_stylebox("position", "GraphNode", graph_position);
+	Ref<StyleBoxFlat> graphnode_normal = make_flat_stylebox_v4(style_color_normal, 18, 42, 18, 12);
+	graphnode_normal->set_border_width(Margin::MARGIN_TOP, 30);
+	graphnode_normal->set_border_color(Color(0.325, 0.325, 0.325, 0.6));
+	Ref<StyleBoxFlat> graphnode_selected = graphnode_normal->duplicate();
+	graphnode_selected->set_border_color(Color(0.625, 0.625, 0.625, 0.6));
+	Ref<StyleBoxFlat> graphnode_comment_normal = make_flat_stylebox_v4(style_color_pressed, 18, 42, 18, 12, 3, true, 2);
+	graphnode_comment_normal->set_border_color(style_color_pressed);
+	Ref<StyleBoxFlat> graphnode_comment_selected = graphnode_comment_normal->duplicate();
+	graphnode_comment_selected->set_border_color(style_color_hover);
+	Ref<StyleBoxFlat> graphnode_breakpoint = make_flat_stylebox_v4(style_color_pressed, 18, 42, 18, 12, 6, true, 4);
+	graphnode_breakpoint->set_border_color(Color(0.9, 0.29, 0.3));
+	Ref<StyleBoxFlat> graphnode_position = make_flat_stylebox_v4(style_color_pressed, 18, 42, 18, 12, 6, true, 4);
+	graphnode_position->set_border_color(Color(0.98, 0.89, 0.27));
+	Ref<StyleBoxEmpty> graphnode_slot = make_empty_stylebox(0, 0, 0, 0);
+
+	Ref<StyleBoxFlat> graphnode_deffocus = make_flat_stylebox_v4(style_color_focus);
+	graphnode_deffocus->set_border_width_all(4);
+
+	theme->set_stylebox("frame", "GraphNode", graphnode_normal);
+	theme->set_stylebox("selectedframe", "GraphNode", graphnode_selected);
+	theme->set_stylebox("defaultframe", "GraphNode", graphnode_normal);
+	theme->set_stylebox("defaultfocus", "GraphNode", graphnode_deffocus);
+	theme->set_stylebox("comment", "GraphNode", graphnode_comment_normal);
+	theme->set_stylebox("commentfocus", "GraphNode", graphnode_comment_selected);
+	theme->set_stylebox("breakpoint", "GraphNode", graphnode_breakpoint);
+	theme->set_stylebox("position", "GraphNode", graphnode_position);
 	theme->set_constant("separation", "GraphNode", 1 * scale);
 	theme->set_icon("port", "GraphNode", make_icon(graph_port_png));
 	theme->set_icon("close", "GraphNode", make_icon(graph_node_close_png));
@@ -651,19 +794,19 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 
 	// Tree
 
-	Ref<StyleBoxTexture> tree_selected = make_stylebox(selection_png, 4, 4, 4, 4, 8, 0, 8, 0);
-	Ref<StyleBoxTexture> tree_selected_oof = make_stylebox(selection_oof_png, 4, 4, 4, 4, 8, 0, 8, 0);
+	//Ref<StyleBoxTexture> tree_selected = make_flat_stylebox_v4(style_color_selected);
+	//Ref<StyleBoxTexture> tree_selected_oof = tree_selected->duplicate();
 
-	theme->set_stylebox("bg", "Tree", make_stylebox(tree_bg_png, 4, 4, 4, 5));
+	theme->set_stylebox("bg", "Tree", make_flat_stylebox_v4(style_color_normal, 4, 4, 4, 5));
 	theme->set_stylebox("bg_focus", "Tree", focus);
-	theme->set_stylebox("selected", "Tree", tree_selected_oof);
-	theme->set_stylebox("selected_focus", "Tree", tree_selected);
+	theme->set_stylebox("selected", "Tree", make_flat_stylebox_v4(style_color_selected));
+	theme->set_stylebox("selected_focus", "Tree", make_flat_stylebox_v4(style_color_selected));
 	theme->set_stylebox("cursor", "Tree", focus);
 	theme->set_stylebox("cursor_unfocused", "Tree", focus);
-	theme->set_stylebox("button_pressed", "Tree", make_stylebox(button_pressed_png, 4, 4, 4, 4));
-	theme->set_stylebox("title_button_normal", "Tree", make_stylebox(tree_title_png, 4, 4, 4, 4));
-	theme->set_stylebox("title_button_pressed", "Tree", make_stylebox(tree_title_pressed_png, 4, 4, 4, 4));
-	theme->set_stylebox("title_button_hover", "Tree", make_stylebox(tree_title_png, 4, 4, 4, 4));
+	theme->set_stylebox("button_pressed", "Tree", sb_button_pressed);
+	theme->set_stylebox("title_button_normal", "Tree", make_flat_stylebox_v4(style_color_pressed, 4, 4, 4, 4));
+	theme->set_stylebox("title_button_pressed", "Tree", make_flat_stylebox_v4(style_color_hover, 4, 4, 4, 4));
+	theme->set_stylebox("title_button_hover", "Tree", make_flat_stylebox_v4(style_color_normal, 4, 4, 4, 4));
 	theme->set_stylebox("custom_button", "Tree", sb_button_normal);
 	theme->set_stylebox("custom_button_pressed", "Tree", sb_button_pressed);
 	theme->set_stylebox("custom_button_hover", "Tree", sb_button_hover);
@@ -696,10 +839,10 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_constant("scroll_speed", "Tree", 12);
 
 	// ItemList
-	Ref<StyleBoxTexture> item_selected = make_stylebox(selection_png, 4, 4, 4, 4, 8, 2, 8, 2);
-	Ref<StyleBoxTexture> item_selected_oof = make_stylebox(selection_oof_png, 4, 4, 4, 4, 8, 2, 8, 2);
+	//Ref<StyleBoxTexture> item_selected = make_flat_stylebox_v4(style_color_selected);
+	//Ref<StyleBoxTexture> item_selected_oof = item_selected->duplicate();//make_stylebox(selection_oof_png, 4, 4, 4, 4, 8, 2, 8, 2);
 
-	theme->set_stylebox("bg", "ItemList", make_stylebox(tree_bg_png, 4, 4, 4, 5));
+	theme->set_stylebox("bg", "ItemList", make_flat_stylebox_v4(style_color_normal));
 	theme->set_stylebox("bg_focus", "ItemList", focus);
 	theme->set_constant("hseparation", "ItemList", 4);
 	theme->set_constant("vseparation", "ItemList", 2);
@@ -709,8 +852,8 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_color("font_color", "ItemList", control_font_color_lower);
 	theme->set_color("font_color_selected", "ItemList", control_font_color_pressed);
 	theme->set_color("guide_color", "ItemList", Color(0, 0, 0, 0.1));
-	theme->set_stylebox("selected", "ItemList", item_selected_oof);
-	theme->set_stylebox("selected_focus", "ItemList", item_selected);
+	theme->set_stylebox("selected", "ItemList", make_flat_stylebox_v4(style_color_selected));
+	theme->set_stylebox("selected_focus", "ItemList", make_flat_stylebox_v4(style_color_selected));
 	theme->set_stylebox("cursor", "ItemList", focus);
 	theme->set_stylebox("cursor_unfocused", "ItemList", focus);
 
@@ -817,7 +960,7 @@ void fill_default_theme(Ref<Theme> &theme, const Ref<Font> &default_font, const 
 	theme->set_stylebox("pressed", "ColorPickerButton", sb_button_pressed);
 	theme->set_stylebox("hover", "ColorPickerButton", sb_button_hover);
 	theme->set_stylebox("disabled", "ColorPickerButton", sb_button_disabled);
-	theme->set_stylebox("focus", "ColorPickerButton", sb_button_focus);
+	theme->set_stylebox("focus", "ColorPickerButton", focus);
 
 	theme->set_font("font", "ColorPickerButton", default_font);
 

@@ -66,13 +66,29 @@ static Ref<StyleBoxEmpty> make_empty_stylebox(float p_margin_left = -1, float p_
 	return style;
 }
 
-static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1) {
+/*static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1) {
 	Ref<StyleBoxFlat> style(memnew(StyleBoxFlat));
 	style->set_bg_color(p_color);
 	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE);
 	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE);
 	style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * EDSCALE);
 	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE);
+	return style;
+}//*/
+
+static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1, int p_corner_width = 0) {
+	Ref<StyleBoxFlat> style(memnew(StyleBoxFlat));
+	style->set_bg_color(p_color);
+	// Adjust level of detail based on the corners' effective sizes.
+	style->set_corner_detail(Math::ceil(0.8 * p_corner_width * EDSCALE));
+	style->set_corner_radius_all(p_corner_width * EDSCALE);
+	// Margin
+	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE);
+	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE);
+	style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * EDSCALE);
+	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE);
+	// Work around issue about antialiased edges being blurrier (GH-35279).
+	style->set_anti_aliased(false);
 	return style;
 }
 
@@ -335,6 +351,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	const float gizmo_handle_scale = EDITOR_GET("interface/touchscreen/scale_gizmo_handles");
 	bool highlight_tabs = EDITOR_GET("interface/theme/highlight_tabs");
 	int border_size = EDITOR_GET("interface/theme/border_size");
+	int corner_radius = EDITOR_GET("interface/theme/corner_radius");
 
 	bool use_gn_headers = EDITOR_GET("interface/theme/use_graph_node_headers");
 
@@ -506,70 +523,75 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	// Highlighted tabs and border width
 	Color tab_color = highlight_tabs ? base_color.linear_interpolate(font_color, contrast) : base_color;
 	// Ensure borders are visible when using an editor scale below 100%.
-	const int border_width = CLAMP(border_size, 0, 3) * MAX(1, EDSCALE);
+	const int border_width = CLAMP(border_size, 0, 2) * MAX(1, EDSCALE);
+	const int corner_width = CLAMP(corner_radius, 0, 6);
 
 	const int default_margin_size = 4;
-	const int margin_size_extra = default_margin_size + CLAMP(border_size, 0, 3);
+	const int margin_size_extra = default_margin_size + CLAMP(border_size, 0, 2);
 
 	// styleboxes
 	// this is the most commonly used stylebox, variations should be made as duplicate of this
-	Ref<StyleBoxFlat> style_default = make_flat_stylebox(base_color, default_margin_size, default_margin_size, default_margin_size, default_margin_size);
+	Ref<StyleBoxFlat> style_default = make_flat_stylebox(base_color, default_margin_size, default_margin_size, default_margin_size, default_margin_size, corner_width);
 	style_default->set_border_width_all(border_width);
 	style_default->set_border_color(base_color);
 	style_default->set_draw_center(true);
 
 	// Button and widgets
 	const float extra_spacing = EDITOR_GET("interface/theme/additional_spacing");
+	const Vector2 widget_default_margin = Vector2(extra_spacing + 6, extra_spacing + default_margin_size + 1) * EDSCALE;
 
 	Ref<StyleBoxFlat> style_widget = style_default->duplicate();
-	style_widget->set_default_margin(MARGIN_LEFT, (extra_spacing + 6) * EDSCALE);
-	style_widget->set_default_margin(MARGIN_TOP, (extra_spacing + default_margin_size) * EDSCALE);
-	style_widget->set_default_margin(MARGIN_RIGHT, (extra_spacing + 6) * EDSCALE);
-	style_widget->set_default_margin(MARGIN_BOTTOM, (extra_spacing + default_margin_size) * EDSCALE);
+	style_widget->set_default_margin(MARGIN_LEFT, widget_default_margin.x);
+	style_widget->set_default_margin(MARGIN_TOP, widget_default_margin.y);
+	style_widget->set_default_margin(MARGIN_RIGHT, widget_default_margin.x);
+	style_widget->set_default_margin(MARGIN_BOTTOM, widget_default_margin.y);
 	style_widget->set_bg_color(dark_color_1);
+	//style_widget->set_border_width_all(0);
 	style_widget->set_border_color(dark_color_2);
+	//style_widget->set_corner_radius_all(3);
 
 	Ref<StyleBoxFlat> style_widget_disabled = style_widget->duplicate();
 	style_widget_disabled->set_border_color(color_disabled);
 	style_widget_disabled->set_bg_color(color_disabled_bg);
 
 	Ref<StyleBoxFlat> style_widget_focus = style_widget->duplicate();
+	style_widget_focus->set_draw_center(false);
+	style_widget_focus->set_border_width_all(Math::round(2 * MAX(1, EDSCALE)));
 	style_widget_focus->set_border_color(accent_color);
 
 	Ref<StyleBoxFlat> style_widget_pressed = style_widget->duplicate();
-	style_widget_pressed->set_border_color(accent_color);
+	style_widget_pressed->set_bg_color(dark_color_1.darkened(0.125));
 
 	Ref<StyleBoxFlat> style_widget_hover = style_widget->duplicate();
-	style_widget_hover->set_border_color(contrast_color_1);
+	style_widget_hover->set_border_width_all(1);
+	style_widget_hover->set_border_color(mono_color * Color(1, 1, 1, 0.15));
 
 	// style for windows, popups, etc..
 	Ref<StyleBoxFlat> style_popup = style_default->duplicate();
-	const int popup_margin_size = default_margin_size * EDSCALE * 2;
-	style_popup->set_default_margin(MARGIN_LEFT, popup_margin_size);
-	style_popup->set_default_margin(MARGIN_TOP, popup_margin_size);
-	style_popup->set_default_margin(MARGIN_RIGHT, popup_margin_size);
-	style_popup->set_default_margin(MARGIN_BOTTOM, popup_margin_size);
-	style_popup->set_border_color(contrast_color_1);
-	style_popup->set_border_width_all(MAX(EDSCALE, border_width));
+	const int popup_margin_size = default_margin_size * EDSCALE * 3;
+	style_popup->set_default_margin_all(popup_margin_size);
+	//style_popup->set_border_color(contrast_color_1);
+	//style_popup->set_border_width_all(MAX(EDSCALE, border_width));
 	const Color shadow_color = Color(0, 0, 0, dark_theme ? 0.3 : 0.1);
 	style_popup->set_shadow_color(shadow_color);
 	style_popup->set_shadow_size(4 * EDSCALE);
+	style_popup->set_corner_radius_all(0);
 
 	Ref<StyleBoxLine> style_popup_separator(memnew(StyleBoxLine));
 	style_popup_separator->set_color(separator_color);
-	style_popup_separator->set_grow_begin(popup_margin_size - MAX(EDSCALE, border_width));
-	style_popup_separator->set_grow_end(popup_margin_size - MAX(EDSCALE, border_width));
-	style_popup_separator->set_thickness(MAX(EDSCALE, border_width));
+	style_popup_separator->set_grow_begin(popup_margin_size - MAX(Math::round(EDSCALE), border_width));
+	style_popup_separator->set_grow_end(popup_margin_size - MAX(Math::round(EDSCALE), border_width));
+	style_popup_separator->set_thickness(MAX(Math::round(EDSCALE), border_width));
 
 	Ref<StyleBoxLine> style_popup_labeled_separator_left(memnew(StyleBoxLine));
-	style_popup_labeled_separator_left->set_grow_begin(popup_margin_size - MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_left->set_grow_begin(popup_margin_size - MAX(Math::round(EDSCALE), border_width));
 	style_popup_labeled_separator_left->set_color(separator_color);
-	style_popup_labeled_separator_left->set_thickness(MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_left->set_thickness(MAX(Math::round(EDSCALE), border_width));
 
 	Ref<StyleBoxLine> style_popup_labeled_separator_right(memnew(StyleBoxLine));
-	style_popup_labeled_separator_right->set_grow_end(popup_margin_size - MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_right->set_grow_end(popup_margin_size - MAX(Math::round(EDSCALE), border_width));
 	style_popup_labeled_separator_right->set_color(separator_color);
-	style_popup_labeled_separator_right->set_thickness(MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_right->set_thickness(MAX(Math::round(EDSCALE), border_width));
 
 	Ref<StyleBoxEmpty> style_empty = make_empty_stylebox(default_margin_size, default_margin_size, default_margin_size, default_margin_size);
 
@@ -638,9 +660,9 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	Ref<StyleBoxFlat> style_menu_hover_bg = style_widget->duplicate();
 	style_menu_hover_bg->set_border_width_all(0);
 	style_menu_hover_bg->set_bg_color(dark_color_1);
-
+	
 	theme->set_stylebox("normal", "MenuButton", style_menu);
-	theme->set_stylebox("hover", "MenuButton", style_menu);
+	theme->set_stylebox("hover", "MenuButton", style_widget_hover);
 	theme->set_stylebox("pressed", "MenuButton", style_menu);
 	theme->set_stylebox("focus", "MenuButton", style_menu);
 	theme->set_stylebox("disabled", "MenuButton", style_menu);
