@@ -26,9 +26,8 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/{azure,microsoft}*
           sudo sed -i '/http:\/\/azure\.archive\.ubuntu\.com\/ubuntu\/.*priority:1/d' /etc/apt/apt-mirrors.txt
           cat /etc/apt/apt-mirrors.txt
-          sudo apt update
-          sudo apt install dos2unix libxml2-utils python3-pip moreutils
-          sudo apt install clang-format-17
+          sudo apt-get update
+          sudo apt-get install -qq dos2unix libxml2-utils python3-pip moreutils clang-format-17
           sudo update-alternatives --remove-all clang-format || true
           sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-17 100
           sudo pip3 install black==24.10.0 pygments
