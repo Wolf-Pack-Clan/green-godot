@@ -133,7 +133,15 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 # SpaceBeforeCpp11BracedList: false
 # SpaceBeforeCtorInitializerColon: true
 # SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: ControlStatements
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterFunctionDeclarationName: false
+  AfterIfMacros: false
+  AfterForeachMacros: false
+  AfterOverloadedOperator: false
+  AfterRequiresInClause: false
+  BeforeNonEmptyParentheses: false
 # SpaceAroundPointerQualifiers: Default
 # SpaceBeforeRangeBasedForLoopColon: true
 # SpaceInEmptyParentheses: false
@@ -152,7 +160,7 @@ SpacesInLineCommentPrefix:
   Minimum:         0
   Maximum:         -1
 # SpacesInParentheses: false
-# SpacesInSquareBrackets: false
+SpacesInSquareBrackets: false
 # SpaceBeforeSquareBrackets: false
 # BitFieldColonSpacing: Both
 # StatementAttributeLikeMacros:

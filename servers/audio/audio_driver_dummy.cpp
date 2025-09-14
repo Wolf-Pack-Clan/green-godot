@@ -101,10 +101,10 @@ void AudioDriverDummy::finish() {
 	};
 };
 
-AudioDriverDummy::AudioDriverDummy() {
+AudioDriverDummy::AudioDriverDummy(){
 
 };
 
-AudioDriverDummy::~AudioDriverDummy() {
+AudioDriverDummy::~AudioDriverDummy(){
 
 };

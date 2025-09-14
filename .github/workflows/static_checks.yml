@@ -26,9 +26,9 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/{azure,microsoft}*
           sudo apt-get update
           sudo apt-get install -qq dos2unix libxml2-utils python3-pip moreutils
-          sudo apt-get install clang-format-18
+          sudo apt-get install clang-format-17
           sudo update-alternatives --remove-all clang-format || true
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-18 100
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-17 100
           sudo pip3 install black==24.10.0 pygments
 
       # This needs to happen before Python and npm execution; it must happen before any extra files are written.
