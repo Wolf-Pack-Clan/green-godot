@@ -6,8 +6,7 @@ on:
 env:
   # Only used for the cache key. Increment version to force clean build.
   GODOT_BASE_BRANCH: 3.6
-  #SCONSFLAGS: verbose=yes warnings=all werror=yes debug_symbols=no module_mono_enabled=yes mono_static=yes mono_glue=no
-  SCONSFLAGS: verbose=yes warnings=all werror=yes debug_symbols=no module_mono_enabled=no mono_static=no mono_glue=no
+  SCONSFLAGS: verbose=yes warnings=all werror=yes debug_symbols=no
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-server
@@ -22,16 +21,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          #- name: Linux Headless w/ Mono (target=release_debug, tools=yes)
           - name: Linux Headless (target=release_debug, tools=yes)
-            #cache-name: server-editor-mono
             cache-name: server-editor
             target: release_debug
             tools: true
 
-          #- name: Linux Server w/ Mono (target=release, tools=no)
           - name: Linux Server (target=release, tools=no)
-            #cache-name: server-template-mono
             cache-name: server-template
             target: release
             tools: false
@@ -63,7 +58,7 @@ jobs:
       - name: Compilation
         uses: ./.github/actions/godot-build
         with:
-          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          sconsflags: ${{ env.SCONSFLAGS }} #${{ matrix.sconsflags }}
           platform: server
           target: ${{ matrix.target }}
           tools: ${{ matrix.tools }}

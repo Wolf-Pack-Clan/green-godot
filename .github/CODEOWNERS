@@ -29,8 +29,6 @@ doc_classes/*                       @godotengine/documentation
 /drivers/coreaudio/                 @godotengine/audio
 /drivers/coremidi/                  @godotengine/audio
 /drivers/pulseaudio/                @godotengine/audio
-/drivers/wasapi/                    @godotengine/audio
-/drivers/winmidi/                   @godotengine/audio
 /drivers/xaudio2/                   @godotengine/audio
 
 ## Rendering
@@ -42,7 +40,6 @@ doc_classes/*                       @godotengine/documentation
 
 ## OS
 /drivers/unix/                      @godotengine/_platforms
-/drivers/windows/                   @godotengine/windows
 
 ## Misc
 /drivers/png/                       @godotengine/import
@@ -115,7 +112,6 @@ doc_classes/*                       @godotengine/documentation
 /modules/gdnative/                  @godotengine/gdnative
 /modules/gdscript/                  @godotengine/gdscript
 /modules/jsonrpc/                   @godotengine/gdscript
-/modules/mono/                      @godotengine/mono
 /modules/visual_script/             @godotengine/visualscript
 
 ## Text
@@ -142,12 +138,8 @@ doc_classes/*                       @godotengine/documentation
 # Platform
 
 /platform/android/                  @godotengine/android
-/platform/iphone/                   @godotengine/ios
 /platform/javascript/               @godotengine/html5
 /platform/x11/                      @godotengine/linux-bsd
-/platform/osx/                      @godotengine/macos
-/platform/uwp/                      @godotengine/uwp
-/platform/windows/                  @godotengine/windows
 
 # Scene
 

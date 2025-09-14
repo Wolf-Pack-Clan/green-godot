@@ -510,7 +510,7 @@
 	<constants>
 	</constants>
 	<theme_items>
-		<theme_item name="font_color" data_type="color" type="Color" default="Color( 0.88, 0.88, 0.88, 1 )">
+		<theme_item name="font_color" data_type="color" type="Color" default="Color( 0.875, 0.875, 0.875, 1 )">
 			The default text [Color] for menu items' names.
 		</theme_item>
 		<theme_item name="font_color_accel" data_type="color" type="Color" default="Color( 0.7, 0.7, 0.7, 0.8 )">
@@ -519,10 +519,10 @@
 		<theme_item name="font_color_disabled" data_type="color" type="Color" default="Color( 0.4, 0.4, 0.4, 0.8 )">
 			[Color] used for disabled menu items' text.
 		</theme_item>
-		<theme_item name="font_color_hover" data_type="color" type="Color" default="Color( 0.88, 0.88, 0.88, 1 )">
+		<theme_item name="font_color_hover" data_type="color" type="Color" default="Color( 0.875, 0.875, 0.875, 1 )">
 			[Color] used for the hovered text.
 		</theme_item>
-		<theme_item name="font_color_separator" data_type="color" type="Color" default="Color( 0.88, 0.88, 0.88, 1 )">
+		<theme_item name="font_color_separator" data_type="color" type="Color" default="Color( 0.875, 0.875, 0.875, 1 )">
 			[Color] used for labeled separators' text. See [method add_separator].
 		</theme_item>
 		<theme_item name="hseparation" data_type="constant" type="int" default="4">

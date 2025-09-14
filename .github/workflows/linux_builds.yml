@@ -21,16 +21,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          #- name: Editor w/ Mono (target=release_debug, tools=yes)
           - name: Editor (target=release_debug, tools=yes)
-            #cache-name: linux-editor-mono
             cache-name: linux-editor
             target: release_debug
             tools: true
-            sconsflags: module_mono_enabled=no mono_static=no mono_glue=no
-            #bin: "./bin/godot.x11.opt.tools.64.mono"
             bin: "./bin/godot.x11.opt.tools.64"
-            build-mono: false
             artifact: true
 
           - name: Editor and sanitizers (target=debug, tools=yes, use_asan=yes, use_ubsan=yes, linker=gold)
@@ -40,18 +35,14 @@ jobs:
             sconsflags: use_asan=yes use_ubsan=yes linker=gold
             test: true
             bin: "./bin/godot.x11.tools.64s"
-            build-mono: false
             # Skip 2GiB artifact speeding up action.
             artifact: false
 
-          #- name: Template w/ Mono (target=release, tools=no)
           - name: Template (target=release, tools=no)
-            #cache-name: linux-template-mono
             cache-name: linux-template
             target: release
             tools: false
-            sconsflags: module_mono_enabled=no mono_static=no mono_glue=no debug_symbols=no
-            build-mono: false
+            sconsflags: debug_symbols=no
             artifact: true
 
           - name: Minimal template (target=release, tools=no, everything disabled)
@@ -59,7 +50,6 @@ jobs:
             target: release
             tools: false
             sconsflags: modules_enabled_by_default=no disable_3d=yes disable_advanced_gui=yes deprecated=no minizip=no debug_symbols=no
-            build-mono: false
             artifact: false
 
     steps:
@@ -108,22 +98,6 @@ jobs:
         with:
           cache-name: ${{ matrix.cache-name }}
         continue-on-error: true
-
-      # Generate mono glue
-      #- name: Generate Mono glue code
-      #  if: ${{ matrix.build-mono }}
-      #  run: |
-      #    DRI_PRIME=0 xvfb-run ${{ matrix.bin }} --generate-mono-glue modules/mono/glue || true
-
-      # Rebuild with mono
-      #- name: Compilation (mono_glue=yes)
-      #  uses: ./.github/actions/godot-build
-      #  if: ${{ matrix.build-mono }}
-      #  with:
-      #    sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }} mono_glue=yes
-      #    platform: linuxbsd
-      #    target: ${{ matrix.target }}
-      #    tools: ${{ matrix.tools }}
 
       # Download and extract zip archive with project, folder is renamed to be able to easy change used project
       - name: Download test project

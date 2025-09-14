@@ -5,7 +5,7 @@ on: [workflow_call, workflow_dispatch]
 env:
   # Only used for the cache key. Increment version to force clean build.
   GODOT_BASE_BRANCH: 3.6
-  SCONSFLAGS: use_static_cpp=yes optimize=speed debug_symbols=no module_visual_script_enabled=no
+  SCONSFLAGS: use_static_cpp=yes optimize=speed debug_symbols=no
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-android
@@ -19,15 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          #- name: Release Template
-          #  cache-name: android-release
-          #  sconsflags: target=release
-          #  tools: false
-
-          #- name: Debug Template
-          #  cache-name: android-debug
-          #  sconsflags: target=release_debug
-          #  tools: false
           - name: Templates
             cache-name: android-templates
             tools: false
