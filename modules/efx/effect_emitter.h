@@ -1,0 +1,4 @@
+#ifndef EFFECT_EMITTER_H
+#define EFFECT_EMITTER_H
+
+#endif // EFFECT_EMITTER_H
