@@ -156,7 +156,7 @@ void DiscordRPCPlugin::updateDiscordPresence() {
 	activity.state = singleton->cached_scene_name;
 	activity.details = singleton->cached_project_name;
 	activity.large_image = "green-godot-1024";
-	activity.large_text = "Godot Engine";
+	activity.large_text = "Green Godot";
 	activity.start_timestamp = startTime;
 
 	singleton->rpc->update_activity(activity);
