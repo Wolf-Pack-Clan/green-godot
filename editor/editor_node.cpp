@@ -6783,25 +6783,25 @@ EditorNode::EditorNode() {
 	filesystem_dock->connect("instance", this, "_instance_request");
 	filesystem_dock->connect("display_mode_changed", this, "_save_docks");
 
-	// Scene: Top left
-	dock_slot[DOCK_SLOT_LEFT_UR]->add_child(scene_tree_dock);
-	dock_slot[DOCK_SLOT_LEFT_UR]->set_tab_title(scene_tree_dock->get_index(), TTR("Scene"));
+	// Scene: Top Right
+	dock_slot[DOCK_SLOT_RIGHT_UR]->add_child(scene_tree_dock);
+	dock_slot[DOCK_SLOT_RIGHT_UR]->set_tab_title(scene_tree_dock->get_index(), TTR("Scene"));
 
-	// Import: Top left, behind Scene
-	dock_slot[DOCK_SLOT_LEFT_UR]->add_child(import_dock);
-	dock_slot[DOCK_SLOT_LEFT_UR]->set_tab_title(import_dock->get_index(), TTR("Import"));
+	// Node: Top Right, behind Scene
+	dock_slot[DOCK_SLOT_RIGHT_UR]->add_child(node_dock);
+	dock_slot[DOCK_SLOT_RIGHT_UR]->set_tab_title(node_dock->get_index(), TTR("Node"));
 
-	// FileSystem: Bottom left
-	dock_slot[DOCK_SLOT_LEFT_BR]->add_child(filesystem_dock);
-	dock_slot[DOCK_SLOT_LEFT_BR]->set_tab_title(filesystem_dock->get_index(), TTR("FileSystem"));
+	// Inspector: Bottom Right
+	dock_slot[DOCK_SLOT_RIGHT_BR]->add_child(inspector_dock);
+	dock_slot[DOCK_SLOT_RIGHT_BR]->set_tab_title(inspector_dock->get_index(), TTR("Inspector"));
 
-	// Inspector: Full height right
-	dock_slot[DOCK_SLOT_RIGHT_UL]->add_child(inspector_dock);
-	dock_slot[DOCK_SLOT_RIGHT_UL]->set_tab_title(inspector_dock->get_index(), TTR("Inspector"));
+	// Import: Bottom Right, behind Inspector
+	dock_slot[DOCK_SLOT_RIGHT_BR]->add_child(import_dock);
+	dock_slot[DOCK_SLOT_RIGHT_BR]->set_tab_title(import_dock->get_index(), TTR("Import"));
 
-	// Node: Full height right, behind Inspector
-	dock_slot[DOCK_SLOT_RIGHT_UL]->add_child(node_dock);
-	dock_slot[DOCK_SLOT_RIGHT_UL]->set_tab_title(node_dock->get_index(), TTR("Node"));
+	// FileSystem: Bottom Right, behind Import
+	dock_slot[DOCK_SLOT_RIGHT_BR]->add_child(filesystem_dock);
+	dock_slot[DOCK_SLOT_RIGHT_BR]->set_tab_title(filesystem_dock->get_index(), TTR("FileSystem"));
 
 	// Hide unused dock slots and vsplits
 	dock_slot[DOCK_SLOT_LEFT_UL]->hide();
