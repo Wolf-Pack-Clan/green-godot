@@ -6,6 +6,15 @@
 set -uo pipefail
 IFS=$'\n\t'
 
+# Check for our clang-format
+if [ ! -f ./misc/clang_format_18 ]; then
+    echo "Downloading clang-format v18 from https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/master-796e77c/clang-format-18_linux-amd64"
+    wget -q https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/master-796e77c/clang-format-18_linux-amd64 -O ./misc/clang_format_18
+    chmod +x ./misc/clang_format_18
+fi
+
+clang_fmt="./misc/clang_format_18"
+
 header_worker="misc/scripts/copyright_headers.py"
 
 while (( $# )); do
@@ -32,7 +41,7 @@ while IFS= read -rd '' f; do
     for extension in ${CLANG_FORMAT_FILE_EXTS[@]}; do
         if [[ "$f" == *"$extension" ]]; then
             # Run clang-format.
-            clang-format --Wno-error=unknown -i "$f"
+            clang_fmt --Wno-error=unknown -i "$f"
             # Fix copyright headers, but not all files get them.
             if [[ "$f" == *"inc" ]]; then
                 continue 2
