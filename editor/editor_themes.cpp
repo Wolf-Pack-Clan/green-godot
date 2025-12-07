@@ -567,7 +567,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	style_widget_hover->set_border_color(mono_color * Color(1, 1, 1, 0.15));
 
 	// style for windows, popups, etc..
-	Ref<StyleBoxFlat> style_popup = style_default->duplicate();
+	/*Ref<StyleBoxFlat> style_popup = style_default->duplicate();
 	const int popup_margin_size = default_margin_size * EDSCALE * 3;
 	style_popup->set_default_margin_all(popup_margin_size);
 	//style_popup->set_border_color(contrast_color_1);
@@ -575,7 +575,16 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	const Color shadow_color = Color(0, 0, 0, dark_theme ? 0.3 : 0.1);
 	style_popup->set_shadow_color(shadow_color);
 	style_popup->set_shadow_size(4 * EDSCALE);
-	style_popup->set_corner_radius_all(0);
+	style_popup->set_corner_radius_all(0);//*/
+
+	const int popup_margin_size = default_margin_size * EDSCALE * 1.5;
+	const Color shadow_color = Color(0, 0, 0, dark_theme ? 0.3 : 0.1);
+	Ref<StyleBoxFlat> style_popup_panel = make_flat_stylebox(dark_color_3, popup_margin_size, popup_margin_size, popup_margin_size, popup_margin_size, corner_radius);
+
+	style_popup_panel->set_border_width_all(MAX(EDSCALE, border_width));
+	style_popup_panel->set_border_color(dark_color_2);
+
+	Ref<StyleBoxFlat> style_popup_hover = make_flat_stylebox(dark_color_1 * Color(1, 1, 1, 0.2), 0, 0, 0, 0, corner_radius);
 
 	Ref<StyleBoxLine> style_popup_separator(memnew(StyleBoxLine));
 	style_popup_separator->set_color(separator_color);
@@ -635,6 +644,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	Ref<StyleBoxFlat> style_menu = style_widget->duplicate();
 	style_menu->set_draw_center(false);
 	style_menu->set_border_width_all(0);
+	//style_menu->set_default_margin_all(8 * EDSCALE);
 	theme->set_stylebox("panel", "PanelContainer", style_menu);
 	theme->set_stylebox("MenuPanel", "EditorStyles", style_menu);
 
@@ -668,7 +678,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_stylebox("disabled", "MenuButton", style_menu);
 
 	theme->set_stylebox("normal", "PopupMenu", style_menu);
-	theme->set_stylebox("hover", "PopupMenu", style_menu_hover_bg);
+	theme->set_stylebox("hover", "PopupMenu", style_popup_hover);
 	theme->set_stylebox("pressed", "PopupMenu", style_menu);
 	theme->set_stylebox("focus", "PopupMenu", style_menu);
 	theme->set_stylebox("disabled", "PopupMenu", style_menu);
@@ -775,10 +785,10 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_constant("check_vadjust", "CheckBox", 0);
 
 	// PopupDialog
-	theme->set_stylebox("panel", "PopupDialog", style_popup);
+	theme->set_stylebox("panel", "PopupDialog", style_popup_panel);
 
 	// PopupMenu
-	theme->set_stylebox("panel", "PopupMenu", style_popup);
+	theme->set_stylebox("panel", "PopupMenu", style_popup_panel);
 	theme->set_stylebox("separator", "PopupMenu", style_popup_separator);
 	theme->set_stylebox("labeled_separator_left", "PopupMenu", style_popup_labeled_separator_left);
 	theme->set_stylebox("labeled_separator_right", "PopupMenu", style_popup_labeled_separator_right);
@@ -796,7 +806,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_icon("visibility_hidden", "PopupMenu", theme->get_icon("GuiVisibilityHidden", "EditorIcons"));
 	theme->set_icon("visibility_visible", "PopupMenu", theme->get_icon("GuiVisibilityVisible", "EditorIcons"));
 	theme->set_icon("visibility_xray", "PopupMenu", theme->get_icon("GuiVisibilityXray", "EditorIcons"));
-	theme->set_constant("vseparation", "PopupMenu", (extra_spacing + default_margin_size + 1) * EDSCALE);
+	theme->set_constant("vseparation", "PopupMenu", 16 * EDSCALE);
 
 	for (int i = 0; i < 16; i++) {
 		Color si_base_color = accent_color;
@@ -1086,7 +1096,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_constant("vseparation", "VFlowContainer", default_margin_size * EDSCALE);
 
 	// WindowDialog
-	Ref<StyleBoxFlat> style_window = style_popup->duplicate();
+	Ref<StyleBoxFlat> style_window = style_popup_panel->duplicate();
 	style_window->set_border_color(tab_color);
 	style_window->set_border_width(MARGIN_TOP, 24 * EDSCALE);
 	style_window->set_expand_margin_size(MARGIN_TOP, 24 * EDSCALE);
@@ -1191,7 +1201,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("font_color_disabled", "LinkButton", font_color_disabled);
 
 	// TooltipPanel
-	Ref<StyleBoxFlat> style_tooltip = style_popup->duplicate();
+	Ref<StyleBoxFlat> style_tooltip = style_popup_panel->duplicate();
 	float v = MAX(border_size * EDSCALE, 1.0);
 	style_tooltip->set_default_margin(MARGIN_LEFT, v);
 	style_tooltip->set_default_margin(MARGIN_TOP, v);
@@ -1205,7 +1215,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_stylebox("panel", "TooltipPanel", style_tooltip);
 
 	// PopupPanel
-	theme->set_stylebox("panel", "PopupPanel", style_popup);
+	theme->set_stylebox("panel", "PopupPanel", style_popup_panel);
 
 	// SpinBox
 	theme->set_icon("updown", "SpinBox", theme->get_icon("GuiSpinboxUpdown", "EditorIcons"));

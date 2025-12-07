@@ -75,8 +75,9 @@ Size2 PopupMenu::get_minimum_size() const {
 			has_check = true;
 		}
 
+		int vsep = items[i].separator ? 4 : vseparation;
 		size.width += items[i].separator ? font_separator->get_string_size(text).width : font->get_string_size(text).width;
-		size.height += vseparation;
+		size.height += vsep;
 
 		if (items[i].accel || (items[i].shortcut.is_valid() && items[i].shortcut->is_valid())) {
 			int accel_w = hseparation * 2;
@@ -114,7 +115,8 @@ int PopupMenu::_get_items_total_height() const {
 	// Get total height of all items by taking max of icon height and font height
 	int items_total_height = 0;
 	for (int i = 0; i < items.size(); i++) {
-		items_total_height += MAX(items[i].get_icon_size().height, font_height) + vsep;
+		int real_vsep = items[i].separator ? 4 : vsep;
+		items_total_height += MAX(items[i].get_icon_size().height, font_height) + real_vsep;
 	}
 
 	return items_total_height;
@@ -149,7 +151,8 @@ int PopupMenu::_get_mouse_over(const Point2 &p_over) const {
 	real_t ofs = style->get_margin(MARGIN_TOP) + control->get_position().y;
 
 	for (int i = 0; i < items.size(); i++) {
-		ofs += MAX(items[i].get_icon_size().height, font_h) + vseparation;
+		int real_vsep = items[i].separator ? 4 : vseparation;
+		ofs += MAX(items[i].get_icon_size().height, font_h) + real_vsep;
 
 		if (p_over.y < ofs) {
 			return i;
@@ -212,7 +215,8 @@ void PopupMenu::_activate_submenu(int over, bool p_by_keyboard) {
 
 		// If there is an area below the submenu item, add an autohide area there.
 		if (items[over]._ofs_cache + items[over]._height_cache + scroll_offset <= control->get_size().height) {
-			int from = items[over]._ofs_cache + items[over]._height_cache + scroll_offset + vsep / 2 + style->get_offset().height;
+			int real_vsep = items[over].separator ? 4 : vsep;
+			int from = items[over]._ofs_cache + items[over]._height_cache + scroll_offset + real_vsep / 2 + style->get_offset().height;
 			submenu_pum->add_autohide_area(Rect2(this_rect.position.x, this_rect.position.y + from, this_rect.size.x, this_rect.size.y - from));
 		}
 	}
@@ -505,8 +509,9 @@ void PopupMenu::_draw_items() {
 	// Loop through all items and draw each.
 	for (int i = 0; i < items.size(); i++) {
 		// If not the first item, add the separation space between items.
+		int vsep = items[i].separator ? 4 : vseparation;
 		if (i > 0) {
-			ofs.y += vseparation;
+			ofs.y += vsep;
 		}
 
 		Point2 item_ofs = ofs;
@@ -514,7 +519,7 @@ void PopupMenu::_draw_items() {
 		float h = MAX(icon_size.height, font_h);
 
 		if (i == mouse_over) {
-			hover->draw(ci, Rect2(item_ofs + Point2(-hseparation, -vseparation / 2), Size2(display_width + hseparation * 2, h + vseparation)));
+			hover->draw(ci, Rect2(item_ofs + Point2(-hseparation, -vsep / 2), Size2(display_width + hseparation * 2, h + vsep)));
 		}
 
 		String text = items[i].xl_text;
