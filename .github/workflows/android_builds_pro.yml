@@ -48,7 +48,7 @@ jobs:
         uses: ./.github/actions/godot-deps
 
       - name: Compile Templates
-        if: ${{ !matrix.tools }} && ${{ !matrix.minimal }}
+        if: ${{ matrix.tools != true }} && ${{ matrix.minimal !=true }}
         shell: sh
         run: |
           echo Building with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
