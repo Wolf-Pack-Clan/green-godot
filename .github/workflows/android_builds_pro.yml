@@ -23,6 +23,11 @@ jobs:
             cache-name: android-templates
             tools: false
 
+          - name: Minimal Templates
+            cache-name: android-min-templates
+            minimal: true
+            tools: false
+
           - name: Editor
             cache-name: android-editor
             sconsflags: target=release_debug
@@ -49,6 +54,17 @@ jobs:
           scons p=android android_arch=arm64v8 tools=no target=release_debug ${{env.SCONSFLAGS}}
           scons p=android android_arch=armv7 tools=no target=release ${{env.SCONSFLAGS}}
           scons p=android android_arch=arm64v8 tools=no target=release ${{env.SCONSFLAGS}}
+          ls -l bin/
+
+      - name: Compile Minimal Templates
+        if: ${{ matrix.minimal }}
+        shell: sh
+        run: |
+          echo Building with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
+          scons p=android android_arch=armv7 tools=no target=release_debug dis disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
+          scons p=android android_arch=arm64v8 tools=no target=release_debug disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
+          scons p=android android_arch=armv7 tools=no target=release disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
+          scons p=android android_arch=arm64v8 tools=no target=release disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
           ls -l bin/
 
       - name: Compile Editor
