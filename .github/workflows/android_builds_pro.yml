@@ -21,6 +21,7 @@ jobs:
         include:
           - name: Templates
             cache-name: android-templates
+            minimal: false
             tools: false
 
           - name: Minimal Templates
@@ -31,6 +32,7 @@ jobs:
           - name: Editor
             cache-name: android-editor
             sconsflags: target=release_debug
+            minimal: false
             tools: true
 
     steps:
