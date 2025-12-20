@@ -94,7 +94,7 @@ jobs:
           module_xatlas_unwrap_enabled = "no"
           EOF
           echo Building with flags: ${{matrix.sconsflags}} ${{env.SCONSFLAGS}}
-          scons p=android android_arch=armv7 tools=no target=release_debug dis disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
+          scons p=android android_arch=armv7 tools=no target=release_debug disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
           scons p=android android_arch=arm64v8 tools=no target=release_debug disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
           scons p=android android_arch=armv7 tools=no target=release disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
           scons p=android android_arch=arm64v8 tools=no target=release disable_3d=yes deprecated=no minizip=no debug_symbols=no ${{env.SCONSFLAGS}}
