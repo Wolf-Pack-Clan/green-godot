@@ -41,7 +41,7 @@ while IFS= read -rd '' f; do
     for extension in ${CLANG_FORMAT_FILE_EXTS[@]}; do
         if [[ "$f" == *"$extension" ]]; then
             # Run clang-format.
-            clang_fmt --Wno-error=unknown -i "$f"
+            $clang_fmt --Wno-error=unknown -i "$f"
             # Fix copyright headers, but not all files get them.
             if [[ "$f" == *"inc" ]]; then
                 continue 2
