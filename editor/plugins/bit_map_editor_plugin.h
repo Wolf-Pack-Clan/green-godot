@@ -35,30 +35,30 @@
 #include "scene/resources/bit_map.h"
 
 class BitMapEditor : public VBoxContainer {
-	GDCLASS(BitMapEditor, VBoxContainer);
+    GDCLASS(BitMapEditor, VBoxContainer);
 
-	TextureRect *texture_rect = nullptr;
-	Label *size_label = nullptr;
+    TextureRect *texture_rect = nullptr;
+    Label *size_label = nullptr;
 
 public:
-	void setup(const Ref<BitMap> &p_bitmap);
+    void setup(const Ref<BitMap> &p_bitmap);
 
-	BitMapEditor();
+    BitMapEditor();
 };
 
 class EditorInspectorPluginBitMap : public EditorInspectorPlugin {
-	GDCLASS(EditorInspectorPluginBitMap, EditorInspectorPlugin);
+    GDCLASS(EditorInspectorPluginBitMap, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object);
-	virtual void parse_begin(Object *p_object);
+    virtual bool can_handle(Object *p_object);
+    virtual void parse_begin(Object *p_object);
 };
 
 class BitMapEditorPlugin : public EditorPlugin {
-	GDCLASS(BitMapEditorPlugin, EditorPlugin);
+    GDCLASS(BitMapEditorPlugin, EditorPlugin);
 
 public:
-	BitMapEditorPlugin(EditorNode *p_editor);
+    BitMapEditorPlugin(EditorNode *p_editor);
 };
 
 #endif // BIT_MAP_EDITOR_PLUGIN_H

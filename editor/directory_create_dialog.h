@@ -38,31 +38,31 @@ class LineEdit;
 class PanelContainer;
 
 class DirectoryCreateDialog : public ConfirmationDialog {
-	GDCLASS(DirectoryCreateDialog, ConfirmationDialog);
+    GDCLASS(DirectoryCreateDialog, ConfirmationDialog);
 
-	String base_dir;
+    String base_dir;
 
-	Label *label = nullptr;
-	LineEdit *dir_path = nullptr;
+    Label *label = nullptr;
+    LineEdit *dir_path = nullptr;
 
-	PanelContainer *status_panel = nullptr;
-	Label *status_label = nullptr;
+    PanelContainer *status_panel = nullptr;
+    Label *status_label = nullptr;
 
-	String _validate_path(const String &p_path) const;
+    String _validate_path(const String &p_path) const;
 
-	void _on_dir_path_changed(const String &p_text);
+    void _on_dir_path_changed(const String &p_text);
 
 protected:
-	static void _bind_methods();
-	void _notification(int p_what);
+    static void _bind_methods();
+    void _notification(int p_what);
 
-	virtual void ok_pressed();
-	virtual void _post_popup();
+    virtual void ok_pressed();
+    virtual void _post_popup();
 
 public:
-	void config(const String &p_base_dir);
+    void config(const String &p_base_dir);
 
-	DirectoryCreateDialog();
+    DirectoryCreateDialog();
 };
 
 #endif // DIRECTORY_CREATE_DIALOG_H

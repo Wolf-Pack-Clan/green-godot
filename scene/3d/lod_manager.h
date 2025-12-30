@@ -40,35 +40,35 @@ struct Vector3;
 
 class LODManager {
 public:
-	enum { NUM_LOD_QUEUES = 5 };
+    enum { NUM_LOD_QUEUES = 5 };
 
-	void register_camera(Camera *p_camera);
-	void remove_camera(Camera *p_camera);
-	void register_lod(LOD *p_lod, uint32_t p_queue_id);
-	void unregister_lod(LOD *p_lod, uint32_t p_queue_id);
-	void update();
+    void register_camera(Camera *p_camera);
+    void remove_camera(Camera *p_camera);
+    void register_lod(LOD *p_lod, uint32_t p_queue_id);
+    void unregister_lod(LOD *p_lod, uint32_t p_queue_id);
+    void update();
 
-	void notify_saving(bool p_active);
+    void notify_saving(bool p_active);
 
-	static void set_enabled(bool p_enabled) { _enabled = p_enabled; }
-	static bool is_enabled() { return _enabled; }
+    static void set_enabled(bool p_enabled) { _enabled = p_enabled; }
+    static bool is_enabled() { return _enabled; }
 
 private:
-	void _update_queue(uint32_t p_queue_id, const Vector3 *p_camera_positions, uint32_t p_num_cameras);
+    void _update_queue(uint32_t p_queue_id, const Vector3 *p_camera_positions, uint32_t p_num_cameras);
 
-	struct Queue {
-		LocalVector<LOD *> lods;
-		uint32_t lod_iterator = 0;
-	};
+    struct Queue {
+        LocalVector<LOD *> lods;
+        uint32_t lod_iterator = 0;
+    };
 
-	struct Data {
-		LocalVector<Camera *> cameras;
-		Queue queues[NUM_LOD_QUEUES];
-		BinaryMutex mutex;
-		bool saving = false;
-	} data;
+    struct Data {
+        LocalVector<Camera *> cameras;
+        Queue queues[NUM_LOD_QUEUES];
+        BinaryMutex mutex;
+        bool saving = false;
+    } data;
 
-	static bool _enabled;
+    static bool _enabled;
 };
 
 #endif // LOD_MANAGER_H

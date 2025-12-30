@@ -32,9 +32,9 @@
 #include "gdsqlite.h"
 
 void register_gdsqlite_types() {
-	ClassDB::register_class<GDSqlite>();
+    ClassDB::register_class<GDSqlite>();
 }
 
 void unregister_gdsqlite_types() {
-	// nothing
+    // nothing
 }

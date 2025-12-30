@@ -36,61 +36,61 @@
 #include "core/vector.h"
 
 class OccluderShape : public Resource {
-	GDCLASS(OccluderShape, Resource);
-	OBJ_SAVE_TYPE(OccluderShape);
-	RES_BASE_EXTENSION("occ");
-	RID _shape;
+    GDCLASS(OccluderShape, Resource);
+    OBJ_SAVE_TYPE(OccluderShape);
+    RES_BASE_EXTENSION("occ");
+    RID _shape;
 
 protected:
-	static void _bind_methods();
+    static void _bind_methods();
 
-	RID get_shape() const { return _shape; }
-	OccluderShape();
+    RID get_shape() const { return _shape; }
+    OccluderShape();
 
 public:
-	virtual RID get_rid() const { return _shape; }
-	~OccluderShape();
+    virtual RID get_rid() const { return _shape; }
+    ~OccluderShape();
 
-	virtual Transform center_node(const Transform &p_global_xform, const Transform &p_parent_xform, real_t p_snap) = 0;
+    virtual Transform center_node(const Transform &p_global_xform, const Transform &p_parent_xform, real_t p_snap) = 0;
 
 #ifdef TOOLS_ENABLED
-	// for editor gizmo
-	virtual AABB get_fallback_gizmo_aabb() const;
-	virtual bool requires_uniform_scale() const { return false; }
+    // for editor gizmo
+    virtual AABB get_fallback_gizmo_aabb() const;
+    virtual bool requires_uniform_scale() const { return false; }
 #endif
 };
 
 class OccluderShapeSphere : public OccluderShape {
-	GDCLASS(OccluderShapeSphere, OccluderShape);
+    GDCLASS(OccluderShapeSphere, OccluderShape);
 
-	// We bandit a plane to store position / radius
-	Vector<Plane> _spheres;
-	const real_t _min_radius = 0.1;
+    // We bandit a plane to store position / radius
+    Vector<Plane> _spheres;
+    const real_t _min_radius = 0.1;
 
 #ifdef TOOLS_ENABLED
-	AABB _aabb_local;
-	void _update_aabb();
+    AABB _aabb_local;
+    void _update_aabb();
 #endif
 
 protected:
-	static void _bind_methods();
+    static void _bind_methods();
 
 public:
-	void set_spheres(const Vector<Plane> &p_spheres);
-	Vector<Plane> get_spheres() const { return _spheres; }
+    void set_spheres(const Vector<Plane> &p_spheres);
+    Vector<Plane> get_spheres() const { return _spheres; }
 
-	void set_sphere_position(int p_idx, const Vector3 &p_position);
-	void set_sphere_radius(int p_idx, real_t p_radius);
+    void set_sphere_position(int p_idx, const Vector3 &p_position);
+    void set_sphere_radius(int p_idx, real_t p_radius);
 
-	void update_shape_to_visual_server();
-	virtual Transform center_node(const Transform &p_global_xform, const Transform &p_parent_xform, real_t p_snap);
+    void update_shape_to_visual_server();
+    virtual Transform center_node(const Transform &p_global_xform, const Transform &p_parent_xform, real_t p_snap);
 
 #ifdef TOOLS_ENABLED
-	virtual AABB get_fallback_gizmo_aabb() const;
-	virtual bool requires_uniform_scale() const { return false; }
+    virtual AABB get_fallback_gizmo_aabb() const;
+    virtual bool requires_uniform_scale() const { return false; }
 #endif
 
-	OccluderShapeSphere();
+    OccluderShapeSphere();
 };
 
 #endif // OCCLUDER_SHAPE_H

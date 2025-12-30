@@ -32,7 +32,7 @@
 #define BULLET_REGISTER_TYPES_H
 
 /**
-	@author AndreaCatania
+    @author AndreaCatania
 */
 
 void register_bullet_types();

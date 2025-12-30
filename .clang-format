@@ -170,7 +170,7 @@ SpacesInSquareBrackets: false
 #   - QT_REQUIRE_VERSION
 TabWidth:        4
 # UseCRLF:         false
-UseTab:          Always
+UseTab:          Never
 # WhitespaceSensitiveMacros:
 #   - STRINGIZE
 #   - PP_STRINGIZE

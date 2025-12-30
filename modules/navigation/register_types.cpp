@@ -47,27 +47,27 @@ NavigationMeshGenerator *_nav_mesh_generator = nullptr;
 #endif
 
 NavigationServer *new_server() {
-	return memnew(GodotNavigationServer);
+    return memnew(GodotNavigationServer);
 }
 
 void register_navigation_types() {
-	NavigationServerManager::set_default_server(new_server);
+    NavigationServerManager::set_default_server(new_server);
 
 #ifndef _3D_DISABLED
-	_nav_mesh_generator = memnew(NavigationMeshGenerator);
-	ClassDB::register_class<NavigationMeshGenerator>();
-	Engine::get_singleton()->add_singleton(Engine::Singleton("NavigationMeshGenerator", NavigationMeshGenerator::get_singleton()));
+    _nav_mesh_generator = memnew(NavigationMeshGenerator);
+    ClassDB::register_class<NavigationMeshGenerator>();
+    Engine::get_singleton()->add_singleton(Engine::Singleton("NavigationMeshGenerator", NavigationMeshGenerator::get_singleton()));
 #endif
 
 #ifdef TOOLS_ENABLED
-	EditorPlugins::add_by_type<NavigationMeshEditorPlugin>();
+    EditorPlugins::add_by_type<NavigationMeshEditorPlugin>();
 #endif
 }
 
 void unregister_navigation_types() {
 #ifndef _3D_DISABLED
-	if (_nav_mesh_generator) {
-		memdelete(_nav_mesh_generator);
-	}
+    if (_nav_mesh_generator) {
+        memdelete(_nav_mesh_generator);
+    }
 #endif
 }

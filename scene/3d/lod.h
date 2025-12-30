@@ -34,40 +34,40 @@
 #include "spatial.h"
 
 class LOD : public Spatial {
-	GDCLASS(LOD, Spatial);
+    GDCLASS(LOD, Spatial);
 
-	struct LODChild {
-		float distance;
-		int32_t child_id;
-	};
+    struct LODChild {
+        float distance;
+        int32_t child_id;
+    };
 
-	struct Data {
-		LocalVector<LODChild> lod_children;
-		int32_t current_lod_child = 0;
-		float hysteresis = 1.0f;
-		int32_t queue_id = 0;
-		const Spatial *current_lod_node = nullptr;
-		bool registered = false;
-	} data;
+    struct Data {
+        LocalVector<LODChild> lod_children;
+        int32_t current_lod_child = 0;
+        float hysteresis = 1.0f;
+        int32_t queue_id = 0;
+        const Spatial *current_lod_node = nullptr;
+        bool registered = false;
+    } data;
 
-	friend class LODManager;
-	bool _lod_update(float p_camera_dist_squared);
-	void _lod_pre_save();
-	void _update_child_distances();
+    friend class LODManager;
+    bool _lod_update(float p_camera_dist_squared);
+    void _lod_pre_save();
+    void _update_child_distances();
 
-	void _lod_register();
-	void _lod_unregister();
+    void _lod_register();
+    void _lod_unregister();
 
 protected:
-	void _notification(int p_what);
-	static void _bind_methods();
+    void _notification(int p_what);
+    static void _bind_methods();
 
 public:
-	void set_hysteresis(real_t p_distance);
-	real_t get_hysteresis() const { return data.hysteresis; }
+    void set_hysteresis(real_t p_distance);
+    real_t get_hysteresis() const { return data.hysteresis; }
 
-	void set_lod_priority(int p_priority);
-	int get_lod_priority() const { return data.queue_id; }
+    void set_lod_priority(int p_priority);
+    int get_lod_priority() const { return data.queue_id; }
 };
 
 #endif // LOD_H

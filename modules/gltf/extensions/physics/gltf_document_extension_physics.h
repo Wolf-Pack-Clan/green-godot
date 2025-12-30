@@ -37,17 +37,17 @@
 #include "gltf_physics_body.h"
 
 class GLTFDocumentExtensionPhysics : public GLTFDocumentExtension {
-	GDCLASS(GLTFDocumentExtensionPhysics, GLTFDocumentExtension);
+    GDCLASS(GLTFDocumentExtensionPhysics, GLTFDocumentExtension);
 
 public:
-	// Import process.
-	Error import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions);
-	Vector<String> get_supported_extensions();
-	Error parse_node_extensions(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &p_extensions);
-	Spatial *generate_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_parent);
-	// Export process.
-	void convert_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_node);
-	Error export_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &r_node_json, Node *p_scene_node);
+    // Import process.
+    Error import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions);
+    Vector<String> get_supported_extensions();
+    Error parse_node_extensions(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &p_extensions);
+    Spatial *generate_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_parent);
+    // Export process.
+    void convert_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_node);
+    Error export_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &r_node_json, Node *p_scene_node);
 };
 
 #endif // GLTF_DOCUMENT_EXTENSION_PHYSICS_H

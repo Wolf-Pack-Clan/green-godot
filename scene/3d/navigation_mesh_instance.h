@@ -38,52 +38,52 @@
 class Navigation;
 
 class NavigationMeshInstance : public Spatial {
-	GDCLASS(NavigationMeshInstance, Spatial);
+    GDCLASS(NavigationMeshInstance, Spatial);
 
-	bool enabled = true;
-	RID region;
-	Ref<NavigationMesh> navmesh;
+    bool enabled = true;
+    RID region;
+    Ref<NavigationMesh> navmesh;
 
-	real_t enter_cost = 0.0;
-	real_t travel_cost = 1.0;
+    real_t enter_cost = 0.0;
+    real_t travel_cost = 1.0;
 
-	uint32_t navigation_layers = 1;
-	Navigation *navigation = nullptr;
-	Node *debug_view = nullptr;
-	Thread bake_thread;
+    uint32_t navigation_layers = 1;
+    Navigation *navigation = nullptr;
+    Node *debug_view = nullptr;
+    Thread bake_thread;
 
 protected:
-	void _notification(int p_what);
-	static void _bind_methods();
-	void _changed_callback(Object *p_changed, const char *p_prop);
+    void _notification(int p_what);
+    static void _bind_methods();
+    void _changed_callback(Object *p_changed, const char *p_prop);
 
 public:
-	void set_enabled(bool p_enabled);
-	bool is_enabled() const;
+    void set_enabled(bool p_enabled);
+    bool is_enabled() const;
 
-	void set_navigation_layers(uint32_t p_navigation_layers);
-	uint32_t get_navigation_layers() const;
+    void set_navigation_layers(uint32_t p_navigation_layers);
+    uint32_t get_navigation_layers() const;
 
-	RID get_region_rid() const;
+    RID get_region_rid() const;
 
-	void set_enter_cost(real_t p_enter_cost);
-	real_t get_enter_cost() const;
+    void set_enter_cost(real_t p_enter_cost);
+    real_t get_enter_cost() const;
 
-	void set_travel_cost(real_t p_travel_cost);
-	real_t get_travel_cost() const;
+    void set_travel_cost(real_t p_travel_cost);
+    real_t get_travel_cost() const;
 
-	void set_navigation_mesh(const Ref<NavigationMesh> &p_navmesh);
-	Ref<NavigationMesh> get_navigation_mesh() const;
+    void set_navigation_mesh(const Ref<NavigationMesh> &p_navmesh);
+    Ref<NavigationMesh> get_navigation_mesh() const;
 
-	/// Bakes the navigation mesh; once done, automatically
-	/// sets the new navigation mesh and emits a signal
-	void bake_navigation_mesh(bool p_on_thread);
-	void _bake_finished(Ref<NavigationMesh> p_nav_mesh);
+    /// Bakes the navigation mesh; once done, automatically
+    /// sets the new navigation mesh and emits a signal
+    void bake_navigation_mesh(bool p_on_thread);
+    void _bake_finished(Ref<NavigationMesh> p_nav_mesh);
 
-	String get_configuration_warning() const;
+    String get_configuration_warning() const;
 
-	NavigationMeshInstance();
-	~NavigationMeshInstance();
+    NavigationMeshInstance();
+    ~NavigationMeshInstance();
 };
 
 #endif // NAVIGATION_MESH_INSTANCE_H

@@ -34,54 +34,54 @@
 #include "scene/gui/container.h"
 
 class FlowContainer : public Container {
-	GDCLASS(FlowContainer, Container);
+    GDCLASS(FlowContainer, Container);
 
 public:
-	enum AlignMode {
-		ALIGN_BEGIN,
-		ALIGN_CENTER,
-		ALIGN_END
-	};
+    enum AlignMode {
+        ALIGN_BEGIN,
+        ALIGN_CENTER,
+        ALIGN_END
+    };
 
 private:
-	int cached_size;
-	int cached_line_count;
+    int cached_size;
+    int cached_line_count;
 
-	bool vertical;
-	AlignMode align;
+    bool vertical;
+    AlignMode align;
 
-	void _resort();
+    void _resort();
 
 protected:
-	void _notification(int p_what);
+    void _notification(int p_what);
 
-	static void _bind_methods();
+    static void _bind_methods();
 
 public:
-	int get_line_count() const;
+    int get_line_count() const;
 
-	virtual Size2 get_minimum_size() const;
+    virtual Size2 get_minimum_size() const;
 
-	FlowContainer(bool p_vertical = false);
+    FlowContainer(bool p_vertical = false);
 
-	void set_alignment(AlignMode p_align);
-	AlignMode get_alignment() const;
+    void set_alignment(AlignMode p_align);
+    AlignMode get_alignment() const;
 };
 
 class HFlowContainer : public FlowContainer {
-	GDCLASS(HFlowContainer, FlowContainer);
+    GDCLASS(HFlowContainer, FlowContainer);
 
 public:
-	HFlowContainer() :
-			FlowContainer(false) {}
+    HFlowContainer() :
+            FlowContainer(false) {}
 };
 
 class VFlowContainer : public FlowContainer {
-	GDCLASS(VFlowContainer, FlowContainer);
+    GDCLASS(VFlowContainer, FlowContainer);
 
 public:
-	VFlowContainer() :
-			FlowContainer(true) {}
+    VFlowContainer() :
+            FlowContainer(true) {}
 };
 
 VARIANT_ENUM_CAST(FlowContainer::AlignMode);
