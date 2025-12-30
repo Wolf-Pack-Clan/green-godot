@@ -167,6 +167,9 @@ void DiscordRPCPlugin::discordLoop() {
 		if (enableRPC && singleton) {
 			// Only send updates if needed or periodically
 			if (singleton->need_update) {
+				if (!singleton->rpc->is_connected()) {
+					return;
+				}
 				updateDiscordPresence();
 				singleton->need_update = false;
 			}

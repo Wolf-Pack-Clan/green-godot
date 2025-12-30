@@ -48,6 +48,7 @@ public:
 	void disconnect();
 	bool update_activity(const Activity &activity);
 	void clear_activity();
+	bool is_connected() const;
 
 private:
 	String client_id_;
