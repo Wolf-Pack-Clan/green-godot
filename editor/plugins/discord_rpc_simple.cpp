@@ -160,12 +160,12 @@ bool SimpleDiscordRPC::send_frame(int opcode, const String &data) {
 	}
 
 	sent = send(sock_fd_, data_utf8.get_data(), length, MSG_NOSIGNAL);
-    if (sent != (ssize_t)length) {
-        print_line("[DiscordRPC] Failed to send data (sent " + String::num_int64(sent) + " bytes, errno: " + String::num(errno) + ")");
-        // Socket might be broken, close it
-        disconnect();
-        return false;
-    }
+	if (sent != (ssize_t)length) {
+		print_line("[DiscordRPC] Failed to send data (sent " + String::num_int64(sent) + " bytes, errno: " + String::num(errno) + ")");
+		// Socket might be broken, close it
+		disconnect();
+		return false;
+	}
 
 	return true;
 }
@@ -235,18 +235,19 @@ String SimpleDiscordRPC::create_activity_payload(const Activity &activity) {
 }
 
 bool SimpleDiscordRPC::is_connected() const {
-    if (sock_fd_ < 0) return false;
-    
-    // Use recv with MSG_PEEK to check if socket is still valid
-    char buf[1];
-    ssize_t result = recv(sock_fd_, buf, 1, MSG_PEEK | MSG_DONTWAIT);
-    if (result == 0) {
-        // Socket closed by peer
-        return false;
-    }
-    if (result < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
-        // Socket error
-        return false;
-    }
-    return true;
+	if (sock_fd_ < 0)
+		return false;
+
+	// Use recv with MSG_PEEK to check if socket is still valid
+	char buf[1];
+	ssize_t result = recv(sock_fd_, buf, 1, MSG_PEEK | MSG_DONTWAIT);
+	if (result == 0) {
+		// Socket closed by peer
+		return false;
+	}
+	if (result < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
+		// Socket error
+		return false;
+	}
+	return true;
 }
