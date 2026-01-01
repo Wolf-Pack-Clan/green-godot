@@ -44,67 +44,67 @@
 // Suffixes such as "Z" are not handled, you need to strip them away manually.
 
 class Time : public Object {
-    GDCLASS(Time, Object);
-    static void _bind_methods();
-    static Time *singleton;
+	GDCLASS(Time, Object);
+	static void _bind_methods();
+	static Time *singleton;
 
 public:
-    static Time *get_singleton();
+	static Time *get_singleton();
 
-    enum Month {
-        /// Start at 1 to follow Windows SYSTEMTIME structure
-        /// https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950(v=vs.85).aspx
-        MONTH_JANUARY = 1,
-        MONTH_FEBRUARY,
-        MONTH_MARCH,
-        MONTH_APRIL,
-        MONTH_MAY,
-        MONTH_JUNE,
-        MONTH_JULY,
-        MONTH_AUGUST,
-        MONTH_SEPTEMBER,
-        MONTH_OCTOBER,
-        MONTH_NOVEMBER,
-        MONTH_DECEMBER,
-    };
+	enum Month {
+		/// Start at 1 to follow Windows SYSTEMTIME structure
+		/// https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950(v=vs.85).aspx
+		MONTH_JANUARY = 1,
+		MONTH_FEBRUARY,
+		MONTH_MARCH,
+		MONTH_APRIL,
+		MONTH_MAY,
+		MONTH_JUNE,
+		MONTH_JULY,
+		MONTH_AUGUST,
+		MONTH_SEPTEMBER,
+		MONTH_OCTOBER,
+		MONTH_NOVEMBER,
+		MONTH_DECEMBER,
+	};
 
-    enum Weekday : uint8_t {
-        WEEKDAY_SUNDAY,
-        WEEKDAY_MONDAY,
-        WEEKDAY_TUESDAY,
-        WEEKDAY_WEDNESDAY,
-        WEEKDAY_THURSDAY,
-        WEEKDAY_FRIDAY,
-        WEEKDAY_SATURDAY,
-    };
+	enum Weekday : uint8_t {
+		WEEKDAY_SUNDAY,
+		WEEKDAY_MONDAY,
+		WEEKDAY_TUESDAY,
+		WEEKDAY_WEDNESDAY,
+		WEEKDAY_THURSDAY,
+		WEEKDAY_FRIDAY,
+		WEEKDAY_SATURDAY,
+	};
 
-    // Methods that convert times.
-    Dictionary get_datetime_dict_from_unix_time(int64_t p_unix_time_val) const;
-    Dictionary get_date_dict_from_unix_time(int64_t p_unix_time_val) const;
-    Dictionary get_time_dict_from_unix_time(int64_t p_unix_time_val) const;
-    String get_datetime_string_from_unix_time(int64_t p_unix_time_val, bool p_use_space = false) const;
-    String get_date_string_from_unix_time(int64_t p_unix_time_val) const;
-    String get_time_string_from_unix_time(int64_t p_unix_time_val) const;
-    Dictionary get_datetime_dict_from_datetime_string(String p_datetime, bool p_weekday = true) const;
-    String get_datetime_string_from_datetime_dict(const Dictionary p_datetime, bool p_use_space = false) const;
-    int64_t get_unix_time_from_datetime_dict(const Dictionary p_datetime) const;
-    int64_t get_unix_time_from_datetime_string(String p_datetime) const;
-    String get_offset_string_from_offset_minutes(int64_t p_offset_minutes) const;
+	// Methods that convert times.
+	Dictionary get_datetime_dict_from_unix_time(int64_t p_unix_time_val) const;
+	Dictionary get_date_dict_from_unix_time(int64_t p_unix_time_val) const;
+	Dictionary get_time_dict_from_unix_time(int64_t p_unix_time_val) const;
+	String get_datetime_string_from_unix_time(int64_t p_unix_time_val, bool p_use_space = false) const;
+	String get_date_string_from_unix_time(int64_t p_unix_time_val) const;
+	String get_time_string_from_unix_time(int64_t p_unix_time_val) const;
+	Dictionary get_datetime_dict_from_datetime_string(String p_datetime, bool p_weekday = true) const;
+	String get_datetime_string_from_datetime_dict(const Dictionary p_datetime, bool p_use_space = false) const;
+	int64_t get_unix_time_from_datetime_dict(const Dictionary p_datetime) const;
+	int64_t get_unix_time_from_datetime_string(String p_datetime) const;
+	String get_offset_string_from_offset_minutes(int64_t p_offset_minutes) const;
 
-    // Methods that get information from OS.
-    Dictionary get_datetime_dict_from_system(bool p_utc = false) const;
-    Dictionary get_date_dict_from_system(bool p_utc = false) const;
-    Dictionary get_time_dict_from_system(bool p_utc = false) const;
-    String get_datetime_string_from_system(bool p_utc = false, bool p_use_space = false) const;
-    String get_date_string_from_system(bool p_utc = false) const;
-    String get_time_string_from_system(bool p_utc = false) const;
-    Dictionary get_time_zone_from_system() const;
-    double get_unix_time_from_system() const;
-    uint64_t get_ticks_msec() const;
-    uint64_t get_ticks_usec() const;
+	// Methods that get information from OS.
+	Dictionary get_datetime_dict_from_system(bool p_utc = false) const;
+	Dictionary get_date_dict_from_system(bool p_utc = false) const;
+	Dictionary get_time_dict_from_system(bool p_utc = false) const;
+	String get_datetime_string_from_system(bool p_utc = false, bool p_use_space = false) const;
+	String get_date_string_from_system(bool p_utc = false) const;
+	String get_time_string_from_system(bool p_utc = false) const;
+	Dictionary get_time_zone_from_system() const;
+	double get_unix_time_from_system() const;
+	uint64_t get_ticks_msec() const;
+	uint64_t get_ticks_usec() const;
 
-    Time();
-    virtual ~Time();
+	Time();
+	virtual ~Time();
 };
 
 #endif // TIME_H

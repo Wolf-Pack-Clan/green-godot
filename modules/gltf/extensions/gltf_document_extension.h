@@ -36,25 +36,25 @@
 #include "scene/3d/spatial.h"
 
 class GLTFDocumentExtension : public Resource {
-    GDCLASS(GLTFDocumentExtension, Resource);
+	GDCLASS(GLTFDocumentExtension, Resource);
 
 protected:
-    static void _bind_methods();
+	static void _bind_methods();
 
 public:
-    // Import process.
-    virtual Error import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions);
-    virtual Vector<String> get_supported_extensions();
-    virtual Error parse_node_extensions(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &p_extensions);
-    virtual Spatial *generate_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_parent);
-    virtual Error import_post_parse(Ref<GLTFState> p_state);
-    virtual Error import_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &r_json, Node *p_node);
-    virtual Error import_post(Ref<GLTFState> p_state, Node *p_node);
-    // Export process.
-    virtual Error export_preflight(Ref<GLTFState> p_state, Node *p_root);
-    virtual void convert_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_node);
-    virtual Error export_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &r_json, Node *p_node);
-    virtual Error export_post(Ref<GLTFState> p_state);
+	// Import process.
+	virtual Error import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions);
+	virtual Vector<String> get_supported_extensions();
+	virtual Error parse_node_extensions(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &p_extensions);
+	virtual Spatial *generate_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_parent);
+	virtual Error import_post_parse(Ref<GLTFState> p_state);
+	virtual Error import_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &r_json, Node *p_node);
+	virtual Error import_post(Ref<GLTFState> p_state, Node *p_node);
+	// Export process.
+	virtual Error export_preflight(Ref<GLTFState> p_state, Node *p_root);
+	virtual void convert_scene_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Node *p_scene_node);
+	virtual Error export_node(Ref<GLTFState> p_state, Ref<GLTFNode> p_gltf_node, Dictionary &r_json, Node *p_node);
+	virtual Error export_post(Ref<GLTFState> p_state);
 };
 
 #endif // GLTF_DOCUMENT_EXTENSION_H

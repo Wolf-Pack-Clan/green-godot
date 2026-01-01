@@ -65,184 +65,184 @@ class RID_OwnerBase;
 class RID_Database;
 
 class RID_Data {
-    friend class RID_OwnerBase;
-    friend class RID_Database;
+	friend class RID_OwnerBase;
+	friend class RID_Database;
 
-    RID_OwnerBase *_owner;
-    uint32_t _id;
+	RID_OwnerBase *_owner;
+	uint32_t _id;
 
 public:
-    uint32_t get_id() const { return _id; }
+	uint32_t get_id() const { return _id; }
 
-    virtual ~RID_Data();
+	virtual ~RID_Data();
 };
 
 class RID_Handle {
 public:
-    union {
-        struct {
-            uint32_t _id;
-            uint32_t _revision;
-        };
-        uint64_t _handle_data;
-    };
+	union {
+		struct {
+			uint32_t _id;
+			uint32_t _revision;
+		};
+		uint64_t _handle_data;
+	};
 
-    RID_Handle() {
-        _handle_data = 0;
-    }
+	RID_Handle() {
+		_handle_data = 0;
+	}
 
-    bool operator==(const RID_Handle &p_rid) const {
-        return _handle_data == p_rid._handle_data;
-    }
-    bool operator<(const RID_Handle &p_rid) const {
-        return _handle_data < p_rid._handle_data;
-    }
-    bool operator<=(const RID_Handle &p_rid) const {
-        return _handle_data <= p_rid._handle_data;
-    }
-    bool operator>(const RID_Handle &p_rid) const {
-        return _handle_data > p_rid._handle_data;
-    }
-    bool operator!=(const RID_Handle &p_rid) const {
-        return _handle_data != p_rid._handle_data;
-    }
-    bool is_valid() const { return _id != 0; }
+	bool operator==(const RID_Handle &p_rid) const {
+		return _handle_data == p_rid._handle_data;
+	}
+	bool operator<(const RID_Handle &p_rid) const {
+		return _handle_data < p_rid._handle_data;
+	}
+	bool operator<=(const RID_Handle &p_rid) const {
+		return _handle_data <= p_rid._handle_data;
+	}
+	bool operator>(const RID_Handle &p_rid) const {
+		return _handle_data > p_rid._handle_data;
+	}
+	bool operator!=(const RID_Handle &p_rid) const {
+		return _handle_data != p_rid._handle_data;
+	}
+	bool is_valid() const { return _id != 0; }
 
-    uint32_t get_id() const { return _id ? _handle_data : 0; }
+	uint32_t get_id() const { return _id ? _handle_data : 0; }
 };
 
 class RID : public RID_Handle {
 };
 
 class RID_Database {
-    struct PoolElement {
-        RID_Data *data;
-        uint32_t revision;
+	struct PoolElement {
+		RID_Data *data;
+		uint32_t revision;
 #ifdef RID_HANDLE_ALLOCATION_TRACKING_ENABLED
-        // current allocation
-        uint16_t line_number;
-        uint16_t owner_name_id;
-        const char *filename;
+		// current allocation
+		uint16_t line_number;
+		uint16_t owner_name_id;
+		const char *filename;
 
-        // previous allocation (allows identifying dangling RID source allocations)
-        const char *previous_filename;
-        uint32_t previous_line_number;
+		// previous allocation (allows identifying dangling RID source allocations)
+		const char *previous_filename;
+		uint32_t previous_line_number;
 #endif
-    };
+	};
 
-    struct Leak {
-        uint16_t line_number;
-        uint16_t owner_name_id;
-        const char *filename;
-        uint32_t num_objects_leaked;
-    };
+	struct Leak {
+		uint16_t line_number;
+		uint16_t owner_name_id;
+		const char *filename;
+		uint32_t num_objects_leaked;
+	};
 
-    // The pooled list zeros on first request .. this is important
-    // so that we initialize the revision to zero. Other than that, it
-    // is treated as a POD type.
-    TrackedPooledList<PoolElement, uint32_t, true, true> _pool;
-    bool _shutdown = false;
-    mutable Mutex _mutex;
+	// The pooled list zeros on first request .. this is important
+	// so that we initialize the revision to zero. Other than that, it
+	// is treated as a POD type.
+	TrackedPooledList<PoolElement, uint32_t, true, true> _pool;
+	bool _shutdown = false;
+	mutable Mutex _mutex;
 
-    // This is purely for printing the leaks at the end, as RID_Owners may be
-    // destroyed before the RID_Database is shutdown, so the RID_Data may be invalid
-    // by this point, and we still want to have a record of the owner names.
-    // The owner names should part of the binary, thus the pointers should still be valid.
-    // They were retrieved using typeid(T).name()
-    LocalVector<const char *> _owner_names;
-    LocalVector<Leak> _leaks;
+	// This is purely for printing the leaks at the end, as RID_Owners may be
+	// destroyed before the RID_Database is shutdown, so the RID_Data may be invalid
+	// by this point, and we still want to have a record of the owner names.
+	// The owner names should part of the binary, thus the pointers should still be valid.
+	// They were retrieved using typeid(T).name()
+	LocalVector<const char *> _owner_names;
+	LocalVector<Leak> _leaks;
 
-    void register_leak(uint32_t p_line_number, uint32_t p_owner_name_id, const char *p_filename);
-    String _rid_to_string(const RID &p_rid, const PoolElement &p_pe) const;
+	void register_leak(uint32_t p_line_number, uint32_t p_owner_name_id, const char *p_filename);
+	String _rid_to_string(const RID &p_rid, const PoolElement &p_pe) const;
 
 public:
-    RID_Database();
-    ~RID_Database();
+	RID_Database();
+	~RID_Database();
 
-    // Called to record the owner names before RID_Owners are destroyed
-    void preshutdown();
+	// Called to record the owner names before RID_Owners are destroyed
+	void preshutdown();
 
-    // Called after destroying RID_Owners to detect leaks
-    void shutdown();
+	// Called after destroying RID_Owners to detect leaks
+	void shutdown();
 
-    // Prepare a RID for memory tracking
-    RID prime(const RID &p_rid, int p_line_number, const char *p_filename);
+	// Prepare a RID for memory tracking
+	RID prime(const RID &p_rid, int p_line_number, const char *p_filename);
 
-    void handle_make_rid(RID &r_rid, RID_Data *p_data, RID_OwnerBase *p_owner);
-    RID_Data *handle_get(const RID &p_rid) const;
-    RID_Data *handle_getptr(const RID &p_rid) const;
-    RID_Data *handle_get_or_null(const RID &p_rid) const;
+	void handle_make_rid(RID &r_rid, RID_Data *p_data, RID_OwnerBase *p_owner);
+	RID_Data *handle_get(const RID &p_rid) const;
+	RID_Data *handle_getptr(const RID &p_rid) const;
+	RID_Data *handle_get_or_null(const RID &p_rid) const;
 
-    bool handle_is_owner(const RID &p_rid, const RID_OwnerBase *p_owner) const;
-    void handle_free(const RID &p_rid);
+	bool handle_is_owner(const RID &p_rid, const RID_OwnerBase *p_owner) const;
+	void handle_free(const RID &p_rid);
 };
 
 extern RID_Database g_rid_database;
 
 class RID_OwnerBase {
 protected:
-    bool _is_owner(const RID &p_rid) const {
-        return g_rid_database.handle_is_owner(p_rid, this);
-    }
+	bool _is_owner(const RID &p_rid) const {
+		return g_rid_database.handle_is_owner(p_rid, this);
+	}
 
-    void _rid_print(const char *pszType, String sz, const RID &p_rid);
+	void _rid_print(const char *pszType, String sz, const RID &p_rid);
 
-    const char *_typename = nullptr;
-    bool _shutdown = false;
+	const char *_typename = nullptr;
+	bool _shutdown = false;
 
 public:
-    virtual void get_owned_list(List<RID> *p_owned) = 0;
-    const char *get_typename() const { return _typename; }
+	virtual void get_owned_list(List<RID> *p_owned) = 0;
+	const char *get_typename() const { return _typename; }
 
-    static void init_rid();
-    virtual ~RID_OwnerBase();
+	static void init_rid();
+	virtual ~RID_OwnerBase();
 };
 
 template <class T>
 class RID_Owner : public RID_OwnerBase {
 public:
-    RID make_rid(T *p_data) {
-        RID rid;
-        g_rid_database.handle_make_rid(rid, p_data, this);
+	RID make_rid(T *p_data) {
+		RID rid;
+		g_rid_database.handle_make_rid(rid, p_data, this);
 
 #ifdef RID_HANDLE_PRINT_LIFETIMES
-        _rid_print(_typename, "make_rid", rid);
+		_rid_print(_typename, "make_rid", rid);
 #endif
-        return rid;
-    }
+		return rid;
+	}
 
-    T *get(const RID &p_rid) {
-        return static_cast<T *>(g_rid_database.handle_get(p_rid));
-    }
+	T *get(const RID &p_rid) {
+		return static_cast<T *>(g_rid_database.handle_get(p_rid));
+	}
 
-    T *getornull(const RID &p_rid) {
-        return static_cast<T *>(g_rid_database.handle_get_or_null(p_rid));
-    }
+	T *getornull(const RID &p_rid) {
+		return static_cast<T *>(g_rid_database.handle_get_or_null(p_rid));
+	}
 
-    T *getptr(const RID &p_rid) {
-        return static_cast<T *>(g_rid_database.handle_getptr(p_rid));
-    }
+	T *getptr(const RID &p_rid) {
+		return static_cast<T *>(g_rid_database.handle_getptr(p_rid));
+	}
 
-    bool owns(const RID &p_rid) const {
-        return _is_owner(p_rid);
-    }
+	bool owns(const RID &p_rid) const {
+		return _is_owner(p_rid);
+	}
 
-    void free(RID p_rid) {
+	void free(RID p_rid) {
 #ifdef RID_HANDLE_PRINT_LIFETIMES
-        _rid_print(_typename, "free_rid", p_rid);
+		_rid_print(_typename, "free_rid", p_rid);
 #endif
-        g_rid_database.handle_free(p_rid);
-    }
+		g_rid_database.handle_free(p_rid);
+	}
 
-    void get_owned_list(List<RID> *p_owned) {
+	void get_owned_list(List<RID> *p_owned) {
 #ifdef DEBUG_ENABLED
 
 #endif
-    }
+	}
 
-    RID_Owner() {
-        _typename = typeid(T).name();
-    }
+	RID_Owner() {
+		_typename = typeid(T).name();
+	}
 };
 
 #endif // RID_HANDLES_ENABLED

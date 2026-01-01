@@ -37,35 +37,35 @@
 // https://github.com/omigroup/gltf-extensions/tree/main/extensions/2.0/OMI_physics_body
 
 class GLTFPhysicsBody : public Resource {
-    GDCLASS(GLTFPhysicsBody, Resource)
+	GDCLASS(GLTFPhysicsBody, Resource)
 
 protected:
-    static void _bind_methods();
+	static void _bind_methods();
 
 private:
-    String body_type = "static";
-    real_t mass = 1.0;
-    Vector3 linear_velocity = Vector3();
-    Vector3 angular_velocity = Vector3();
+	String body_type = "static";
+	real_t mass = 1.0;
+	Vector3 linear_velocity = Vector3();
+	Vector3 angular_velocity = Vector3();
 
 public:
-    String get_body_type() const;
-    void set_body_type(String p_body_type);
+	String get_body_type() const;
+	void set_body_type(String p_body_type);
 
-    real_t get_mass() const;
-    void set_mass(real_t p_mass);
+	real_t get_mass() const;
+	void set_mass(real_t p_mass);
 
-    Vector3 get_linear_velocity() const;
-    void set_linear_velocity(Vector3 p_linear_velocity);
+	Vector3 get_linear_velocity() const;
+	void set_linear_velocity(Vector3 p_linear_velocity);
 
-    Vector3 get_angular_velocity() const;
-    void set_angular_velocity(Vector3 p_angular_velocity);
+	Vector3 get_angular_velocity() const;
+	void set_angular_velocity(Vector3 p_angular_velocity);
 
-    static Ref<GLTFPhysicsBody> from_node(const CollisionObject *p_body_node);
-    CollisionObject *to_node() const;
+	static Ref<GLTFPhysicsBody> from_node(const CollisionObject *p_body_node);
+	CollisionObject *to_node() const;
 
-    static Ref<GLTFPhysicsBody> from_dictionary(const Dictionary p_dictionary);
-    Dictionary to_dictionary() const;
+	static Ref<GLTFPhysicsBody> from_dictionary(const Dictionary p_dictionary);
+	Dictionary to_dictionary() const;
 };
 
 #endif // GLTF_PHYSICS_BODY_H

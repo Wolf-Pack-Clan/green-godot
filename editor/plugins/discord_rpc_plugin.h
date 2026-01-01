@@ -36,40 +36,40 @@
 #include <thread>
 
 class DiscordRPCPlugin : public EditorPlugin {
-    GDCLASS(DiscordRPCPlugin, EditorPlugin)
+	GDCLASS(DiscordRPCPlugin, EditorPlugin)
 
 private:
-    static DiscordRPCPlugin *singleton;
-    static int64_t startTime;
-    static std::atomic<bool> shouldRun;
-    static std::thread updateThread;
-    static bool enableRPC;
-    static bool showProjectName;
-    static bool showSceneName;
-    static bool showSceneType;
+	static DiscordRPCPlugin *singleton;
+	static int64_t startTime;
+	static std::atomic<bool> shouldRun;
+	static std::thread updateThread;
+	static bool enableRPC;
+	static bool showProjectName;
+	static bool showSceneName;
+	static bool showSceneType;
 
-    std::unique_ptr<SimpleDiscordRPC> rpc;
+	std::unique_ptr<SimpleDiscordRPC> rpc;
 
-    String cached_scene_name;
-    String cached_project_name;
-    bool need_update;
+	String cached_scene_name;
+	String cached_project_name;
+	bool need_update;
 
-    static void handleSettingsChange();
-    static void updateDiscordPresence();
-    static void discordLoop();
-    void initDiscord();
-    void shutdownDiscord();
-    void updateCachedData();
-    void _delayed_init();
+	static void handleSettingsChange();
+	static void updateDiscordPresence();
+	static void discordLoop();
+	void initDiscord();
+	void shutdownDiscord();
+	void updateCachedData();
+	void _delayed_init();
 
 protected:
-    static void _bind_methods();
-    void _notification(int p_what);
+	static void _bind_methods();
+	void _notification(int p_what);
 
 public:
-    static DiscordRPCPlugin *get_singleton();
-    DiscordRPCPlugin();
-    ~DiscordRPCPlugin();
+	static DiscordRPCPlugin *get_singleton();
+	DiscordRPCPlugin();
+	~DiscordRPCPlugin();
 };
 
 #endif

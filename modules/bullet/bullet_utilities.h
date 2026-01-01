@@ -32,16 +32,16 @@
 #define BULLET_UTILITIES_H
 
 /**
-    @author AndreaCatania
+	@author AndreaCatania
 */
 
 #define bulletnew(cl) \
-    new cl
+	new cl
 
 #define bulletdelete(cl) \
-    {                    \
-        delete cl;       \
-        cl = NULL;       \
-    }
+	{                    \
+		delete cl;       \
+		cl = NULL;       \
+	}
 
 #endif // BULLET_UTILITIES_H

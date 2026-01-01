@@ -43,59 +43,59 @@ struct SpatialIndexer;
 class LODManager;
 
 class World : public Resource {
-    GDCLASS(World, Resource);
-    RES_BASE_EXTENSION("world");
+	GDCLASS(World, Resource);
+	RES_BASE_EXTENSION("world");
 
 private:
-    RID space;
-    RID scenario;
-    RID navigation_map;
+	RID space;
+	RID scenario;
+	RID navigation_map;
 
-    SpatialIndexer *indexer;
-    LODManager *lod_manager = nullptr;
-    Ref<Environment> environment;
-    Ref<Environment> fallback_environment;
+	SpatialIndexer *indexer;
+	LODManager *lod_manager = nullptr;
+	Ref<Environment> environment;
+	Ref<Environment> fallback_environment;
 
 protected:
-    static void _bind_methods();
+	static void _bind_methods();
 
-    friend class Camera;
-    friend class VisibilityNotifier;
-    friend class LOD;
+	friend class Camera;
+	friend class VisibilityNotifier;
+	friend class LOD;
 
-    void _register_camera(Camera *p_camera);
-    void _update_camera(Camera *p_camera);
-    void _remove_camera(Camera *p_camera);
+	void _register_camera(Camera *p_camera);
+	void _update_camera(Camera *p_camera);
+	void _remove_camera(Camera *p_camera);
 
-    void _register_notifier(VisibilityNotifier *p_notifier, const AABB &p_rect);
-    void _update_notifier(VisibilityNotifier *p_notifier, const AABB &p_rect);
-    void _remove_notifier(VisibilityNotifier *p_notifier);
+	void _register_notifier(VisibilityNotifier *p_notifier, const AABB &p_rect);
+	void _update_notifier(VisibilityNotifier *p_notifier, const AABB &p_rect);
+	void _remove_notifier(VisibilityNotifier *p_notifier);
 
-    void _register_lod(LOD *p_lod, uint32_t p_queue_id);
-    void _unregister_lod(LOD *p_lod, uint32_t p_queue_id);
+	void _register_lod(LOD *p_lod, uint32_t p_queue_id);
+	void _unregister_lod(LOD *p_lod, uint32_t p_queue_id);
 
-    friend class Viewport;
-    void _update(uint64_t p_frame);
+	friend class Viewport;
+	void _update(uint64_t p_frame);
 
 public:
-    RID get_space() const;
-    RID get_scenario() const;
-    RID get_navigation_map() const;
+	RID get_space() const;
+	RID get_scenario() const;
+	RID get_navigation_map() const;
 
-    void set_environment(const Ref<Environment> &p_environment);
-    Ref<Environment> get_environment() const;
+	void set_environment(const Ref<Environment> &p_environment);
+	Ref<Environment> get_environment() const;
 
-    void set_fallback_environment(const Ref<Environment> &p_environment);
-    Ref<Environment> get_fallback_environment() const;
+	void set_fallback_environment(const Ref<Environment> &p_environment);
+	Ref<Environment> get_fallback_environment() const;
 
-    void get_camera_list(List<Camera *> *r_cameras);
+	void get_camera_list(List<Camera *> *r_cameras);
 
-    PhysicsDirectSpaceState *get_direct_space_state();
+	PhysicsDirectSpaceState *get_direct_space_state();
 
-    void notify_saving(bool p_active);
+	void notify_saving(bool p_active);
 
-    World();
-    ~World();
+	World();
+	~World();
 };
 
 #endif // WORLD_H

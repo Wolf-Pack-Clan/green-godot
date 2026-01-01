@@ -46,184 +46,184 @@ import javax.microedition.khronos.opengles.GL10;
  * Wrapper for native library
  */
 public class GodotLib {
-    static {
-        System.loadLibrary("godot_android");
-    }
+	static {
+		System.loadLibrary("godot_android");
+	}
 
-    /**
-     * Invoked on the main thread to initialize Godot native layer.
-     */
-    public static native void initialize(Activity activity, Godot p_instance, AssetManager p_asset_manager, GodotIO godotIO, GodotNetUtils netUtils, DirectoryAccessHandler directoryAccessHandler, FileAccessHandler fileAccessHandler, boolean use_apk_expansion);
+	/**
+	 * Invoked on the main thread to initialize Godot native layer.
+	 */
+	public static native void initialize(Activity activity, Godot p_instance, AssetManager p_asset_manager, GodotIO godotIO, GodotNetUtils netUtils, DirectoryAccessHandler directoryAccessHandler, FileAccessHandler fileAccessHandler, boolean use_apk_expansion);
 
-    /**
-     * Invoked on the main thread to clean up Godot native layer.
-     * @see androidx.fragment.app.Fragment#onDestroy()
-     */
-    public static native void ondestroy();
+	/**
+	 * Invoked on the main thread to clean up Godot native layer.
+	 * @see androidx.fragment.app.Fragment#onDestroy()
+	 */
+	public static native void ondestroy();
 
-    /**
-     * Invoked on the GL thread to complete setup for the Godot native layer logic.
-     * @param p_cmdline Command line arguments used to configure Godot native layer components.
-     */
-    public static native boolean setup(String[] p_cmdline, GodotTTS tts);
+	/**
+	 * Invoked on the GL thread to complete setup for the Godot native layer logic.
+	 * @param p_cmdline Command line arguments used to configure Godot native layer components.
+	 */
+	public static native boolean setup(String[] p_cmdline, GodotTTS tts);
 
-    /**
-     * Invoked on the GL thread when the underlying Android surface has changed size.
-     * @param width
-     * @param height
-     * @see org.godotengine.godot.gl.GLSurfaceView.Renderer#onSurfaceChanged(GL10, int, int)
-     */
-    public static native void resize(int width, int height);
+	/**
+	 * Invoked on the GL thread when the underlying Android surface has changed size.
+	 * @param width
+	 * @param height
+	 * @see org.godotengine.godot.gl.GLSurfaceView.Renderer#onSurfaceChanged(GL10, int, int)
+	 */
+	public static native void resize(int width, int height);
 
-    /**
-     * Invoked on the GL thread when the underlying Android surface is created or recreated.
-     * @see org.godotengine.godot.gl.GLSurfaceView.Renderer#onSurfaceCreated(GL10, EGLConfig)
-     */
-    public static native void newcontext();
+	/**
+	 * Invoked on the GL thread when the underlying Android surface is created or recreated.
+	 * @see org.godotengine.godot.gl.GLSurfaceView.Renderer#onSurfaceCreated(GL10, EGLConfig)
+	 */
+	public static native void newcontext();
 
-    /**
-     * Forward {@link Activity#onBackPressed()} event.
-     */
-    public static native void back();
+	/**
+	 * Forward {@link Activity#onBackPressed()} event.
+	 */
+	public static native void back();
 
-    /**
-     * Invoked on the GL thread to draw the current frame.
-     * @see org.godotengine.godot.gl.GLSurfaceView.Renderer#onDrawFrame(GL10)
-     */
-    public static native boolean step();
+	/**
+	 * Invoked on the GL thread to draw the current frame.
+	 * @see org.godotengine.godot.gl.GLSurfaceView.Renderer#onDrawFrame(GL10)
+	 */
+	public static native boolean step();
 
-    /**
-     * TTS callback.
-     */
-    public static native void ttsCallback(int event, int id, int pos);
+	/**
+	 * TTS callback.
+	 */
+	public static native void ttsCallback(int event, int id, int pos);
 
-    /**
-     * Forward touch events.
-     */
-    public static native void dispatchTouchEvent(int event, int pointer, int pointerCount, float[] positions, boolean doubleTap);
+	/**
+	 * Forward touch events.
+	 */
+	public static native void dispatchTouchEvent(int event, int pointer, int pointerCount, float[] positions, boolean doubleTap);
 
-    /**
-     * Dispatch mouse events
-     */
-    public static native void dispatchMouseEvent(int event, int buttonMask, float x, float y, float deltaX, float deltaY, boolean doubleClick, boolean sourceMouseRelative);
+	/**
+	 * Dispatch mouse events
+	 */
+	public static native void dispatchMouseEvent(int event, int buttonMask, float x, float y, float deltaX, float deltaY, boolean doubleClick, boolean sourceMouseRelative);
 
-    public static native void magnify(float x, float y, float factor);
+	public static native void magnify(float x, float y, float factor);
 
-    public static native void pan(float x, float y, float deltaX, float deltaY);
+	public static native void pan(float x, float y, float deltaX, float deltaY);
 
-    /**
-     * Forward accelerometer sensor events.
-     * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
-     */
-    public static native void accelerometer(float x, float y, float z);
+	/**
+	 * Forward accelerometer sensor events.
+	 * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
+	 */
+	public static native void accelerometer(float x, float y, float z);
 
-    /**
-     * Forward gravity sensor events.
-     * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
-     */
-    public static native void gravity(float x, float y, float z);
+	/**
+	 * Forward gravity sensor events.
+	 * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
+	 */
+	public static native void gravity(float x, float y, float z);
 
-    /**
-     * Forward magnetometer sensor events.
-     * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
-     */
-    public static native void magnetometer(float x, float y, float z);
+	/**
+	 * Forward magnetometer sensor events.
+	 * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
+	 */
+	public static native void magnetometer(float x, float y, float z);
 
-    /**
-     * Forward gyroscope sensor events.
-     * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
-     */
-    public static native void gyroscope(float x, float y, float z);
+	/**
+	 * Forward gyroscope sensor events.
+	 * @see android.hardware.SensorEventListener#onSensorChanged(SensorEvent)
+	 */
+	public static native void gyroscope(float x, float y, float z);
 
-    /**
-     * Forward regular key events.
-     */
-    public static native void key(int p_scancode, int p_physical_scancode, int p_unicode, boolean p_pressed);
+	/**
+	 * Forward regular key events.
+	 */
+	public static native void key(int p_scancode, int p_physical_scancode, int p_unicode, boolean p_pressed);
 
-    /**
-     * Forward game device's key events.
-     */
-    public static native void joybutton(int p_device, int p_but, boolean p_pressed);
+	/**
+	 * Forward game device's key events.
+	 */
+	public static native void joybutton(int p_device, int p_but, boolean p_pressed);
 
-    /**
-     * Forward joystick devices axis motion events.
-     */
-    public static native void joyaxis(int p_device, int p_axis, float p_value);
+	/**
+	 * Forward joystick devices axis motion events.
+	 */
+	public static native void joyaxis(int p_device, int p_axis, float p_value);
 
-    /**
-     * Forward joystick devices hat motion events.
-     */
-    public static native void joyhat(int p_device, int p_hat_x, int p_hat_y);
+	/**
+	 * Forward joystick devices hat motion events.
+	 */
+	public static native void joyhat(int p_device, int p_hat_x, int p_hat_y);
 
-    /**
-     * Fires when a joystick device is added or removed.
-     */
-    public static native void joyconnectionchanged(int p_device, boolean p_connected, String p_name);
+	/**
+	 * Fires when a joystick device is added or removed.
+	 */
+	public static native void joyconnectionchanged(int p_device, boolean p_connected, String p_name);
 
-    /**
-     * Invoked when the Android app resumes.
-     * @see androidx.fragment.app.Fragment#onResume()
-     */
-    public static native void focusin();
+	/**
+	 * Invoked when the Android app resumes.
+	 * @see androidx.fragment.app.Fragment#onResume()
+	 */
+	public static native void focusin();
 
-    /**
-     * Invoked when the Android app pauses.
-     * @see androidx.fragment.app.Fragment#onPause()
-     */
-    public static native void focusout();
+	/**
+	 * Invoked when the Android app pauses.
+	 * @see androidx.fragment.app.Fragment#onPause()
+	 */
+	public static native void focusout();
 
-    /**
-     * Used to access Godot global properties.
-     * @param p_key Property key
-     * @return String value of the property
-     */
-    public static native String getGlobal(String p_key);
+	/**
+	 * Used to access Godot global properties.
+	 * @param p_key Property key
+	 * @return String value of the property
+	 */
+	public static native String getGlobal(String p_key);
 
-    /**
-     * Used to access Godot's editor settings.
-     * @param settingKey Setting key
-     * @return String value of the setting
-     */
-    public static native String getEditorSetting(String settingKey);
+	/**
+	 * Used to access Godot's editor settings.
+	 * @param settingKey Setting key
+	 * @return String value of the setting
+	 */
+	public static native String getEditorSetting(String settingKey);
 
-    /**
-     * Invoke method |p_method| on the Godot object specified by |p_id|
-     * @param p_id Id of the Godot object to invoke
-     * @param p_method Name of the method to invoke
-     * @param p_params Parameters to use for method invocation
-     */
-    public static native void callobject(long p_id, String p_method, Object[] p_params);
+	/**
+	 * Invoke method |p_method| on the Godot object specified by |p_id|
+	 * @param p_id Id of the Godot object to invoke
+	 * @param p_method Name of the method to invoke
+	 * @param p_params Parameters to use for method invocation
+	 */
+	public static native void callobject(long p_id, String p_method, Object[] p_params);
 
-    /**
-     * Invoke method |p_method| on the Godot object specified by |p_id| during idle time.
-     * @param p_id Id of the Godot object to invoke
-     * @param p_method Name of the method to invoke
-     * @param p_params Parameters to use for method invocation
-     */
-    public static native void calldeferred(long p_id, String p_method, Object[] p_params);
+	/**
+	 * Invoke method |p_method| on the Godot object specified by |p_id| during idle time.
+	 * @param p_id Id of the Godot object to invoke
+	 * @param p_method Name of the method to invoke
+	 * @param p_params Parameters to use for method invocation
+	 */
+	public static native void calldeferred(long p_id, String p_method, Object[] p_params);
 
-    /**
-     * Forward the results from a permission request.
-     * @see Activity#onRequestPermissionsResult(int, String[], int[])
-     * @param p_permission Request permission
-     * @param p_result True if the permission was granted, false otherwise
-     */
-    public static native void requestPermissionResult(String p_permission, boolean p_result);
+	/**
+	 * Forward the results from a permission request.
+	 * @see Activity#onRequestPermissionsResult(int, String[], int[])
+	 * @param p_permission Request permission
+	 * @param p_result True if the permission was granted, false otherwise
+	 */
+	public static native void requestPermissionResult(String p_permission, boolean p_result);
 
-    /**
-     * Invoked on the GL thread to configure the height of the virtual keyboard.
-     */
-    public static native void setVirtualKeyboardHeight(int p_height);
+	/**
+	 * Invoked on the GL thread to configure the height of the virtual keyboard.
+	 */
+	public static native void setVirtualKeyboardHeight(int p_height);
 
-    /**
-     * Invoked on the GL thread when the {@link GodotRenderer} has been resumed.
-     * @see GodotRenderer#onActivityResumed()
-     */
-    public static native void onRendererResumed();
+	/**
+	 * Invoked on the GL thread when the {@link GodotRenderer} has been resumed.
+	 * @see GodotRenderer#onActivityResumed()
+	 */
+	public static native void onRendererResumed();
 
-    /**
-     * Invoked on the GL thread when the {@link GodotRenderer} has been paused.
-     * @see GodotRenderer#onActivityPaused()
-     */
-    public static native void onRendererPaused();
+	/**
+	 * Invoked on the GL thread when the {@link GodotRenderer} has been paused.
+	 * @see GodotRenderer#onActivityPaused()
+	 */
+	public static native void onRendererPaused();
 }

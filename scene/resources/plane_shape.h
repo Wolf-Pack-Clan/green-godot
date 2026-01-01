@@ -34,24 +34,24 @@
 #include "scene/resources/shape.h"
 
 class PlaneShape : public Shape {
-    GDCLASS(PlaneShape, Shape);
-    Plane plane;
+	GDCLASS(PlaneShape, Shape);
+	Plane plane;
 
 protected:
-    static void _bind_methods();
-    virtual void _update_shape();
+	static void _bind_methods();
+	virtual void _update_shape();
 
 public:
-    void set_plane(Plane p_plane);
-    Plane get_plane() const;
+	void set_plane(Plane p_plane);
+	Plane get_plane() const;
 
-    virtual Vector<Vector3> get_debug_mesh_lines();
-    virtual real_t get_enclosing_radius() const {
-        // Should be infinite?
-        return 0;
-    };
+	virtual Vector<Vector3> get_debug_mesh_lines();
+	virtual real_t get_enclosing_radius() const {
+		// Should be infinite?
+		return 0;
+	};
 
-    PlaneShape();
+	PlaneShape();
 };
 
 #endif // PLANE_SHAPE_H

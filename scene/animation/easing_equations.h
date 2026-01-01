@@ -57,348 +57,348 @@
 
 namespace linear {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    return c * t / d + b;
+	return c * t / d + b;
 }
 }; // namespace linear
 
 namespace sine {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    return -c * cos(t / d * (Math_PI / 2)) + c + b;
+	return -c * cos(t / d * (Math_PI / 2)) + c + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    return c * sin(t / d * (Math_PI / 2)) + b;
+	return c * sin(t / d * (Math_PI / 2)) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    return -c / 2 * (cos(Math_PI * t / d) - 1) + b;
+	return -c / 2 * (cos(Math_PI * t / d) - 1) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace sine
 
 namespace quint {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    return c * pow(t / d, 5) + b;
+	return c * pow(t / d, 5) + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    return c * (pow(t / d - 1, 5) + 1) + b;
+	return c * (pow(t / d - 1, 5) + 1) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    t = t / d * 2;
+	t = t / d * 2;
 
-    if (t < 1) {
-        return c / 2 * pow(t, 5) + b;
-    }
-    return c / 2 * (pow(t - 2, 5) + 2) + b;
+	if (t < 1) {
+		return c / 2 * pow(t, 5) + b;
+	}
+	return c / 2 * (pow(t - 2, 5) + 2) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace quint
 
 namespace quart {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    return c * pow(t / d, 4) + b;
+	return c * pow(t / d, 4) + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    return -c * (pow(t / d - 1, 4) - 1) + b;
+	return -c * (pow(t / d - 1, 4) - 1) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    t = t / d * 2;
+	t = t / d * 2;
 
-    if (t < 1) {
-        return c / 2 * pow(t, 4) + b;
-    }
-    return -c / 2 * (pow(t - 2, 4) - 2) + b;
+	if (t < 1) {
+		return c / 2 * pow(t, 4) + b;
+	}
+	return -c / 2 * (pow(t - 2, 4) - 2) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace quart
 
 namespace quad {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    return c * pow(t / d, 2) + b;
+	return c * pow(t / d, 2) + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    t /= d;
-    return -c * t * (t - 2) + b;
+	t /= d;
+	return -c * t * (t - 2) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    t = t / d * 2;
+	t = t / d * 2;
 
-    if (t < 1) {
-        return c / 2 * pow(t, 2) + b;
-    }
-    return -c / 2 * ((t - 1) * (t - 3) - 1) + b;
+	if (t < 1) {
+		return c / 2 * pow(t, 2) + b;
+	}
+	return -c / 2 * ((t - 1) * (t - 3) - 1) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace quad
 
 namespace expo {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    if (t == 0) {
-        return b;
-    }
-    return c * pow(2, 10 * (t / d - 1)) + b - c * 0.001;
+	if (t == 0) {
+		return b;
+	}
+	return c * pow(2, 10 * (t / d - 1)) + b - c * 0.001;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    if (t == d) {
-        return b + c;
-    }
-    return c * 1.001 * (-pow(2, -10 * t / d) + 1) + b;
+	if (t == d) {
+		return b + c;
+	}
+	return c * 1.001 * (-pow(2, -10 * t / d) + 1) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    if (t == 0) {
-        return b;
-    }
+	if (t == 0) {
+		return b;
+	}
 
-    if (t == d) {
-        return b + c;
-    }
+	if (t == d) {
+		return b + c;
+	}
 
-    t = t / d * 2;
+	t = t / d * 2;
 
-    if (t < 1) {
-        return c / 2 * pow(2, 10 * (t - 1)) + b - c * 0.0005;
-    }
-    return c / 2 * 1.0005 * (-pow(2, -10 * (t - 1)) + 2) + b;
+	if (t < 1) {
+		return c / 2 * pow(2, 10 * (t - 1)) + b - c * 0.0005;
+	}
+	return c / 2 * 1.0005 * (-pow(2, -10 * (t - 1)) + 2) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace expo
 
 namespace elastic {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    if (t == 0) {
-        return b;
-    }
+	if (t == 0) {
+		return b;
+	}
 
-    t /= d;
-    if (t == 1) {
-        return b + c;
-    }
+	t /= d;
+	if (t == 1) {
+		return b + c;
+	}
 
-    t -= 1;
-    float p = d * 0.3f;
-    float a = c * pow(2, 10 * t);
-    float s = p / 4;
+	t -= 1;
+	float p = d * 0.3f;
+	float a = c * pow(2, 10 * t);
+	float s = p / 4;
 
-    return -(a * sin((t * d - s) * (2 * Math_PI) / p)) + b;
+	return -(a * sin((t * d - s) * (2 * Math_PI) / p)) + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    if (t == 0) {
-        return b;
-    }
+	if (t == 0) {
+		return b;
+	}
 
-    t /= d;
-    if (t == 1) {
-        return b + c;
-    }
+	t /= d;
+	if (t == 1) {
+		return b + c;
+	}
 
-    float p = d * 0.3f;
-    float s = p / 4;
+	float p = d * 0.3f;
+	float s = p / 4;
 
-    return (c * pow(2, -10 * t) * sin((t * d - s) * (2 * Math_PI) / p) + c + b);
+	return (c * pow(2, -10 * t) * sin((t * d - s) * (2 * Math_PI) / p) + c + b);
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    if (t == 0) {
-        return b;
-    }
+	if (t == 0) {
+		return b;
+	}
 
-    if ((t /= d / 2) == 2) {
-        return b + c;
-    }
+	if ((t /= d / 2) == 2) {
+		return b + c;
+	}
 
-    float p = d * (0.3f * 1.5f);
-    float a = c;
-    float s = p / 4;
+	float p = d * (0.3f * 1.5f);
+	float a = c;
+	float s = p / 4;
 
-    if (t < 1) {
-        t -= 1;
-        a *= pow(2, 10 * t);
-        return -0.5f * (a * sin((t * d - s) * (2 * Math_PI) / p)) + b;
-    }
+	if (t < 1) {
+		t -= 1;
+		a *= pow(2, 10 * t);
+		return -0.5f * (a * sin((t * d - s) * (2 * Math_PI) / p)) + b;
+	}
 
-    t -= 1;
-    a *= pow(2, -10 * t);
-    return a * sin((t * d - s) * (2 * Math_PI) / p) * 0.5f + c + b;
+	t -= 1;
+	a *= pow(2, -10 * t);
+	return a * sin((t * d - s) * (2 * Math_PI) / p) * 0.5f + c + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace elastic
 
 namespace cubic {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    t /= d;
-    return c * t * t * t + b;
+	t /= d;
+	return c * t * t * t + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    t = t / d - 1;
-    return c * (t * t * t + 1) + b;
+	t = t / d - 1;
+	return c * (t * t * t + 1) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    t /= d / 2;
-    if (t < 1) {
-        return c / 2 * t * t * t + b;
-    }
+	t /= d / 2;
+	if (t < 1) {
+		return c / 2 * t * t * t + b;
+	}
 
-    t -= 2;
-    return c / 2 * (t * t * t + 2) + b;
+	t -= 2;
+	return c / 2 * (t * t * t + 2) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace cubic
 
 namespace circ {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    t /= d;
-    return -c * (sqrt(1 - t * t) - 1) + b;
+	t /= d;
+	return -c * (sqrt(1 - t * t) - 1) + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    t = t / d - 1;
-    return c * sqrt(1 - t * t) + b;
+	t = t / d - 1;
+	return c * sqrt(1 - t * t) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    t /= d / 2;
-    if (t < 1) {
-        return -c / 2 * (sqrt(1 - t * t) - 1) + b;
-    }
+	t /= d / 2;
+	if (t < 1) {
+		return -c / 2 * (sqrt(1 - t * t) - 1) + b;
+	}
 
-    t -= 2;
-    return c / 2 * (sqrt(1 - t * t) + 1) + b;
+	t -= 2;
+	return c / 2 * (sqrt(1 - t * t) + 1) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace circ
 
 namespace bounce {
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    t /= d;
+	t /= d;
 
-    if (t < (1 / 2.75f)) {
-        return c * (7.5625f * t * t) + b;
-    }
+	if (t < (1 / 2.75f)) {
+		return c * (7.5625f * t * t) + b;
+	}
 
-    if (t < (2 / 2.75f)) {
-        t -= 1.5f / 2.75f;
-        return c * (7.5625f * t * t + 0.75f) + b;
-    }
+	if (t < (2 / 2.75f)) {
+		t -= 1.5f / 2.75f;
+		return c * (7.5625f * t * t + 0.75f) + b;
+	}
 
-    if (t < (2.5 / 2.75)) {
-        t -= 2.25f / 2.75f;
-        return c * (7.5625f * t * t + 0.9375f) + b;
-    }
+	if (t < (2.5 / 2.75)) {
+		t -= 2.25f / 2.75f;
+		return c * (7.5625f * t * t + 0.9375f) + b;
+	}
 
-    t -= 2.625f / 2.75f;
-    return c * (7.5625f * t * t + 0.984375f) + b;
+	t -= 2.625f / 2.75f;
+	return c * (7.5625f * t * t + 0.984375f) + b;
 }
 
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    return c - out(d - t, 0, c, d) + b;
+	return c - out(d - t, 0, c, d) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return in(t * 2, b, c / 2, d);
-    }
-    return out(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return in(t * 2, b, c / 2, d);
+	}
+	return out(t * 2 - d, b + c / 2, c / 2, d);
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace bounce
 
 namespace back {
 static real_t in(real_t t, real_t b, real_t c, real_t d) {
-    float s = 1.70158f;
-    t /= d;
+	float s = 1.70158f;
+	t /= d;
 
-    return c * t * t * ((s + 1) * t - s) + b;
+	return c * t * t * ((s + 1) * t - s) + b;
 }
 
 static real_t out(real_t t, real_t b, real_t c, real_t d) {
-    float s = 1.70158f;
-    t = t / d - 1;
+	float s = 1.70158f;
+	t = t / d - 1;
 
-    return c * (t * t * ((s + 1) * t + s) + 1) + b;
+	return c * (t * t * ((s + 1) * t + s) + 1) + b;
 }
 
 static real_t in_out(real_t t, real_t b, real_t c, real_t d) {
-    float s = 1.70158f * 1.525f;
-    t /= d / 2;
+	float s = 1.70158f * 1.525f;
+	t /= d / 2;
 
-    if (t < 1) {
-        return c / 2 * (t * t * ((s + 1) * t - s)) + b;
-    }
+	if (t < 1) {
+		return c / 2 * (t * t * ((s + 1) * t - s)) + b;
+	}
 
-    t -= 2;
-    return c / 2 * (t * t * ((s + 1) * t + s) + 2) + b;
+	t -= 2;
+	return c / 2 * (t * t * ((s + 1) * t + s) + 2) + b;
 }
 
 static real_t out_in(real_t t, real_t b, real_t c, real_t d) {
-    if (t < d / 2) {
-        return out(t * 2, b, c / 2, d);
-    }
-    return in(t * 2 - d, b + c / 2, c / 2, d);
+	if (t < d / 2) {
+		return out(t * 2, b, c / 2, d);
+	}
+	return in(t * 2 - d, b + c / 2, c / 2, d);
 }
 }; // namespace back
 

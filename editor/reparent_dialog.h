@@ -41,23 +41,23 @@
 @author Juan Linietsky <reduzio@gmail.com>
 */
 class ReparentDialog : public ConfirmationDialog {
-    GDCLASS(ReparentDialog, ConfirmationDialog);
+	GDCLASS(ReparentDialog, ConfirmationDialog);
 
-    SceneTreeEditor *tree;
-    CheckBox *keep_transform;
+	SceneTreeEditor *tree;
+	CheckBox *keep_transform;
 
-    void _reparent();
-    void _cancel();
+	void _reparent();
+	void _cancel();
 
 protected:
-    void _notification(int p_what);
-    static void _bind_methods();
+	void _notification(int p_what);
+	static void _bind_methods();
 
 public:
-    void set_current(const Set<Node *> &p_selection);
+	void set_current(const Set<Node *> &p_selection);
 
-    ReparentDialog();
-    ~ReparentDialog();
+	ReparentDialog();
+	~ReparentDialog();
 };
 
 #endif // REPARENT_DIALOG_H

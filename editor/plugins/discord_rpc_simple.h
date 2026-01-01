@@ -30,30 +30,30 @@
 
 class SimpleDiscordRPC {
 public:
-    struct Activity {
-        String state;
-        String details;
-        String large_image;
-        String large_text;
-        String small_image;
-        String small_text;
-        int64_t start_timestamp = 0;
-        int64_t end_timestamp = 0;
-    };
+	struct Activity {
+		String state;
+		String details;
+		String large_image;
+		String large_text;
+		String small_image;
+		String small_text;
+		int64_t start_timestamp = 0;
+		int64_t end_timestamp = 0;
+	};
 
-    SimpleDiscordRPC(const String &client_id);
-    ~SimpleDiscordRPC();
+	SimpleDiscordRPC(const String &client_id);
+	~SimpleDiscordRPC();
 
-    bool connect();
-    void disconnect();
-    bool update_activity(const Activity &activity);
-    void clear_activity();
-    bool is_connected() const;
+	bool connect();
+	void disconnect();
+	bool update_activity(const Activity &activity);
+	void clear_activity();
+	bool is_connected() const;
 
 private:
-    String client_id_;
-    int sock_fd_ = -1;
+	String client_id_;
+	int sock_fd_ = -1;
 
-    bool send_frame(int opcode, const String &data);
-    String create_activity_payload(const Activity &activity);
+	bool send_frame(int opcode, const String &data);
+	String create_activity_payload(const Activity &activity);
 };

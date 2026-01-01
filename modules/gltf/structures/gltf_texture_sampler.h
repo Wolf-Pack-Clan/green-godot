@@ -35,131 +35,131 @@
 #include "scene/resources/texture.h"
 
 class GLTFTextureSampler : public Resource {
-    GDCLASS(GLTFTextureSampler, Resource);
+	GDCLASS(GLTFTextureSampler, Resource);
 
 public:
-    enum FilterMode {
-        NEAREST = 9728,
-        LINEAR = 9729,
-        NEAREST_MIPMAP_NEAREST = 9984,
-        LINEAR_MIPMAP_NEAREST = 9985,
-        NEAREST_MIPMAP_LINEAR = 9986,
-        LINEAR_MIPMAP_LINEAR = 9987
-    };
+	enum FilterMode {
+		NEAREST = 9728,
+		LINEAR = 9729,
+		NEAREST_MIPMAP_NEAREST = 9984,
+		LINEAR_MIPMAP_NEAREST = 9985,
+		NEAREST_MIPMAP_LINEAR = 9986,
+		LINEAR_MIPMAP_LINEAR = 9987
+	};
 
-    enum WrapMode {
-        CLAMP_TO_EDGE = 33071,
-        MIRRORED_REPEAT = 33648,
-        REPEAT = 10497
-    };
+	enum WrapMode {
+		CLAMP_TO_EDGE = 33071,
+		MIRRORED_REPEAT = 33648,
+		REPEAT = 10497
+	};
 
-    int get_mag_filter() const {
-        return mag_filter;
-    }
+	int get_mag_filter() const {
+		return mag_filter;
+	}
 
-    void set_mag_filter(const int filter_mode) {
-        mag_filter = (FilterMode)filter_mode;
-    }
+	void set_mag_filter(const int filter_mode) {
+		mag_filter = (FilterMode)filter_mode;
+	}
 
-    int get_min_filter() const {
-        return min_filter;
-    }
+	int get_min_filter() const {
+		return min_filter;
+	}
 
-    void set_min_filter(const int filter_mode) {
-        min_filter = (FilterMode)filter_mode;
-    }
+	void set_min_filter(const int filter_mode) {
+		min_filter = (FilterMode)filter_mode;
+	}
 
-    int get_wrap_s() const {
-        return wrap_s;
-    }
+	int get_wrap_s() const {
+		return wrap_s;
+	}
 
-    void set_wrap_s(const int wrap_mode) {
-        wrap_s = (WrapMode)wrap_mode;
-    }
+	void set_wrap_s(const int wrap_mode) {
+		wrap_s = (WrapMode)wrap_mode;
+	}
 
-    int get_wrap_t() const {
-        return wrap_t;
-    }
+	int get_wrap_t() const {
+		return wrap_t;
+	}
 
-    void set_wrap_t(const int wrap_mode) {
-        wrap_s = (WrapMode)wrap_mode;
-    }
+	void set_wrap_t(const int wrap_mode) {
+		wrap_s = (WrapMode)wrap_mode;
+	}
 
-    Texture::Flags get_filter_mode() const {
-        switch (min_filter) {
-            case NEAREST:
-                return (Texture::Flags)0;
-            case LINEAR:
-                return Texture::Flags::FLAG_FILTER;
-            case NEAREST_MIPMAP_NEAREST:
-            case NEAREST_MIPMAP_LINEAR:
-                return Texture::Flags::FLAG_MIPMAPS;
-            case LINEAR_MIPMAP_NEAREST:
-            case LINEAR_MIPMAP_LINEAR:
-            default:
-                return (Texture::Flags)(Texture::Flags::FLAG_FILTER | Texture::Flags::FLAG_MIPMAPS);
-        }
-    }
+	Texture::Flags get_filter_mode() const {
+		switch (min_filter) {
+			case NEAREST:
+				return (Texture::Flags)0;
+			case LINEAR:
+				return Texture::Flags::FLAG_FILTER;
+			case NEAREST_MIPMAP_NEAREST:
+			case NEAREST_MIPMAP_LINEAR:
+				return Texture::Flags::FLAG_MIPMAPS;
+			case LINEAR_MIPMAP_NEAREST:
+			case LINEAR_MIPMAP_LINEAR:
+			default:
+				return (Texture::Flags)(Texture::Flags::FLAG_FILTER | Texture::Flags::FLAG_MIPMAPS);
+		}
+	}
 
-    void set_filter_mode(uint32_t flags) {
-        const bool filter = (flags & Texture::Flags::FLAG_FILTER);
-        const bool mipmaps = (flags & Texture::Flags::FLAG_MIPMAPS);
+	void set_filter_mode(uint32_t flags) {
+		const bool filter = (flags & Texture::Flags::FLAG_FILTER);
+		const bool mipmaps = (flags & Texture::Flags::FLAG_MIPMAPS);
 
-        if (filter && mipmaps) {
-            min_filter = FilterMode::LINEAR_MIPMAP_LINEAR;
-            mag_filter = FilterMode::LINEAR;
-        } else if (filter) {
-            min_filter = FilterMode::LINEAR;
-            mag_filter = FilterMode::LINEAR;
-        } else if (mipmaps) {
-            min_filter = FilterMode::NEAREST_MIPMAP_LINEAR;
-            mag_filter = FilterMode::NEAREST;
-        } else {
-            min_filter = FilterMode::NEAREST;
-            mag_filter = FilterMode::NEAREST;
-        }
-    }
+		if (filter && mipmaps) {
+			min_filter = FilterMode::LINEAR_MIPMAP_LINEAR;
+			mag_filter = FilterMode::LINEAR;
+		} else if (filter) {
+			min_filter = FilterMode::LINEAR;
+			mag_filter = FilterMode::LINEAR;
+		} else if (mipmaps) {
+			min_filter = FilterMode::NEAREST_MIPMAP_LINEAR;
+			mag_filter = FilterMode::NEAREST;
+		} else {
+			min_filter = FilterMode::NEAREST;
+			mag_filter = FilterMode::NEAREST;
+		}
+	}
 
-    Texture::Flags get_wrap_mode() const {
-        if ((wrap_s == WrapMode::MIRRORED_REPEAT) && (wrap_t == WrapMode::MIRRORED_REPEAT)) {
-            return Texture::Flags::FLAG_MIRRORED_REPEAT;
-        } else if ((wrap_s == WrapMode::REPEAT) && (wrap_t == WrapMode::REPEAT)) {
-            return Texture::Flags::FLAG_REPEAT;
-        } else {
-            return (Texture::Flags)0;
-        }
-    }
+	Texture::Flags get_wrap_mode() const {
+		if ((wrap_s == WrapMode::MIRRORED_REPEAT) && (wrap_t == WrapMode::MIRRORED_REPEAT)) {
+			return Texture::Flags::FLAG_MIRRORED_REPEAT;
+		} else if ((wrap_s == WrapMode::REPEAT) && (wrap_t == WrapMode::REPEAT)) {
+			return Texture::Flags::FLAG_REPEAT;
+		} else {
+			return (Texture::Flags)0;
+		}
+	}
 
-    void set_wrap_mode(uint32_t flags) {
-        if (flags & Texture::Flags::FLAG_MIRRORED_REPEAT) {
-            wrap_s = WrapMode::MIRRORED_REPEAT;
-            wrap_t = WrapMode::MIRRORED_REPEAT;
-        } else if (flags & Texture::Flags::FLAG_REPEAT) {
-            wrap_s = WrapMode::REPEAT;
-            wrap_t = WrapMode::REPEAT;
-        } else {
-            wrap_s = WrapMode::CLAMP_TO_EDGE;
-            wrap_t = WrapMode::CLAMP_TO_EDGE;
-        }
-    }
+	void set_wrap_mode(uint32_t flags) {
+		if (flags & Texture::Flags::FLAG_MIRRORED_REPEAT) {
+			wrap_s = WrapMode::MIRRORED_REPEAT;
+			wrap_t = WrapMode::MIRRORED_REPEAT;
+		} else if (flags & Texture::Flags::FLAG_REPEAT) {
+			wrap_s = WrapMode::REPEAT;
+			wrap_t = WrapMode::REPEAT;
+		} else {
+			wrap_s = WrapMode::CLAMP_TO_EDGE;
+			wrap_t = WrapMode::CLAMP_TO_EDGE;
+		}
+	}
 
-    Texture::Flags get_texture_flags() const {
-        return (Texture::Flags)(get_filter_mode() | get_wrap_mode());
-    }
+	Texture::Flags get_texture_flags() const {
+		return (Texture::Flags)(get_filter_mode() | get_wrap_mode());
+	}
 
-    void set_texture_flags(uint32_t flags) {
-        set_filter_mode(flags);
-        set_wrap_mode(flags);
-    }
+	void set_texture_flags(uint32_t flags) {
+		set_filter_mode(flags);
+		set_wrap_mode(flags);
+	}
 
 protected:
-    static void _bind_methods();
+	static void _bind_methods();
 
 private:
-    FilterMode mag_filter = FilterMode::LINEAR;
-    FilterMode min_filter = FilterMode::LINEAR_MIPMAP_LINEAR;
-    WrapMode wrap_s = WrapMode::REPEAT;
-    WrapMode wrap_t = WrapMode::REPEAT;
+	FilterMode mag_filter = FilterMode::LINEAR;
+	FilterMode min_filter = FilterMode::LINEAR_MIPMAP_LINEAR;
+	WrapMode wrap_s = WrapMode::REPEAT;
+	WrapMode wrap_t = WrapMode::REPEAT;
 };
 
 #endif // GLTF_TEXTURE_SAMPLER_H

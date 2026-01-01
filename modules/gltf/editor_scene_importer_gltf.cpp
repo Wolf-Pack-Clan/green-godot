@@ -37,27 +37,27 @@
 #include "packed_scene_gltf.h"
 
 uint32_t EditorSceneImporterGLTF::get_import_flags() const {
-    return ImportFlags::IMPORT_SCENE | ImportFlags::IMPORT_ANIMATION;
+	return ImportFlags::IMPORT_SCENE | ImportFlags::IMPORT_ANIMATION;
 }
 
 void EditorSceneImporterGLTF::get_extensions(List<String> *r_extensions) const {
-    r_extensions->push_back("gltf");
-    r_extensions->push_back("glb");
+	r_extensions->push_back("gltf");
+	r_extensions->push_back("glb");
 }
 
 Node *EditorSceneImporterGLTF::import_scene(const String &p_path,
-        uint32_t p_flags, int p_bake_fps, uint32_t p_compress_flags,
-        List<String> *r_missing_deps,
-        Error *r_err) {
-    Ref<PackedSceneGLTF> importer;
-    importer.instance();
-    return importer->import_scene(p_path, p_flags, p_bake_fps, p_compress_flags, r_missing_deps, r_err, Ref<GLTFState>());
+		uint32_t p_flags, int p_bake_fps, uint32_t p_compress_flags,
+		List<String> *r_missing_deps,
+		Error *r_err) {
+	Ref<PackedSceneGLTF> importer;
+	importer.instance();
+	return importer->import_scene(p_path, p_flags, p_bake_fps, p_compress_flags, r_missing_deps, r_err, Ref<GLTFState>());
 }
 
 Ref<Animation> EditorSceneImporterGLTF::import_animation(const String &p_path,
-        uint32_t p_flags,
-        int p_bake_fps) {
-    return Ref<Animation>();
+		uint32_t p_flags,
+		int p_bake_fps) {
+	return Ref<Animation>();
 }
 
 #endif // TOOLS_ENABLED

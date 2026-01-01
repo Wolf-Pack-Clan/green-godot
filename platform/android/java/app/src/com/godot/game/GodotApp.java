@@ -39,9 +39,9 @@ import android.os.Bundle;
  * Feel free to extend and modify this class for your custom logic.
  */
 public class GodotApp extends FullScreenGodotApp {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.GodotAppMainTheme);
-        super.onCreate(savedInstanceState);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.GodotAppMainTheme);
+		super.onCreate(savedInstanceState);
+	}
 }

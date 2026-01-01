@@ -38,12 +38,12 @@ extern "C" {
 #include "stddef.h"
 
 enum WebXRInputEvent {
-    WEBXR_INPUT_EVENT_SELECTSTART,
-    WEBXR_INPUT_EVENT_SELECTEND,
-    WEBXR_INPUT_EVENT_SELECT,
-    WEBXR_INPUT_EVENT_SQUEEZESTART,
-    WEBXR_INPUT_EVENT_SQUEEZEEND,
-    WEBXR_INPUT_EVENT_SQUEEZE,
+	WEBXR_INPUT_EVENT_SELECTSTART,
+	WEBXR_INPUT_EVENT_SELECTEND,
+	WEBXR_INPUT_EVENT_SELECT,
+	WEBXR_INPUT_EVENT_SQUEEZESTART,
+	WEBXR_INPUT_EVENT_SQUEEZEEND,
+	WEBXR_INPUT_EVENT_SQUEEZE,
 };
 
 typedef void (*GodotWebXRSupportedCallback)(char *p_session_mode, int p_supported);
@@ -58,16 +58,16 @@ extern int godot_webxr_is_supported();
 extern void godot_webxr_is_session_supported(const char *p_session_mode, GodotWebXRSupportedCallback p_callback);
 
 extern void godot_webxr_initialize(
-        const char *p_session_mode,
-        const char *p_required_features,
-        const char *p_optional_features,
-        const char *p_requested_reference_space_types,
-        GodotWebXRStartedCallback p_on_session_started,
-        GodotWebXREndedCallback p_on_session_ended,
-        GodotWebXRFailedCallback p_on_session_failed,
-        GodotWebXRControllerCallback p_on_controller_changed,
-        GodotWebXRInputEventCallback p_on_input_event,
-        GodotWebXRSimpleEventCallback p_on_simple_event);
+		const char *p_session_mode,
+		const char *p_required_features,
+		const char *p_optional_features,
+		const char *p_requested_reference_space_types,
+		GodotWebXRStartedCallback p_on_session_started,
+		GodotWebXREndedCallback p_on_session_ended,
+		GodotWebXRFailedCallback p_on_session_failed,
+		GodotWebXRControllerCallback p_on_controller_changed,
+		GodotWebXRInputEventCallback p_on_input_event,
+		GodotWebXRSimpleEventCallback p_on_simple_event);
 extern void godot_webxr_uninitialize();
 
 extern int godot_webxr_get_view_count();
